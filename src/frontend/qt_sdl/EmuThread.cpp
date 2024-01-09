@@ -299,6 +299,144 @@ bool EmuThread::UpdateConsole(UpdateConsoleNDSArgs&& ndsargs, UpdateConsoleGBAAr
     return true;
 }
 
+void EmuThread::metroidProcess()
+{
+    printf("%d\n",metroidState);
+    // scan visor 0.5 x 0.9
+    // morph ball 0.864 x 0.87
+
+    if (metroidSkipFrames > 0) {
+        metroidSkipFrames--;
+        return;
+    } else {
+        if (metroidState == MetroidState::LookReset) {
+            metroidState = MetroidState::None;
+        }
+    }
+
+    if (Input::HotkeyPressed(HK_MetroidMorphBall)) {
+        metroidStopLooking();
+        metroidState = MetroidState::ButtonPrepare;
+        metroidButton = MetroidButtons::MorphBall;
+        metroidSkipFrames = 2;
+        return;
+    }
+
+    if (metroidState == MetroidState::ButtonPrepare) {
+        switch (metroidButton) {
+            case MetroidButtons::MorphBall:
+                NDS->TouchScreen(220, 166);
+                metroidState = MetroidState::ButtonPressed;
+                break;
+
+            default:
+                metroidState = MetroidState::None;
+                break;
+        }
+        
+        metroidButton = MetroidButtons::None;
+
+        return;        
+    }
+
+    if (metroidState == MetroidState::ButtonPressed) {
+        NDS->ReleaseScreen();
+        metroidState = MetroidState::None;
+        metroidSkipFrames = 2;
+        return;
+    }
+
+
+    // if (Input::HotkeyPressed(HK_MetroidMorphBall) || metroidState == ButtonQueueMorphBall) {
+    //     
+
+    //     if (metroidState == None || metroidState == ButtonQueueMorphBall) {
+    //         NDS->TouchScreen(screenX, screenY);
+    //         metroidState = ButtonReset;
+    //         metroidSkipFrames = 4;
+    //         return;
+    //     }
+
+    //     if (metroidState == Looking) {
+    //         metroidStopLooking();
+    //         metroidState = ButtonQueueMorphBall;
+    //         metroidSkipFrames = 4;
+    //         return;
+    //     }
+    // }
+
+    if (metroidState == MetroidState::None || metroidState == MetroidState::Looking) {
+        float xAxis = Input::HotkeyAnalogueValue(HK_MetroidLookX);
+        float yAxis = Input::HotkeyAnalogueValue(HK_MetroidLookY); 
+
+        const float deadzone = 0.01;
+        const float sensitivity = 0.015;
+
+        const float dsAspectRatio = 256 / 192;
+    
+        if (abs(xAxis) > deadzone || abs(yAxis) > deadzone) {
+            metroidState = MetroidState::Looking;
+
+            xAxis *= sensitivity;
+            yAxis *= sensitivity * dsAspectRatio;
+
+            metroidLookScreenX += xAxis;
+            metroidLookScreenY += yAxis;
+
+            // release, wait 2 frames and move to the other side
+            // if we wait 1 frame, itll glitch out sometimes
+
+            if (metroidLookScreenX < -1) {
+                NDS->ReleaseScreen();
+                metroidLookScreenX = 1;
+                metroidSkipFrames = 2;
+                metroidState = MetroidState::LookReset;
+                return;
+            }
+
+            if (metroidLookScreenX > 1) {
+                NDS->ReleaseScreen();
+                metroidLookScreenX = -1;
+                metroidSkipFrames = 2;
+                metroidState = MetroidState::LookReset;
+                return;
+            }
+
+            if (metroidLookScreenY < -1) {
+                NDS->ReleaseScreen();
+                metroidLookScreenY = 1;
+                metroidSkipFrames = 2;
+                metroidState = MetroidState::LookReset;
+                return;
+            }
+
+            if (metroidLookScreenY > 1) {
+                NDS->ReleaseScreen();
+                metroidLookScreenY = -1;
+                metroidSkipFrames = 2;
+                metroidState = MetroidState::LookReset;
+                return;
+            }
+
+            // touching the screen
+
+            u16 screenX = (metroidLookScreenX + 1.0) / 2.0 * 255.0;
+            u16 screenY = (metroidLookScreenY + 1.0) / 2.0 * 191.0;
+
+            NDS->TouchScreen(screenX, screenY);
+        }
+    }
+}
+
+void EmuThread::metroidStopLooking() {
+    if (metroidState == MetroidState::Looking) {
+        NDS->ReleaseScreen();
+        metroidState = MetroidState::None;
+        metroidLookScreenX = 0;
+        metroidLookScreenY = 0;
+    }
+}
+
 void EmuThread::run()
 {
     u32 mainScreenPos[3];
@@ -395,6 +533,8 @@ void EmuThread::run()
                     mainWindow->osdAddMessage(0, "Solar sensor level: %d", level);
                 }
             }
+
+            metroidProcess();
 
             if (NDS->ConsoleType == 1)
             {

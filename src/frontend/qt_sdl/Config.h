@@ -39,6 +39,10 @@ enum
     HK_PowerButton,
     HK_VolumeUp,
     HK_VolumeDown,
+    HK_MetroidLookX,
+    HK_MetroidLookY,
+    HK_MetroidScanVisor,
+    HK_MetroidMorphBall,
     HK_MAX
 };
 

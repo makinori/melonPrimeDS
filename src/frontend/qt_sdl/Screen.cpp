@@ -191,6 +191,7 @@ void ScreenPanel::mousePressEvent(QMouseEvent* event)
     {
         touching = true;
         assert(emuThread->NDS != nullptr);
+        emuThread->metroidStopLooking();
         emuThread->NDS->TouchScreen(x, y);
     }
 }
@@ -223,6 +224,7 @@ void ScreenPanel::mouseMoveEvent(QMouseEvent* event)
     if (Frontend::GetTouchCoords(x, y, true))
     {
         assert(emuThread->NDS != nullptr);
+        emuThread->metroidStopLooking();
         emuThread->NDS->TouchScreen(x, y);
     }
 }
@@ -243,6 +245,7 @@ void ScreenPanel::tabletEvent(QTabletEvent* event)
             {
                 touching = true;
                 assert(emuThread->NDS != nullptr);
+                emuThread->metroidStopLooking();
                 emuThread->NDS->TouchScreen(x, y);
             }
         }
@@ -278,6 +281,7 @@ void ScreenPanel::touchEvent(QTouchEvent* event)
             {
                 touching = true;
                 assert(emuThread->NDS != nullptr);
+                emuThread->metroidStopLooking();
                 emuThread->NDS->TouchScreen(x, y);
             }
         }

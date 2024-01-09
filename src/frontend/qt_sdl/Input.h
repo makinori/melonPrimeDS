@@ -47,6 +47,8 @@ bool HotkeyDown(int id);
 bool HotkeyPressed(int id);
 bool HotkeyReleased(int id);
 
+float HotkeyAnalogueValue(int val);
+
 bool IsRightModKey(QKeyEvent* event);
 
 }

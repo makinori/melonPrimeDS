@@ -227,6 +227,22 @@ bool HotkeyPressed(int id)  { return HotkeyPress   & (1<<id); }
 bool HotkeyReleased(int id) { return HotkeyRelease & (1<<id); }
 
 
+float HotkeyAnalogueValue(int id) {
+    int val = Config::HKJoyMapping[id];
+    if (val == -1) return 0;
+
+    if (val & 0x10000)
+    {
+        int axisnum = (val >> 24) & 0xF;
+        // int axisdir = (val >> 20) & 0xF;
+        Sint16 axisval = SDL_JoystickGetAxis(Joystick, axisnum);
+        return (float)axisval / INT16_MAX;
+    }
+    
+    return 0;
+}
+
+
 // distinguish between left and right modifier keys (Ctrl, Alt, Shift)
 // Qt provides no real cross-platform way to do this, so here we go
 // for Windows and Linux we can distinguish via scancodes (but both

@@ -31,12 +31,20 @@ static constexpr std::initializer_list<int> hk_addons =
 {
     HK_SolarSensorIncrease,
     HK_SolarSensorDecrease,
+    HK_MetroidLookX,
+    HK_MetroidLookY,
+    HK_MetroidScanVisor,
+    HK_MetroidMorphBall,
 };
 
 static constexpr std::initializer_list<const char*> hk_addons_labels =
 {
     "[Boktai] Sunlight + ",
     "[Boktai] Sunlight - ",
+    "[Metroid] Look Left/Right",
+    "[Metroid] Look Up/Down",
+    "[Metroid] Scan Visor",
+    "[Metroid] Morph Ball",
 };
 
 static_assert(hk_addons.size() == hk_addons_labels.size());

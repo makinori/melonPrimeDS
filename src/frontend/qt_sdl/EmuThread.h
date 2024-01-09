@@ -62,6 +62,8 @@ public:
     void initContext();
     void deinitContext();
 
+    void metroidStopLooking();
+
     int FrontBuffer = 0;
     QMutex FrontBufferLock;
 
@@ -129,6 +131,28 @@ private:
 
     int videoRenderer;
     bool videoSettingsDirty;
+
+    enum class MetroidState {
+        None,
+        Looking,
+        LookReset,
+        ButtonPrepare,
+        ButtonPressed,
+    };
+
+    enum class MetroidButtons {
+        None,
+        MorphBall
+    };
+
+    MetroidState metroidState = MetroidState::None;
+    MetroidButtons metroidButton = MetroidButtons::None;
+
+    float metroidLookScreenX = 0;
+    float metroidLookScreenY = 0;
+    int metroidSkipFrames = 0;
+
+    void metroidProcess();
 };
 
 #endif // EMUTHREAD_H
