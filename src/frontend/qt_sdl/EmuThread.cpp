@@ -299,144 +299,6 @@ bool EmuThread::UpdateConsole(UpdateConsoleNDSArgs&& ndsargs, UpdateConsoleGBAAr
     return true;
 }
 
-void EmuThread::metroidProcess()
-{
-    printf("%d\n",metroidState);
-    // scan visor 0.5 x 0.9
-    // morph ball 0.864 x 0.87
-
-    if (metroidSkipFrames > 0) {
-        metroidSkipFrames--;
-        return;
-    } else {
-        if (metroidState == MetroidState::LookReset) {
-            metroidState = MetroidState::None;
-        }
-    }
-
-    if (Input::HotkeyPressed(HK_MetroidMorphBall)) {
-        metroidStopLooking();
-        metroidState = MetroidState::ButtonPrepare;
-        metroidButton = MetroidButtons::MorphBall;
-        metroidSkipFrames = 2;
-        return;
-    }
-
-    if (metroidState == MetroidState::ButtonPrepare) {
-        switch (metroidButton) {
-            case MetroidButtons::MorphBall:
-                NDS->TouchScreen(220, 166);
-                metroidState = MetroidState::ButtonPressed;
-                break;
-
-            default:
-                metroidState = MetroidState::None;
-                break;
-        }
-        
-        metroidButton = MetroidButtons::None;
-
-        return;        
-    }
-
-    if (metroidState == MetroidState::ButtonPressed) {
-        NDS->ReleaseScreen();
-        metroidState = MetroidState::None;
-        metroidSkipFrames = 2;
-        return;
-    }
-
-
-    // if (Input::HotkeyPressed(HK_MetroidMorphBall) || metroidState == ButtonQueueMorphBall) {
-    //     
-
-    //     if (metroidState == None || metroidState == ButtonQueueMorphBall) {
-    //         NDS->TouchScreen(screenX, screenY);
-    //         metroidState = ButtonReset;
-    //         metroidSkipFrames = 4;
-    //         return;
-    //     }
-
-    //     if (metroidState == Looking) {
-    //         metroidStopLooking();
-    //         metroidState = ButtonQueueMorphBall;
-    //         metroidSkipFrames = 4;
-    //         return;
-    //     }
-    // }
-
-    if (metroidState == MetroidState::None || metroidState == MetroidState::Looking) {
-        float xAxis = Input::HotkeyAnalogueValue(HK_MetroidLookX);
-        float yAxis = Input::HotkeyAnalogueValue(HK_MetroidLookY); 
-
-        const float deadzone = 0.01;
-        const float sensitivity = 0.015;
-
-        const float dsAspectRatio = 256 / 192;
-    
-        if (abs(xAxis) > deadzone || abs(yAxis) > deadzone) {
-            metroidState = MetroidState::Looking;
-
-            xAxis *= sensitivity;
-            yAxis *= sensitivity * dsAspectRatio;
-
-            metroidLookScreenX += xAxis;
-            metroidLookScreenY += yAxis;
-
-            // release, wait 2 frames and move to the other side
-            // if we wait 1 frame, itll glitch out sometimes
-
-            if (metroidLookScreenX < -1) {
-                NDS->ReleaseScreen();
-                metroidLookScreenX = 1;
-                metroidSkipFrames = 2;
-                metroidState = MetroidState::LookReset;
-                return;
-            }
-
-            if (metroidLookScreenX > 1) {
-                NDS->ReleaseScreen();
-                metroidLookScreenX = -1;
-                metroidSkipFrames = 2;
-                metroidState = MetroidState::LookReset;
-                return;
-            }
-
-            if (metroidLookScreenY < -1) {
-                NDS->ReleaseScreen();
-                metroidLookScreenY = 1;
-                metroidSkipFrames = 2;
-                metroidState = MetroidState::LookReset;
-                return;
-            }
-
-            if (metroidLookScreenY > 1) {
-                NDS->ReleaseScreen();
-                metroidLookScreenY = -1;
-                metroidSkipFrames = 2;
-                metroidState = MetroidState::LookReset;
-                return;
-            }
-
-            // touching the screen
-
-            u16 screenX = (metroidLookScreenX + 1.0) / 2.0 * 255.0;
-            u16 screenY = (metroidLookScreenY + 1.0) / 2.0 * 191.0;
-
-            NDS->TouchScreen(screenX, screenY);
-        }
-    }
-}
-
-void EmuThread::metroidStopLooking() {
-    if (metroidState == MetroidState::Looking) {
-        NDS->ReleaseScreen();
-        metroidState = MetroidState::None;
-        metroidLookScreenX = 0;
-        metroidLookScreenY = 0;
-    }
-}
-
 void EmuThread::run()
 {
     u32 mainScreenPos[3];
@@ -497,7 +359,8 @@ void EmuThread::run()
 
     char melontitle[100];
 
-    while (EmuRunning != emuStatus_Exit)
+    auto frameAdvance {
+    [&]()
     {
         Input::Process();
 
@@ -533,8 +396,6 @@ void EmuThread::run()
                     mainWindow->osdAddMessage(0, "Solar sensor level: %d", level);
                 }
             }
-
-            metroidProcess();
 
             if (NDS->ConsoleType == 1)
             {
@@ -608,7 +469,7 @@ void EmuThread::run()
             }
 
             // process input and hotkeys
-            NDS->SetKeyMask(Input::InputMask);
+            // NDS->SetKeyMask(Input::InputMask); // doing this in metroid code
 
             if (Input::HotkeyPressed(HK_Lid))
             {
@@ -679,7 +540,7 @@ void EmuThread::run()
             MelonCap::Update();
 #endif // MELONCAP
 
-            if (EmuRunning == emuStatus_Exit) break;
+            if (EmuRunning == emuStatus_Exit) return;
 
             winUpdateCount++;
             if (winUpdateCount >= winUpdateFreq && !screenGL)
@@ -798,6 +659,296 @@ void EmuThread::run()
                 ContextRequest = contextRequest_None;
             }
         }
+    }
+    };
+
+    // metroid hunters code
+    // adapted from https://forums.desmume.org/viewtopic.php?id=11715
+
+    #define INPUT_A 0
+    #define INPUT_B 1
+    #define INPUT_SELECT 2
+    #define INPUT_START 3
+    #define INPUT_RIGHT 4
+    #define INPUT_LEFT 5
+    #define INPUT_UP 6
+    #define INPUT_DOWN 7
+    #define INPUT_R 8
+    #define INPUT_L 9
+    #define INPUT_X 10
+    #define INPUT_Y 11
+    #define FN_INPUT_PRESS(i) Input::InputMask &= ~(1<<i);
+    #define FN_INPUT_RELEASE(i) Input::InputMask |= (1<<i);
+
+    const float aimDeadzone = 0.05;
+    const float moveDeadzone = 0.5;
+
+    const float aimSensitivity = 1;
+    const float vCurSensitivity = 0.75;
+    
+    melonDS::u8 cooldown = 0;
+    melonDS::s8 weapon = 0;
+    melonDS::s8 subweapon = 0;
+    const bool toggleStylus = false; // unused
+    bool toggleAim = false;
+    float vCurX = 128;
+    float vCurY = 96;
+    
+    while (EmuRunning != emuStatus_Exit) {
+        // frameAdvance();
+
+        bool drawVCur = false;
+
+        if (Input::HotkeyDown(HK_MetroidVirtualStylus)) {
+            // this exists to just delay the pressing of the screen when you 
+            // release the virtual stylus key
+            toggleAim = true;
+
+            drawVCur = true;
+
+            if (Input::HotkeyDown(HK_MetroidSubweaponNext)) {
+                NDS->TouchScreen(vCurX, vCurY);
+            } else {
+                NDS->ReleaseScreen();
+            }
+
+            // unused
+            // if (Input::HotkeyDown(HK_MetroidSubweaponPrevious) && cooldown == 0) {
+            //     toggleStylus = !toggleStylus;
+            //     cooldown = 20;
+            // }
+
+            float rightStickX = Input::HotkeyAnalogueValue(HK_MetroidRightStickXAxis);
+            if (abs(rightStickX) > aimDeadzone) {
+                vCurX += (rightStickX * 4 * vCurSensitivity);
+            }
+
+            float rightStickY = Input::HotkeyAnalogueValue(HK_MetroidRightStickYAxis);
+            if (abs(rightStickY) > aimDeadzone) {
+                vCurY += (rightStickY * 6 * vCurSensitivity);
+            }
+
+            if (vCurX < 0) vCurX = 0;
+            if (vCurX > 255) vCurX = 255;
+            if (vCurY < 0) vCurY = 0;
+            if (vCurY > 191) vCurY = 191;
+        } else {
+            drawVCur = false;
+
+            // morph ball
+            if (Input::HotkeyDown(HK_MetroidMorphBall)) {
+                NDS->ReleaseScreen();
+                frameAdvance();
+                frameAdvance();
+                NDS->TouchScreen(231, 167);
+                frameAdvance();
+                frameAdvance();
+            }
+
+            // scan visor
+            if (Input::HotkeyDown(HK_MetroidScanVisor)) {
+                if (cooldown == 0) {
+                    NDS->ReleaseScreen();
+                    frameAdvance();
+                    frameAdvance();
+                }
+                cooldown = 10;
+                NDS->TouchScreen(128, 173);
+            }
+
+            // ok (in scans and messages)
+            if (Input::HotkeyDown(HK_MetroidUIOk)) {
+                NDS->ReleaseScreen();
+                frameAdvance();
+                frameAdvance();
+                NDS->TouchScreen(128, 142);
+                frameAdvance();
+                frameAdvance();
+            }
+
+            // left arrow (in scans and messages)
+            if (Input::HotkeyDown(HK_MetroidUILeft)) {
+                NDS->ReleaseScreen();
+                frameAdvance();
+                frameAdvance();
+                NDS->TouchScreen(71, 141);
+                frameAdvance();
+                frameAdvance();
+            }
+
+            // right arrow (in scans and messages)
+            if (Input::HotkeyDown(HK_MetroidUIRight)) {
+                NDS->ReleaseScreen();
+                frameAdvance();
+                frameAdvance();
+                NDS->TouchScreen(185, 141);
+                frameAdvance();
+                frameAdvance();
+            }
+
+            // switch weapon (beam -> missile -> subweapon -> beam)
+            if (Input::HotkeyDown(HK_MetroidWeaponCycle) && cooldown == 0) {
+                cooldown = 20;
+                weapon = (weapon + 1) % 3;
+                NDS->ReleaseScreen();
+                frameAdvance();
+                frameAdvance();
+                NDS->TouchScreen(85 + 40 * weapon, 32);
+                frameAdvance();
+                NDS->TouchScreen(85 + 40 * weapon, 32);
+            }
+
+            // switch subweapon
+            auto subweaponPrevious = Input::HotkeyDown(HK_MetroidSubweaponPrevious);
+            auto subweaponNext = Input::HotkeyDown(HK_MetroidSubweaponNext);
+            if ((subweaponPrevious || subweaponNext) && cooldown == 0) {
+                cooldown = 20;
+                weapon = 2;
+                if (subweaponPrevious) subweapon = (subweapon - 1) % 6;
+                if (subweaponNext) subweapon = (subweapon + 1) % 6;
+                melonDS::u16 subX = 93 + 25 * subweapon;
+                melonDS::u16 subY = 48 + 25 * subweapon;
+                NDS->ReleaseScreen();
+                frameAdvance();
+                frameAdvance();
+                NDS->TouchScreen(232, 34);
+                frameAdvance();
+                NDS->TouchScreen(232, 34);
+                frameAdvance();
+                NDS->TouchScreen(subX, subY);
+                frameAdvance();
+                NDS->TouchScreen(subX, subY);
+            }
+
+            // move left and right 
+            float leftStickX = Input::HotkeyAnalogueValue(HK_MetroidLeftStickXAxis);
+            if (leftStickX < -moveDeadzone) {
+                FN_INPUT_PRESS(INPUT_LEFT);
+            } else {
+                FN_INPUT_RELEASE(INPUT_LEFT);
+            }
+            if (leftStickX > moveDeadzone) {
+                FN_INPUT_PRESS(INPUT_RIGHT);
+            } else {
+                FN_INPUT_RELEASE(INPUT_RIGHT);
+            }
+
+            // move forward and back 
+            float leftStickY = Input::HotkeyAnalogueValue(HK_MetroidLeftStickYAxis);
+            if (leftStickY < -moveDeadzone) {
+                FN_INPUT_PRESS(INPUT_UP);
+            } else {
+                FN_INPUT_RELEASE(INPUT_UP);
+            }
+            if (leftStickY > moveDeadzone) {
+                FN_INPUT_PRESS(INPUT_DOWN);
+            } else {
+                FN_INPUT_RELEASE(INPUT_DOWN);
+            }
+
+            // look left and right
+            float rightStickX = Input::HotkeyAnalogueValue(HK_MetroidRightStickXAxis);
+            if (abs(rightStickX) > aimDeadzone && toggleStylus == false) {
+                NDS->ARM9Write32(0x020DE526, rightStickX * 4 * aimSensitivity);
+                toggleAim = false;
+            }
+
+            // look up and down
+            float rightStickY = Input::HotkeyAnalogueValue(HK_MetroidRightStickYAxis);
+            if (abs(rightStickY) > aimDeadzone && toggleStylus == false) {
+                NDS->ARM9Write32(0x020DE52E, rightStickY * 6 * aimSensitivity);
+                toggleAim = false;
+            }
+
+            // morph ball boost
+            if (Input::HotkeyDown(HK_MetroidMorphBallBoost)) {
+                FN_INPUT_PRESS(INPUT_R);
+            } else {
+                FN_INPUT_RELEASE(INPUT_R);
+            }
+
+            // shoot
+            if (Input::HotkeyDown(HK_MetroidShoot)) {
+                FN_INPUT_PRESS(INPUT_L);
+            } else {
+                FN_INPUT_RELEASE(INPUT_L);
+            }
+
+            // jump
+            if (Input::HotkeyDown(HK_MetroidJump)) {
+                FN_INPUT_PRESS(INPUT_B);
+            } else {
+                FN_INPUT_RELEASE(INPUT_B);
+            }
+
+            // start
+            if (Input::HotkeyDown(HK_MetroidMenu)) {
+                FN_INPUT_PRESS(INPUT_START);
+            } else {
+                FN_INPUT_RELEASE(INPUT_START);
+            }
+        
+        }
+
+        if (cooldown > 0) {
+            cooldown--;
+        } else {
+            // is this a good way of detecting morph ball status?
+            bool ball = NDS->ARM9Read8(0x020DA818) == 0x02;
+            if (ball == false && toggleStylus == false && toggleAim == false) {
+                NDS->TouchScreen(128, 96); // required for aiming
+            }
+        }
+        
+        NDS->SetKeyMask(Input::InputMask);
+
+        if (drawVCur) {
+            const int cursorSize = 11;
+            const int cursorOffset = 5;
+            const bool cursor[] = {
+                0,0,0,1,1,1,1,1,0,0,0,
+                0,0,1,0,0,0,0,0,1,0,0,
+                0,1,0,0,0,0,0,0,0,1,0,
+                1,0,0,0,0,0,0,0,0,0,1,
+                1,0,0,0,0,1,0,0,0,0,1,
+                1,0,0,0,1,1,1,0,0,0,1,
+                1,0,0,0,0,1,0,0,0,0,1,
+                1,0,0,0,0,0,0,0,0,0,1,
+                0,1,0,0,0,0,0,0,0,1,0,
+                0,0,1,0,0,0,0,0,1,0,0,
+                0,0,0,1,1,1,1,1,0,0,0,
+            };
+
+            auto setPixel {
+                [&](int x, int y, melonDS::u32 color) {
+                    if (x < 0) return;
+                    if (x > 255) return;
+                    if (y < 0) return;
+                    if (y > 191) return;
+                    if (NDS->GPU.GPU3D.IsRendererAccelerated()) {
+                        NDS->GPU.Framebuffer[0][1][y * (256 * 3 + 1) + x] = color;
+                        NDS->GPU.Framebuffer[1][1][y * (256 * 3 + 1) + x] = color;
+                    } else {
+                        NDS->GPU.Framebuffer[0][1][y * 256 + x] = color;
+                        NDS->GPU.Framebuffer[1][1][y * 256 + x] = color;
+                    }
+                }
+            };
+
+            for (int y = 0; y < cursorSize; y++) {
+                for (int x = 0; x < cursorSize; x++) {
+                    int value = cursor[y * cursorSize + x];
+                    if (!value) continue;
+                    setPixel(
+                        vCurX + x - cursorOffset,
+                        vCurY + y - cursorOffset,
+                        0xFFFFFFFF
+                    );
+                }
+            }
+        }
+
+        frameAdvance();
     }
 
     file = Platform::OpenLocalFile("rtc.bin", Platform::FileMode::Write);

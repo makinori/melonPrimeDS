@@ -31,20 +31,48 @@ static constexpr std::initializer_list<int> hk_addons =
 {
     HK_SolarSensorIncrease,
     HK_SolarSensorDecrease,
-    HK_MetroidLookX,
-    HK_MetroidLookY,
-    HK_MetroidScanVisor,
+
     HK_MetroidMorphBall,
+    HK_MetroidScanVisor,
+    HK_MetroidUIOk,
+    HK_MetroidUILeft,
+    HK_MetroidUIRight,
+    HK_MetroidWeaponCycle,
+    HK_MetroidSubweaponPrevious,
+    HK_MetroidSubweaponNext,
+    HK_MetroidLeftStickXAxis,
+    HK_MetroidLeftStickYAxis,
+    HK_MetroidRightStickXAxis,
+    HK_MetroidRightStickYAxis,
+    HK_MetroidShoot,
+    HK_MetroidMorphBallBoost,
+    HK_MetroidVirtualStylus,
+    HK_MetroidJump,
+    HK_MetroidMenu,
 };
 
 static constexpr std::initializer_list<const char*> hk_addons_labels =
 {
     "[Boktai] Sunlight + ",
     "[Boktai] Sunlight - ",
-    "[Metroid] Look Left/Right",
-    "[Metroid] Look Up/Down",
-    "[Metroid] Scan Visor",
+    
     "[Metroid] Morph Ball",
+    "[Metroid] Scan Visor",
+    "[Metroid] UI Ok",
+    "[Metroid] UI Left",
+    "[Metroid] UI Right",
+    "[Metroid] Weapon Cycle",
+    "[Metroid] Subweapon Previous",
+    "[Metroid] Subweapon Next",
+    "[Metroid] Left Stick X Axis",
+    "[Metroid] Left Stick Y Axis",
+    "[Metroid] Right Stick X Axis",
+    "[Metroid] Right Stick Y Axis",
+    "[Metroid] Shoot",
+    "[Metroid] Morph Ball Boost",
+    "[Metroid] Virtual Stylus (Hold)",
+    "[Metroid] Jump",
+    "[Metroid] Menu",
 };
 
 static_assert(hk_addons.size() == hk_addons_labels.size());

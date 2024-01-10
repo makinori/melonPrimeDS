@@ -39,10 +39,25 @@ enum
     HK_PowerButton,
     HK_VolumeUp,
     HK_VolumeDown,
-    HK_MetroidLookX,
-    HK_MetroidLookY,
-    HK_MetroidScanVisor,
+    
     HK_MetroidMorphBall,
+    HK_MetroidScanVisor,
+    HK_MetroidUIOk,
+    HK_MetroidUILeft,
+    HK_MetroidUIRight,
+    HK_MetroidWeaponCycle,
+    HK_MetroidSubweaponPrevious,
+    HK_MetroidSubweaponNext,
+    HK_MetroidLeftStickXAxis,
+    HK_MetroidLeftStickYAxis,
+    HK_MetroidRightStickXAxis,
+    HK_MetroidRightStickYAxis,
+    HK_MetroidShoot,
+    HK_MetroidMorphBallBoost,
+    HK_MetroidVirtualStylus,
+    HK_MetroidJump,
+    HK_MetroidMenu,
+    
     HK_MAX
 };
 
