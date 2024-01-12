@@ -220,7 +220,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     oldH = Config::WindowHeight;
     oldMax = Config::WindowMaximized;
 
-    setWindowTitle("melonDS (Prime Hack Hunters) " MELONDS_VERSION);
+    setWindowTitle("melonDS (Metroid Hunters) " MELONDS_VERSION);
     setAttribute(Qt::WA_DeleteOnClose);
     setAcceptDrops(true);
     setFocusPolicy(Qt::ClickFocus);

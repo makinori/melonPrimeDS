@@ -1,11 +1,11 @@
 [Desktop Entry]
-Name=PrimeHuntersHack
+Name=melonDS (Metroid Hunters)
 GenericName=Nintendo DS Emulator
 Comment=A fast and accurate Nintendo DS emulator.
 Exec=melonDS %f
 Type=Application
 Categories=Game;Emulator;
 Terminal=false
-Icon=io.makidoll.primeHuntersHack
+Icon=io.makidoll.melonDSMetroidHunters
 MimeType=application/x-nintendo-ds-rom;
 Keywords=emulator;Nintendo;DS;NDS;Nintendo DS;

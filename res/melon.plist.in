@@ -7,7 +7,7 @@
         <key>CFBundleIconFile</key>
         <string>melon.icns</string>
         <key>CFBundleIdentifier</key>
-        <string>io.makidoll.primeHuntersHack</string>
+        <string>io.makidoll.melonDSMetroidHunters</string>
         <key>CFBundleDevelopmentRegion</key>
         <string>English</string>
         <key>CFBundlePackageType</key>

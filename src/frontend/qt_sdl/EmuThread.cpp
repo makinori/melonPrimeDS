@@ -617,9 +617,9 @@ void EmuThread::run()
 
                 int inst = Platform::InstanceID();
                 if (inst == 0)
-                    sprintf(melontitle, "[%d/%.0f] melonDS (Prime Hack Hunters) " MELONDS_VERSION, fps, fpstarget);
+                    sprintf(melontitle, "[%d/%.0f] melonDS (Metroid Hunters) " MELONDS_VERSION, fps, fpstarget);
                 else
-                    sprintf(melontitle, "[%d/%.0f] melonDS (Prime Hack Hunters) (%d)", fps, fpstarget, inst+1);
+                    sprintf(melontitle, "[%d/%.0f] melonDS (Metroid Hunters) (%d)", fps, fpstarget, inst+1);
                 changeWindowTitle(melontitle);
             }
         }
@@ -636,9 +636,9 @@ void EmuThread::run()
 
             int inst = Platform::InstanceID();
             if (inst == 0)
-                sprintf(melontitle, "melonDS (Prime Hack Hunters) " MELONDS_VERSION);
+                sprintf(melontitle, "melonDS (Metroid Hunters) " MELONDS_VERSION);
             else
-                sprintf(melontitle, "melonDS (Prime Hack Hunters) (%d)", inst+1);
+                sprintf(melontitle, "melonDS (Metroid Hunters) (%d)", inst+1);
             changeWindowTitle(melontitle);
 
             SDL_Delay(75);

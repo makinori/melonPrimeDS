@@ -266,7 +266,7 @@ MelonApplication::MelonApplication(int& argc, char** argv)
 #if !defined(Q_OS_APPLE)
     setWindowIcon(QIcon(":/melon-icon"));
     #if defined(Q_OS_UNIX)
-        setDesktopFileName(QString("io.makidoll.primeHuntersHack"));
+        setDesktopFileName(QString("io.makidoll.melonDSMetroidHunters"));
     #endif
 #endif
 }
