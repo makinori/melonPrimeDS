@@ -1,7 +1,7 @@
-<img src="./res/icon/melon_128x128.png" width="96" height="96"/>
-
-# melonDS: Metroid Hunters
-
+<p align="center"><img src="./res/icon/melon_128x128.png"></p>
+<h1 align="center"><b>melonDS: Metroid Hunters</b></h1>
+<br>
+    
 Modded version of melonDS emulator to play Metroid Hunters.
 
 It's a bit of a hack but the goal is to make the game as fun as possible using a controller.
