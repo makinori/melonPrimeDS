@@ -21,6 +21,7 @@ It's a bit of a hack but the goal is to make the game as fun as possible using a
         Just be mindful that the dedicated jump button (B) is what you should use.
     -   UI left and right will also press on the touch screen.
 
+    <br>
     <img src="./metroid/hunters%20controls.png" height="250"/>
 
 ### Optional instructions
