@@ -471,12 +471,13 @@ void EmuThread::run()
             // process input and hotkeys
             // NDS->SetKeyMask(Input::InputMask); // doing this in metroid code
 
-            if (Input::HotkeyPressed(HK_Lid))
-            {
-                bool lid = !NDS->IsLidClosed();
-                NDS->SetLidClosed(lid);
-                mainWindow->osdAddMessage(0, lid ? "Lid closed" : "Lid opened");
-            }
+            // for some reason this is running when metroid menu is pressed
+            // if (Input::HotkeyPressed(HK_Lid))
+            // {
+            //     bool lid = !NDS->IsLidClosed();
+            //     NDS->SetLidClosed(lid);
+            //     mainWindow->osdAddMessage(0, lid ? "Lid closed" : "Lid opened");
+            // }
 
             // microphone input
             AudioInOut::MicProcess(*NDS);
