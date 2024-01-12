@@ -1,3 +1,5 @@
+<img src="./res/icon/melon_64x64.png"/>
+
 # melonDS: Metroid Hunters
 
 Modded version of melonDS emulator to play Metroid Hunters.
