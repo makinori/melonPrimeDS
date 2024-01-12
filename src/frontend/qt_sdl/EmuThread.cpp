@@ -776,10 +776,15 @@ void EmuThread::run()
 
             // morph ball
             if (Input::HotkeyPressed(HK_MetroidMorphBall)) {
+                enableAim = false; // in case inBall isnt immediately true
                 NDS->ReleaseScreen();
                 frameAdvance(2);
                 NDS->TouchScreen(231, 167);
-                frameAdvance(2);
+                // boost ball doesnt work unless i release screen late enough
+                for (int i = 0; i < 4; i++) {
+                    frameAdvance(2);
+                    NDS->ReleaseScreen();
+                }
             }
 
             // scan visor
@@ -898,6 +903,10 @@ void EmuThread::run()
 
             // morph ball boost
             if (Input::HotkeyDown(HK_MetroidMorphBallBoost)) {
+                // just incase
+                enableAim = false;
+                NDS->ReleaseScreen();
+                // then press input
                 FN_INPUT_PRESS(INPUT_R);
             } else {
                 FN_INPUT_RELEASE(INPUT_R);
