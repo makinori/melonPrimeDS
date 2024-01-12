@@ -40,3 +40,9 @@ It's a bit of a hack but the goal is to make the game as fun as possible using a
 -   My recommended screen layout<br>
     `Config → Screen layout → Horizontal`<br>
     `Config → Screen sizing → Emphasize top`<br>
+
+-   Hide mouse after inactivity<br>
+    `Config → Interface settings → Hide mouse after inactivity`
+
+-   Bind `Toggle fullscreen` to `F` or something else<br>
+    `Config → Input and hotkeys → General hotkeys`
