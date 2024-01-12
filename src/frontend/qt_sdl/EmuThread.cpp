@@ -673,6 +673,10 @@ void EmuThread::run()
     // metroid hunters code
     // adapted from https://forums.desmume.org/viewtopic.php?id=11715
 
+    // #define INTERP_IN(t) (t * t)
+    // #define INTERP_IN_CUBIC(t) (t * t * t)
+    // #define INTERP_IN_QUART(t) (t * t * t * t)
+
     #define INPUT_A 0
     #define INPUT_B 1
     #define INPUT_SELECT 2
@@ -890,6 +894,9 @@ void EmuThread::run()
             // look left and right
             float rightStickX = Input::HotkeyAnalogueValue(HK_MetroidRightStickXAxis);
             if (abs(rightStickX) > aimDeadzone) {
+                // // interpolate to make it feel more natural
+                // if (rightStickX > 0) rightStickX = INTERP_IN(rightStickX);
+                // else if (rightStickX < 0) rightStickX = -INTERP_IN(abs(rightStickX));
                 NDS->ARM9Write32(aimXAddr, rightStickX * 4 * aimSensitivity);
                 enableAim = true;
             }
@@ -897,6 +904,9 @@ void EmuThread::run()
             // look up and down
             float rightStickY = Input::HotkeyAnalogueValue(HK_MetroidRightStickYAxis);
             if (abs(rightStickY) > aimDeadzone) {
+                // // interpolate to make it feel more natural
+                // if (rightStickY > 0) rightStickY = INTERP_IN(rightStickY);
+                // else if (rightStickY < 0) rightStickY = -INTERP_IN(abs(rightStickY));
                 NDS->ARM9Write32(aimYAddr, rightStickY * 6 * aimSensitivity);
                 enableAim = true;
             }
