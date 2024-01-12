@@ -219,25 +219,54 @@ ConfigEntry ConfigFile[] =
     {"HKJoy_SwapScreenEmphasis",  0, &HKJoyMapping[HK_SwapScreenEmphasis],  -1, true},
     {"HKJoy_SolarSensorDecrease", 0, &HKJoyMapping[HK_SolarSensorDecrease], -1, true},
     {"HKJoy_SolarSensorIncrease", 0, &HKJoyMapping[HK_SolarSensorIncrease], -1, true},
+
+    // metroid key
+
+    {"HKKey_MetroidScanVisor",         0, &HKKeyMapping[HK_MetroidScanVisor],         -1, true},
+    {"HKKey_MetroidMorphBall",         0, &HKKeyMapping[HK_MetroidMorphBall],         -1, true},
+    {"HKKey_MetroidUILeft",            0, &HKKeyMapping[HK_MetroidUILeft],            -1, true},
+    {"HKKey_MetroidUIRight",           0, &HKKeyMapping[HK_MetroidUIRight],           -1, true},
     
-    {"HKJoy_MetroidMorphBall",         0, &HKJoyMapping[HK_MetroidMorphBall],         -1, true},
-    {"HKJoy_MetroidScanVisor",         0, &HKJoyMapping[HK_MetroidScanVisor],         -1, true},
-    {"HKJoy_MetroidUIOk",              0, &HKJoyMapping[HK_MetroidUIOk],              -1, true},
-    {"HKJoy_MetroidUILeft",            0, &HKJoyMapping[HK_MetroidUILeft],            -1, true},
-    {"HKJoy_MetroidUIRight",           0, &HKJoyMapping[HK_MetroidUIRight],           -1, true},
-    {"HKJoy_MetroidWeaponCycle",       0, &HKJoyMapping[HK_MetroidWeaponCycle],       -1, true},
-    {"HKJoy_MetroidSubweaponPrevious", 0, &HKJoyMapping[HK_MetroidSubweaponPrevious], -1, true},
-    {"HKJoy_MetroidSubweaponNext",     0, &HKJoyMapping[HK_MetroidSubweaponNext],     -1, true},
+    {"HKKey_MetroidWeaponCycle",       0, &HKKeyMapping[HK_MetroidWeaponCycle],       -1, true},
+    {"HKKey_MetroidMorphBallBoost",    0, &HKKeyMapping[HK_MetroidMorphBallBoost],    -1, true},
+    {"HKKey_MetroidUIOk",              0, &HKKeyMapping[HK_MetroidUIOk],              -1, true},
+    {"HKKey_MetroidJump",              0, &HKKeyMapping[HK_MetroidJump],              -1, true},
+
+    {"HKKey_MetroidSubweaponPrevious", 0, &HKKeyMapping[HK_MetroidSubweaponPrevious], -1, true},
+    {"HKKey_MetroidSubweaponNext",     0, &HKKeyMapping[HK_MetroidSubweaponNext],     -1, true},
+    {"HKKey_MetroidScanShoot",         0, &HKKeyMapping[HK_MetroidScanShoot],         -1, true},
+    {"HKKey_MetroidShootScan",         0, &HKKeyMapping[HK_MetroidShootScan],         -1, true},
+    
+    {"HKKey_MetroidVirtualStylus",     0, &HKKeyMapping[HK_MetroidVirtualStylus],     -1, true},
+    {"HKKey_MetroidMenu",              0, &HKKeyMapping[HK_MetroidMenu],              -1, true},
+
+    // metroid joy
+
     {"HKJoy_MetroidLeftStickXAxis",    0, &HKJoyMapping[HK_MetroidLeftStickXAxis],    -1, true},
     {"HKJoy_MetroidLeftStickYAxis",    0, &HKJoyMapping[HK_MetroidLeftStickYAxis],    -1, true},
     {"HKJoy_MetroidRightStickXAxis",   0, &HKJoyMapping[HK_MetroidRightStickXAxis],   -1, true},
     {"HKJoy_MetroidRightStickYAxis",   0, &HKJoyMapping[HK_MetroidRightStickYAxis],   -1, true},
-    {"HKJoy_MetroidShoot",             0, &HKJoyMapping[HK_MetroidShoot],             -1, true},
+
+    {"HKJoy_MetroidScanVisor",         0, &HKJoyMapping[HK_MetroidScanVisor],         -1, true},
+    {"HKJoy_MetroidMorphBall",         0, &HKJoyMapping[HK_MetroidMorphBall],         -1, true},
+    {"HKJoy_MetroidUILeft",            0, &HKJoyMapping[HK_MetroidUILeft],            -1, true},
+    {"HKJoy_MetroidUIRight",           0, &HKJoyMapping[HK_MetroidUIRight],           -1, true},
+    
+    {"HKJoy_MetroidWeaponCycle",       0, &HKJoyMapping[HK_MetroidWeaponCycle],       -1, true},
     {"HKJoy_MetroidMorphBallBoost",    0, &HKJoyMapping[HK_MetroidMorphBallBoost],    -1, true},
-    {"HKJoy_MetroidVirtualStylus",     0, &HKJoyMapping[HK_MetroidVirtualStylus],     -1, true},
+    {"HKJoy_MetroidUIOk",              0, &HKJoyMapping[HK_MetroidUIOk],              -1, true},
     {"HKJoy_MetroidJump",              0, &HKJoyMapping[HK_MetroidJump],              -1, true},
+
+    {"HKJoy_MetroidSubweaponPrevious", 0, &HKJoyMapping[HK_MetroidSubweaponPrevious], -1, true},
+    {"HKJoy_MetroidSubweaponNext",     0, &HKJoyMapping[HK_MetroidSubweaponNext],     -1, true},
+    {"HKJoy_MetroidScanShoot",         0, &HKJoyMapping[HK_MetroidScanShoot],         -1, true},
+    {"HKJoy_MetroidShootScan",         0, &HKJoyMapping[HK_MetroidShootScan],         -1, true},
+    
+    {"HKJoy_MetroidVirtualStylus",     0, &HKJoyMapping[HK_MetroidVirtualStylus],     -1, true},
     {"HKJoy_MetroidMenu",              0, &HKJoyMapping[HK_MetroidMenu],              -1, true},
     
+    // not metroid
+
     {"HKJoy_FrameStep",           0, &HKJoyMapping[HK_FrameStep],           -1, true},
     {"HKJoy_PowerButton",         0, &HKJoyMapping[HK_PowerButton],         -1, true},
     {"HKJoy_VolumeUp",            0, &HKJoyMapping[HK_VolumeUp],            -1, true},

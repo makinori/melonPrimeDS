@@ -40,22 +40,27 @@ enum
     HK_VolumeUp,
     HK_VolumeDown,
     
-    HK_MetroidMorphBall,
-    HK_MetroidScanVisor,
-    HK_MetroidUIOk,
-    HK_MetroidUILeft,
-    HK_MetroidUIRight,
-    HK_MetroidWeaponCycle,
-    HK_MetroidSubweaponPrevious,
-    HK_MetroidSubweaponNext,
     HK_MetroidLeftStickXAxis,
     HK_MetroidLeftStickYAxis,
     HK_MetroidRightStickXAxis,
     HK_MetroidRightStickYAxis,
-    HK_MetroidShoot,
+
+    HK_MetroidScanVisor,
+    HK_MetroidMorphBall,
+    HK_MetroidUILeft,
+    HK_MetroidUIRight,
+
+    HK_MetroidWeaponCycle,
     HK_MetroidMorphBallBoost,
-    HK_MetroidVirtualStylus,
+    HK_MetroidUIOk,
     HK_MetroidJump,
+
+    HK_MetroidSubweaponPrevious,
+    HK_MetroidSubweaponNext,
+    HK_MetroidScanShoot,
+    HK_MetroidShootScan,
+
+    HK_MetroidVirtualStylus,
     HK_MetroidMenu,
     
     HK_MAX

@@ -359,7 +359,7 @@ void EmuThread::run()
 
     char melontitle[100];
 
-    auto frameAdvance {
+    auto frameAdvanceOnce {
     [&]()
     {
         Input::Process();
@@ -662,6 +662,13 @@ void EmuThread::run()
     }
     };
 
+    auto frameAdvance {
+    [&](int n)
+    {
+        for (int i = 0; i < n; i++) frameAdvanceOnce();
+    }
+    };
+
     // metroid hunters code
     // adapted from https://forums.desmume.org/viewtopic.php?id=11715
 
@@ -685,38 +692,69 @@ void EmuThread::run()
 
     const float aimSensitivity = 1;
     const float vCurSensitivity = 0.75;
+
+    const melonDS::u8 cooldownMultiplier = 1;
     
     melonDS::u8 cooldown = 0;
     melonDS::s8 weapon = 0;
     melonDS::s8 subweapon = 0;
-    const bool toggleStylus = false; // unused
-    bool toggleAim = false;
+
+    bool enableAim = true;
+
     float vCurX = 128;
     float vCurY = 96;
-    
-    while (EmuRunning != emuStatus_Exit) {
-        // frameAdvance();
 
+#define METROID_US_1_1 1
+#ifdef METROID_US_1_1
+    const melonDS::u32 aimXAddr = 0x020DEDA6;
+    const melonDS::u32 aimYAddr = 0x020DEDAE;
+    const melonDS::u32 ballAddr = 0x020DB098;
+    const melonDS::u32 visorAddr = 0x020D9A7D; // my best guess
+#else
+    const melonDS::u32 aimXAddr = 0x020DE526;
+    const melonDS::u32 aimYAddr = 0x020DE52E;
+    const melonDS::u32 ballAddr = 0x020DA818;
+#endif
+
+// #define ENABLE_MEMORY_DUMP 1
+
+    int memoryDump = 0;
+
+    while (EmuRunning != emuStatus_Exit) {
         bool drawVCur = false;
 
+#ifdef ENABLE_MEMORY_DUMP
+        if (Input::HotkeyPressed(HK_MetroidVirtualStylus)) {
+            printf("MainRAMMask 0x%.8" PRIXPTR "\n", (uintptr_t)NDS->MainRAMMask);
+            QFile file("memory" + QString::number(memoryDump++) + ".bin");
+            if (file.open(QIODevice::ReadWrite)) {
+                file.write(QByteArray((char*)NDS->MainRAM, NDS->MainRAMMaxSize));
+            }
+        }
+     
+        if (false) {
+#else
         if (Input::HotkeyDown(HK_MetroidVirtualStylus)) {
+#endif
+
             // this exists to just delay the pressing of the screen when you 
             // release the virtual stylus key
-            toggleAim = true;
+            enableAim = false;
 
             drawVCur = true;
 
-            if (Input::HotkeyDown(HK_MetroidSubweaponNext)) {
+            if (
+                Input::HotkeyDown(HK_MetroidScanShoot) || 
+                Input::HotkeyDown(HK_MetroidShootScan) || 
+                Input::HotkeyDown(HK_MetroidSubweaponPrevious) || 
+                Input::HotkeyDown(HK_MetroidSubweaponNext) ||
+                Input::HotkeyDown(HK_MetroidUIOk) ||
+                Input::HotkeyDown(HK_MetroidJump)
+            ) {
                 NDS->TouchScreen(vCurX, vCurY);
             } else {
                 NDS->ReleaseScreen();
             }
-
-            // unused
-            // if (Input::HotkeyDown(HK_MetroidSubweaponPrevious) && cooldown == 0) {
-            //     toggleStylus = !toggleStylus;
-            //     cooldown = 20;
-            // }
 
             float rightStickX = Input::HotkeyAnalogueValue(HK_MetroidRightStickXAxis);
             if (abs(rightStickX) > aimDeadzone) {
@@ -736,88 +774,85 @@ void EmuThread::run()
             drawVCur = false;
 
             // morph ball
-            if (Input::HotkeyDown(HK_MetroidMorphBall)) {
+            if (Input::HotkeyPressed(HK_MetroidMorphBall)) {
                 NDS->ReleaseScreen();
-                frameAdvance();
-                frameAdvance();
+                frameAdvance(2);
                 NDS->TouchScreen(231, 167);
-                frameAdvance();
-                frameAdvance();
+                frameAdvance(2);
             }
 
             // scan visor
-            if (Input::HotkeyDown(HK_MetroidScanVisor)) {
-                if (cooldown == 0) {
-                    NDS->ReleaseScreen();
-                    frameAdvance();
-                    frameAdvance();
-                }
-                cooldown = 10;
+            if (Input::HotkeyPressed(HK_MetroidScanVisor)) {
+                NDS->ReleaseScreen();
+                frameAdvance(2);
+
+                bool inVisor = NDS->ARM9Read8(visorAddr) == 0x1;
+                // mainWindow->osdAddMessage(0, "in visor %d", inVisor);
+
                 NDS->TouchScreen(128, 173);
+                frameAdvance(inVisor ? 2 : 30);
+                
+                NDS->ReleaseScreen();
+                frameAdvance(2);
             }
 
             // ok (in scans and messages)
-            if (Input::HotkeyDown(HK_MetroidUIOk)) {
+            if (Input::HotkeyPressed(HK_MetroidUIOk)) {
                 NDS->ReleaseScreen();
-                frameAdvance();
-                frameAdvance();
+                frameAdvance(2);
                 NDS->TouchScreen(128, 142);
-                frameAdvance();
-                frameAdvance();
+                frameAdvance(2);
             }
 
             // left arrow (in scans and messages)
-            if (Input::HotkeyDown(HK_MetroidUILeft)) {
+            if (Input::HotkeyPressed(HK_MetroidUILeft)) {
                 NDS->ReleaseScreen();
-                frameAdvance();
-                frameAdvance();
+                frameAdvance(2);
                 NDS->TouchScreen(71, 141);
-                frameAdvance();
-                frameAdvance();
+                frameAdvance(2);
             }
 
             // right arrow (in scans and messages)
-            if (Input::HotkeyDown(HK_MetroidUIRight)) {
+            if (Input::HotkeyPressed(HK_MetroidUIRight)) {
                 NDS->ReleaseScreen();
-                frameAdvance();
-                frameAdvance();
+                frameAdvance(2);
                 NDS->TouchScreen(185, 141);
-                frameAdvance();
-                frameAdvance();
+                frameAdvance(2);
             }
 
+            // TODO: needs to be checked
             // switch weapon (beam -> missile -> subweapon -> beam)
-            if (Input::HotkeyDown(HK_MetroidWeaponCycle) && cooldown == 0) {
-                cooldown = 20;
+            if (Input::HotkeyPressed(HK_MetroidWeaponCycle)) {
+                // cooldown = 20 * cooldownMultiplier;
                 weapon = (weapon + 1) % 3;
                 NDS->ReleaseScreen();
-                frameAdvance();
-                frameAdvance();
+                frameAdvance(2);
                 NDS->TouchScreen(85 + 40 * weapon, 32);
-                frameAdvance();
-                NDS->TouchScreen(85 + 40 * weapon, 32);
+                frameAdvance(2);
+                NDS->ReleaseScreen();
+                frameAdvance(2);
             }
 
             // switch subweapon
-            auto subweaponPrevious = Input::HotkeyDown(HK_MetroidSubweaponPrevious);
-            auto subweaponNext = Input::HotkeyDown(HK_MetroidSubweaponNext);
+            auto subweaponPrevious = Input::HotkeyPressed(HK_MetroidSubweaponPrevious);
+            auto subweaponNext = Input::HotkeyPressed(HK_MetroidSubweaponNext);
             if ((subweaponPrevious || subweaponNext) && cooldown == 0) {
-                cooldown = 20;
                 weapon = 2;
+
                 if (subweaponPrevious) subweapon = (subweapon - 1) % 6;
                 if (subweaponNext) subweapon = (subweapon + 1) % 6;
+
                 melonDS::u16 subX = 93 + 25 * subweapon;
                 melonDS::u16 subY = 48 + 25 * subweapon;
+
                 NDS->ReleaseScreen();
-                frameAdvance();
-                frameAdvance();
+                frameAdvance(2);
                 NDS->TouchScreen(232, 34);
-                frameAdvance();
-                NDS->TouchScreen(232, 34);
-                frameAdvance();
+                frameAdvance(2);
                 NDS->TouchScreen(subX, subY);
-                frameAdvance();
-                NDS->TouchScreen(subX, subY);
+                frameAdvance(2);
+                NDS->ReleaseScreen();
+                frameAdvance(2);
             }
 
             // move left and right 
@@ -848,16 +883,16 @@ void EmuThread::run()
 
             // look left and right
             float rightStickX = Input::HotkeyAnalogueValue(HK_MetroidRightStickXAxis);
-            if (abs(rightStickX) > aimDeadzone && toggleStylus == false) {
-                NDS->ARM9Write32(0x020DE526, rightStickX * 4 * aimSensitivity);
-                toggleAim = false;
+            if (abs(rightStickX) > aimDeadzone) {
+                NDS->ARM9Write32(aimXAddr, rightStickX * 4 * aimSensitivity);
+                enableAim = true;
             }
 
             // look up and down
             float rightStickY = Input::HotkeyAnalogueValue(HK_MetroidRightStickYAxis);
-            if (abs(rightStickY) > aimDeadzone && toggleStylus == false) {
-                NDS->ARM9Write32(0x020DE52E, rightStickY * 6 * aimSensitivity);
-                toggleAim = false;
+            if (abs(rightStickY) > aimDeadzone) {
+                NDS->ARM9Write32(aimYAddr, rightStickY * 6 * aimSensitivity);
+                enableAim = true;
             }
 
             // morph ball boost
@@ -868,7 +903,7 @@ void EmuThread::run()
             }
 
             // shoot
-            if (Input::HotkeyDown(HK_MetroidShoot)) {
+            if (Input::HotkeyDown(HK_MetroidShootScan) || Input::HotkeyDown(HK_MetroidScanShoot)) {
                 FN_INPUT_PRESS(INPUT_L);
             } else {
                 FN_INPUT_RELEASE(INPUT_L);
@@ -890,14 +925,11 @@ void EmuThread::run()
         
         }
 
-        if (cooldown > 0) {
-            cooldown--;
-        } else {
-            // is this a good way of detecting morph ball status?
-            bool ball = NDS->ARM9Read8(0x020DA818) == 0x02;
-            if (ball == false && toggleStylus == false && toggleAim == false) {
-                NDS->TouchScreen(128, 96); // required for aiming
-            }
+        // is this a good way of detecting morph ball status?
+        bool inBall = NDS->ARM9Read8(ballAddr) == 0x02;
+        if (!inBall && enableAim) {
+            // mainWindow->osdAddMessage(0,"touching screen for aim");
+            NDS->TouchScreen(128, 96); // required for aiming
         }
         
         NDS->SetKeyMask(Input::InputMask);
@@ -948,7 +980,7 @@ void EmuThread::run()
             }
         }
 
-        frameAdvance();
+        frameAdvanceOnce();
     }
 
     file = Platform::OpenLocalFile("rtc.bin", Platform::FileMode::Write);

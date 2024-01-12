@@ -32,22 +32,27 @@ static constexpr std::initializer_list<int> hk_addons =
     HK_SolarSensorIncrease,
     HK_SolarSensorDecrease,
 
-    HK_MetroidMorphBall,
-    HK_MetroidScanVisor,
-    HK_MetroidUIOk,
-    HK_MetroidUILeft,
-    HK_MetroidUIRight,
-    HK_MetroidWeaponCycle,
-    HK_MetroidSubweaponPrevious,
-    HK_MetroidSubweaponNext,
     HK_MetroidLeftStickXAxis,
     HK_MetroidLeftStickYAxis,
     HK_MetroidRightStickXAxis,
     HK_MetroidRightStickYAxis,
-    HK_MetroidShoot,
+
+    HK_MetroidScanVisor,
+    HK_MetroidMorphBall,
+    HK_MetroidUILeft,
+    HK_MetroidUIRight,
+
+    HK_MetroidWeaponCycle,
     HK_MetroidMorphBallBoost,
-    HK_MetroidVirtualStylus,
+    HK_MetroidUIOk,
     HK_MetroidJump,
+
+    HK_MetroidSubweaponPrevious,
+    HK_MetroidSubweaponNext,
+    HK_MetroidScanShoot,
+    HK_MetroidShootScan,
+    
+    HK_MetroidVirtualStylus,
     HK_MetroidMenu,
 };
 
@@ -56,23 +61,28 @@ static constexpr std::initializer_list<const char*> hk_addons_labels =
     "[Boktai] Sunlight + ",
     "[Boktai] Sunlight - ",
     
-    "[Metroid] Morph Ball",
-    "[Metroid] Scan Visor",
-    "[Metroid] UI Ok",
-    "[Metroid] UI Left",
-    "[Metroid] UI Right",
-    "[Metroid] Weapon Cycle",
-    "[Metroid] Subweapon Previous",
-    "[Metroid] Subweapon Next",
-    "[Metroid] Left Stick X Axis",
-    "[Metroid] Left Stick Y Axis",
-    "[Metroid] Right Stick X Axis",
-    "[Metroid] Right Stick Y Axis",
-    "[Metroid] Shoot",
-    "[Metroid] Morph Ball Boost",
-    "[Metroid] Virtual Stylus (Hold)",
-    "[Metroid] Jump",
-    "[Metroid] Menu",
+    "[Metroid] (L) Move X Axis",
+    "[Metroid] (L) Move Y Axis",
+    "[Metroid] (R) Aim X Axis",
+    "[Metroid] (R) Aim Y Axis",
+
+    "[Metroid] (↑) Scan Visor",
+    "[Metroid] (↓) Morph Ball",
+    "[Metroid] (←) UI Left",
+    "[Metroid] (→) UI Right",
+
+    "[Metroid] (X) Weapon Cycle",
+    "[Metroid] (Y) Morph Ball Boost",
+    "[Metroid] (A) UI Ok",
+    "[Metroid] (B) Jump",
+    
+    "[Metroid] (LB) Subweapon Previous",
+    "[Metroid] (RB) Subweapon Next",
+    "[Metroid] (LT) Scan/Shoot",
+    "[Metroid] (RT) Shoot/Scan",
+
+    "[Metroid] (Select) Virtual Stylus",
+    "[Metroid] (Start) Menu",
 };
 
 static_assert(hk_addons.size() == hk_addons_labels.size());
