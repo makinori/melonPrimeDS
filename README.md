@@ -6,13 +6,15 @@ It's a bit of a hack but the goal is to make the game as fun as possible using a
 
 ### Main instructions
 
--   Make sure to disable all bindings in<br>
+-   Make sure to set all bindings to `None` in<br>
     `Config → Input and hotkeys → DS keypad`<br>
     _(click binding and press backspace)_
 
--   Set Metroid Hunters related bindings for **Joystick mappings** in<br>
+-   Set Metroid Hunters related `Joystick mappings` in<br>
     `Config → Input and hotkeys → Add-ons`<br>
     Recommended Nintendo layout controls have been added in parentheses.
+
+    Notes:
 
     -   Left and Right trigger are the same button.
     -   UI OK (A) will press "OK" on the touch screen, which will jump and also break aiming.<br>
