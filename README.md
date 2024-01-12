@@ -1,4 +1,5 @@
-<img src="./res/icon/melon_64x64.png"/>
+<img src="./res/icon/melon_128x128.png" width="96" height="96"/>
+<br><br>
 
 # melonDS: Metroid Hunters
 
