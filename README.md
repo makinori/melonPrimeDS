@@ -20,6 +20,7 @@ It's a bit of a hack but the goal is to make the game as fun as possible using a
     -   UI OK (A) will press "OK" on the touch screen, which will jump and also break aiming.<br>
         Just be mindful that the dedicated jump button (B) is what you should use.
     -   UI left and right will also press on the touch screen.
+    -   Right aim stick causes the screen to be pressed.
 
     <br>
     <img src="./metroid/hunters%20controls.png" height="250"/>
