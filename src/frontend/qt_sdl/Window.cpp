@@ -808,6 +808,11 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
     //if (event->key() == Qt::Key_F11) NDS::debug(0);
 
     Input::KeyPress(event);
+
+    // for metroid cursor lock 
+    if (event->key() == Qt::Key_Escape) {
+        mainWindow->panel->unfocus();
+    }
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent* event)
@@ -816,7 +821,6 @@ void MainWindow::keyReleaseEvent(QKeyEvent* event)
 
     Input::KeyRelease(event);
 }
-
 
 void MainWindow::dragEnterEvent(QDragEnterEvent* event)
 {
@@ -1847,7 +1851,7 @@ void MainWindow::onOpenInterfaceSettings()
 
 void MainWindow::onUpdateMouseTimer()
 {
-    panel->mouseTimer->setInterval(Config::MouseHideSeconds*1000);
+    // panel->mouseTimer->setInterval(Config::MouseHideSeconds*1000);
 }
 
 void MainWindow::onInterfaceSettingsFinished(int res)

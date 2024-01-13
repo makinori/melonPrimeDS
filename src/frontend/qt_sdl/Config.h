@@ -23,6 +23,7 @@
 #include <string>
 
 enum
+Hotkey
 {
     HK_Lid = 0,
     HK_Mic,
@@ -40,25 +41,33 @@ enum
     HK_VolumeUp,
     HK_VolumeDown,
     
-    HK_MetroidLeftStickXAxis,
-    HK_MetroidLeftStickYAxis,
-    HK_MetroidRightStickXAxis,
-    HK_MetroidRightStickYAxis,
+    HK_MetroidMoveForward,
+    HK_MetroidMoveBack,
+    HK_MetroidMoveLeft,
+    HK_MetroidMoveRight,
 
-    HK_MetroidScanVisor,
-    HK_MetroidMorphBall,
-    HK_MetroidUILeft,
-    HK_MetroidUIRight,
-
-    HK_MetroidWeaponCycle,
-    HK_MetroidMorphBallBoost,
-    HK_MetroidUIOk,
     HK_MetroidJump,
 
-    HK_MetroidSubweaponPrevious,
-    HK_MetroidSubweaponNext,
-    HK_MetroidScanShoot,
+    HK_MetroidMorphBall,
+    HK_MetroidMorphBallBoost,
+
+    HK_MetroidScanVisor,
+
+    HK_MetroidUILeft,
+    HK_MetroidUIRight,
+    HK_MetroidUIOk,
+
     HK_MetroidShootScan,
+    HK_MetroidScanShoot,
+    
+    HK_MetroidWeaponBeam,
+    HK_MetroidWeaponMissile,
+    HK_MetroidWeapon1,
+    HK_MetroidWeapon2,
+    HK_MetroidWeapon3,
+    HK_MetroidWeapon4,
+    HK_MetroidWeapon5,
+    HK_MetroidWeapon6,
 
     HK_MetroidVirtualStylus,
     HK_MetroidMenu,

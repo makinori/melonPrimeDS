@@ -32,25 +32,33 @@ static constexpr std::initializer_list<int> hk_addons =
     HK_SolarSensorIncrease,
     HK_SolarSensorDecrease,
 
-    HK_MetroidLeftStickXAxis,
-    HK_MetroidLeftStickYAxis,
-    HK_MetroidRightStickXAxis,
-    HK_MetroidRightStickYAxis,
+    HK_MetroidMoveForward,
+    HK_MetroidMoveBack,
+    HK_MetroidMoveLeft,
+    HK_MetroidMoveRight,
 
-    HK_MetroidScanVisor,
-    HK_MetroidMorphBall,
-    HK_MetroidUILeft,
-    HK_MetroidUIRight,
-
-    HK_MetroidWeaponCycle,
-    HK_MetroidMorphBallBoost,
-    HK_MetroidUIOk,
     HK_MetroidJump,
 
-    HK_MetroidSubweaponPrevious,
-    HK_MetroidSubweaponNext,
-    HK_MetroidScanShoot,
+    HK_MetroidMorphBall,
+    HK_MetroidMorphBallBoost,
+
+    HK_MetroidScanVisor,
+    
+    HK_MetroidUILeft,
+    HK_MetroidUIRight,
+    HK_MetroidUIOk,
+
     HK_MetroidShootScan,
+    HK_MetroidScanShoot,
+
+    HK_MetroidWeaponBeam,
+    HK_MetroidWeaponMissile,
+    HK_MetroidWeapon1,
+    HK_MetroidWeapon2,
+    HK_MetroidWeapon3,
+    HK_MetroidWeapon4,
+    HK_MetroidWeapon5,
+    HK_MetroidWeapon6,
     
     HK_MetroidVirtualStylus,
     HK_MetroidMenu,
@@ -60,29 +68,37 @@ static constexpr std::initializer_list<const char*> hk_addons_labels =
 {
     "[Boktai] Sunlight + ",
     "[Boktai] Sunlight - ",
-    
-    "[Metroid] (L) Move X Axis",
-    "[Metroid] (L) Move Y Axis",
-    "[Metroid] (R) Aim X Axis",
-    "[Metroid] (R) Aim Y Axis",
 
-    "[Metroid] (↑) Scan Visor",
-    "[Metroid] (↓) Morph Ball",
-    "[Metroid] (←) UI Left",
-    "[Metroid] (→) UI Right",
+    "[Metroid] (W) Move Forward",
+    "[Metroid] (S) Move Back",
+    "[Metroid] (A) Move Left",
+    "[Metroid] (D) Move Right",
 
-    "[Metroid] (X) Weapon Cycle",
-    "[Metroid] (Y) Morph Ball Boost",
-    "[Metroid] (A) UI Ok",
-    "[Metroid] (B) Jump",
-    
-    "[Metroid] (LB) Subweapon Previous",
-    "[Metroid] (RB) Subweapon Next",
-    "[Metroid] (LT) Scan/Shoot",
-    "[Metroid] (RT) Shoot/Scan",
+    "[Metroid] (Space) Jump",
 
-    "[Metroid] (Select) Virtual Stylus",
-    "[Metroid] (Start) Menu",
+    "[Metroid] (L. Ctrl) Morph Ball",
+    "[Metroid] (L. Shift) Morph Ball Boost and Zoom Out",
+
+    "[Metroid] (C) Scan Visor",
+
+    "[Metroid] (Q) UI Left",
+    "[Metroid] (E) UI Right",
+    "[Metroid] (F) UI Ok",
+
+    "[Metroid] (Mouse Left) Shoot/Scan and Zoom In)",
+    "[Metroid] (Mouse Right) Scan/Shoot and Zoom In)",
+
+    "[Metroid] (Mouse 5) Weapon Beam",
+    "[Metroid] (Mouse 4) Weapon Missile",
+    "[Metroid] (1) Weapon 1",
+    "[Metroid] (2) Weapon 2",
+    "[Metroid] (3) Weapon 3",
+    "[Metroid] (4) Weapon 4",
+    "[Metroid] (5) Weapon 5",
+    "[Metroid] (6) Weapon 6",
+
+    "[Metroid] (Tab) Virtual Stylus",
+    "[Metroid] (Z) Menu/Map",
 };
 
 static_assert(hk_addons.size() == hk_addons_labels.size());

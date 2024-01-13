@@ -57,13 +57,16 @@ public:
     explicit ScreenPanel(QWidget* parent);
     virtual ~ScreenPanel();
 
-    QTimer* setupMouseTimer();
-    void updateMouseTimer();
-    QTimer* mouseTimer;
+    // QTimer* setupMouseTimer();
+    // void updateMouseTimer();
+    // QTimer* mouseTimer;
     QSize screenGetMinSize(int factor);
 
     void osdSetEnabled(bool enabled);
     void osdAddMessage(unsigned int color, const char* msg);
+
+    bool getFocused() { return isFocused; }
+    void unfocus();
 
 private slots:
     void onScreenLayoutChanged();
@@ -104,7 +107,9 @@ protected:
 
     bool touching = false;
 
-    void showCursor();
+    // void showCursor();
+
+    bool isFocused = false;
 
     int osdFindBreakPoint(const char* text, int i);
     void osdLayoutText(const char* text, int* width, int* height, int* breaks);

@@ -48,6 +48,7 @@
 #include "GPU3D_OpenGL.h"
 #include "Platform.h"
 #include "Config.h"
+#include "Input.h"
 
 #include "main_shaders.h"
 #include "OSD_shaders.h"
@@ -72,8 +73,8 @@ ScreenPanel::ScreenPanel(QWidget* parent) : QWidget(parent)
 {
     setMouseTracking(true);
     setAttribute(Qt::WA_AcceptTouchEvents);
-    QTimer* mouseTimer = setupMouseTimer();
-    connect(mouseTimer, &QTimer::timeout, [=] { if (Config::MouseHide) setCursor(Qt::BlankCursor);});
+    // QTimer* mouseTimer = setupMouseTimer();
+    // connect(mouseTimer, &QTimer::timeout, [=] { if (Config::MouseHide) setCursor(Qt::BlankCursor);});
 
     osdEnabled = false;
     osdID = 1;
@@ -81,8 +82,8 @@ ScreenPanel::ScreenPanel(QWidget* parent) : QWidget(parent)
 
 ScreenPanel::~ScreenPanel()
 {
-    mouseTimer->stop();
-    delete mouseTimer;
+    // mouseTimer->stop();
+    // delete mouseTimer;
 }
 
 void ScreenPanel::setupScreenLayout()
@@ -182,6 +183,12 @@ void ScreenPanel::resizeEvent(QResizeEvent* event)
 void ScreenPanel::mousePressEvent(QMouseEvent* event)
 {
     event->accept();
+
+    // so we dont press buttons before fully focusing
+    if (isFocused) {
+        Input::MousePress(event);
+    }
+
     if (event->button() != Qt::LeftButton) return;
 
     int x = event->pos().x();
@@ -193,11 +200,17 @@ void ScreenPanel::mousePressEvent(QMouseEvent* event)
         assert(emuThread->NDS != nullptr);
         emuThread->NDS->TouchScreen(x, y);
     }
+
+    isFocused = true;
+    setCursor(Qt::BlankCursor);
 }
 
 void ScreenPanel::mouseReleaseEvent(QMouseEvent* event)
 {
     event->accept();
+
+    Input::MouseRelease(event);
+
     if (event->button() != Qt::LeftButton) return;
 
     if (touching)
@@ -212,7 +225,7 @@ void ScreenPanel::mouseMoveEvent(QMouseEvent* event)
 {
     event->accept();
 
-    showCursor();
+    // showCursor();
 
     if (!(event->buttons() & Qt::LeftButton)) return;
     if (!touching) return;
@@ -308,21 +321,27 @@ bool ScreenPanel::event(QEvent* event)
     return QWidget::event(event);
 }
 
-void ScreenPanel::showCursor()
+void ScreenPanel::unfocus()
 {
-    mainWindow->panel->setCursor(Qt::ArrowCursor);
-    mouseTimer->start();
+    isFocused = false;
+    setCursor(Qt::ArrowCursor);
 }
 
-QTimer* ScreenPanel::setupMouseTimer()
-{
-    mouseTimer = new QTimer();
-    mouseTimer->setSingleShot(true);
-    mouseTimer->setInterval(Config::MouseHideSeconds*1000);
-    mouseTimer->start();
+// void ScreenPanel::showCursor()
+// {
+//     mainWindow->panel->setCursor(Qt::ArrowCursor);
+//     mouseTimer->start();
+// }
 
-    return mouseTimer;
-}
+// QTimer* ScreenPanel::setupMouseTimer()
+// {
+//     mouseTimer = new QTimer();
+//     mouseTimer->setSingleShot(true);
+//     mouseTimer->setInterval(Config::MouseHideSeconds*1000);
+//     mouseTimer->start();
+
+//     return mouseTimer;
+// }
 
 int ScreenPanel::osdFindBreakPoint(const char* text, int i)
 {

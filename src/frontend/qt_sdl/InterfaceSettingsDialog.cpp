@@ -30,9 +30,9 @@ InterfaceSettingsDialog::InterfaceSettingsDialog(QWidget* parent) : QDialog(pare
     ui->setupUi(this);
     setAttribute(Qt::WA_DeleteOnClose);
 
-    ui->cbMouseHide->setChecked(Config::MouseHide != 0);
-    ui->spinMouseHideSeconds->setEnabled(Config::MouseHide != 0);
-    ui->spinMouseHideSeconds->setValue(Config::MouseHideSeconds);
+    // ui->cbMouseHide->setChecked(Config::MouseHide != 0);
+    // ui->spinMouseHideSeconds->setEnabled(Config::MouseHide != 0);
+    // ui->spinMouseHideSeconds->setValue(Config::MouseHideSeconds);
     ui->cbPauseLostFocus->setChecked(Config::PauseLostFocus != 0);
 }
 
@@ -41,24 +41,24 @@ InterfaceSettingsDialog::~InterfaceSettingsDialog()
     delete ui;
 }
 
-void InterfaceSettingsDialog::on_cbMouseHide_clicked()
-{
-    if (ui->spinMouseHideSeconds->isEnabled())
-    {
-        ui->spinMouseHideSeconds->setEnabled(false);
-    }
-    else
-    {
-        ui->spinMouseHideSeconds->setEnabled(true);
-    }
-}
+// void InterfaceSettingsDialog::on_cbMouseHide_clicked()
+// {
+//     if (ui->spinMouseHideSeconds->isEnabled())
+//     {
+//         ui->spinMouseHideSeconds->setEnabled(false);
+//     }
+//     else
+//     {
+//         ui->spinMouseHideSeconds->setEnabled(true);
+//     }
+// }
 
 void InterfaceSettingsDialog::done(int r)
 {
     if (r == QDialog::Accepted)
     {
-        Config::MouseHide = ui->cbMouseHide->isChecked() ? 1:0;
-        Config::MouseHideSeconds = ui->spinMouseHideSeconds->value();
+        // Config::MouseHide = ui->cbMouseHide->isChecked() ? 1:0;
+        // Config::MouseHideSeconds = ui->spinMouseHideSeconds->value();
         Config::PauseLostFocus = ui->cbPauseLostFocus->isChecked() ? 1:0;
 
         Config::Save();

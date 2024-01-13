@@ -19,6 +19,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#include <QBitArray>
 #include <SDL2/SDL.h>
 
 #include "types.h"
@@ -30,7 +31,7 @@ using namespace melonDS;
 extern int JoystickID;
 extern SDL_Joystick* Joystick;
 
-extern u32 InputMask;
+extern QBitArray InputMask;
 
 void Init();
 
@@ -41,6 +42,9 @@ void CloseJoystick();
 void KeyPress(QKeyEvent* event);
 void KeyRelease(QKeyEvent* event);
 
+void MousePress(QMouseEvent* event);
+void MouseRelease(QMouseEvent* event);
+
 void Process();
 
 bool HotkeyDown(int id);
@@ -48,6 +52,8 @@ bool HotkeyPressed(int id);
 bool HotkeyReleased(int id);
 
 float HotkeyAnalogueValue(int val);
+
+melonDS::u32 GetInputMask();
 
 bool IsRightModKey(QKeyEvent* event);
 

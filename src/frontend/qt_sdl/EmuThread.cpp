@@ -689,25 +689,18 @@ void EmuThread::run()
     #define INPUT_L 9
     #define INPUT_X 10
     #define INPUT_Y 11
-    #define FN_INPUT_PRESS(i) Input::InputMask &= ~(1<<i);
-    #define FN_INPUT_RELEASE(i) Input::InputMask |= (1<<i);
+    #define FN_INPUT_PRESS(i) Input::InputMask.setBit(i, false);
+    #define FN_INPUT_RELEASE(i) Input::InputMask.setBit(i, true);
 
-    const float aimDeadzone = 0.05;
-    const float moveDeadzone = 0.5;
-
-    const float aimSensitivity = 1;
-    const float vCurSensitivity = 0.75;
-
-    const melonDS::u8 cooldownMultiplier = 1;
-    
-    melonDS::u8 cooldown = 0;
-    melonDS::s8 weapon = 0;
-    melonDS::s8 subweapon = 0;
+    const float mouseAimSensitivity = 0.04;
+    const float mouseVCurSensitivity = 0.04;
 
     bool enableAim = true;
 
     float vCurX = 128;
     float vCurY = 96;
+
+    bool focusedLastFrame = false;
 
 #define METROID_US_1_1 1
 #ifdef METROID_US_1_1
@@ -722,10 +715,26 @@ void EmuThread::run()
 #endif
 
 // #define ENABLE_MEMORY_DUMP 1
-
+#ifdef ENABLE_MEMORY_DUMP
     int memoryDump = 0;
+#endif
 
     while (EmuRunning != emuStatus_Exit) {
+        QPoint mouseRel;
+
+        auto isFocused = mainWindow->panel->getFocused();
+
+        if (isFocused) {
+            auto windowCenterX = mainWindow->pos().x() + mainWindow->size().width() / 2;
+            auto windowCenterY = mainWindow->pos().y() + mainWindow->size().height() / 2;
+            if (focusedLastFrame) {
+                mouseRel = QCursor::pos() - QPoint(windowCenterX, windowCenterY);
+            }
+            QCursor::setPos(windowCenterX, windowCenterY);
+        }
+
+        focusedLastFrame = isFocused;
+
         bool drawVCur = false;
 
 #ifdef ENABLE_MEMORY_DUMP
@@ -739,7 +748,7 @@ void EmuThread::run()
      
         if (false) {
 #else
-        if (Input::HotkeyDown(HK_MetroidVirtualStylus)) {
+        if (isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus)) {
 #endif
 
             // this exists to just delay the pressing of the screen when you 
@@ -748,34 +757,26 @@ void EmuThread::run()
 
             drawVCur = true;
 
-            if (
-                Input::HotkeyDown(HK_MetroidScanShoot) || 
-                Input::HotkeyDown(HK_MetroidShootScan) || 
-                Input::HotkeyDown(HK_MetroidSubweaponPrevious) || 
-                Input::HotkeyDown(HK_MetroidSubweaponNext) ||
-                Input::HotkeyDown(HK_MetroidUIOk) ||
-                Input::HotkeyDown(HK_MetroidJump)
-            ) {
+            if (Input::HotkeyDown(HK_MetroidShootScan) || Input::HotkeyDown(HK_MetroidScanShoot)) {
                 NDS->TouchScreen(vCurX, vCurY);
             } else {
                 NDS->ReleaseScreen();
             }
 
-            float rightStickX = Input::HotkeyAnalogueValue(HK_MetroidRightStickXAxis);
-            if (abs(rightStickX) > aimDeadzone) {
-                vCurX += (rightStickX * 4 * vCurSensitivity);
+            // mouse
+            if (abs(mouseRel.x()) > 0) {
+                vCurX += (mouseRel.x() * 4 * mouseVCurSensitivity);
             }
 
-            float rightStickY = Input::HotkeyAnalogueValue(HK_MetroidRightStickYAxis);
-            if (abs(rightStickY) > aimDeadzone) {
-                vCurY += (rightStickY * 6 * vCurSensitivity);
+            if (abs(mouseRel.y()) > 0) {
+                vCurY += (mouseRel.y() * 6 * mouseVCurSensitivity);
             }
 
             if (vCurX < 0) vCurX = 0;
             if (vCurX > 255) vCurX = 255;
             if (vCurY < 0) vCurY = 0;
             if (vCurY > 191) vCurY = 191;
-        } else {
+        } else if (isFocused) {
             drawVCur = false;
 
             // morph ball
@@ -800,6 +801,7 @@ void EmuThread::run()
                 // mainWindow->osdAddMessage(0, "in visor %d", inVisor);
 
                 NDS->TouchScreen(128, 173);
+                // TODO: if moving whilst starting scan visor, player loses move control
                 frameAdvance(inVisor ? 2 : 30);
                 
                 NDS->ReleaseScreen();
@@ -830,84 +832,90 @@ void EmuThread::run()
                 frameAdvance(2);
             }
 
-            // TODO: needs to be checked
-            // switch weapon (beam -> missile -> subweapon -> beam)
-            if (Input::HotkeyPressed(HK_MetroidWeaponCycle)) {
-                // cooldown = 20 * cooldownMultiplier;
-                weapon = (weapon + 1) % 3;
+            // switch to beam
+            if (Input::HotkeyPressed(HK_MetroidWeaponBeam)) {
                 NDS->ReleaseScreen();
                 frameAdvance(2);
-                NDS->TouchScreen(85 + 40 * weapon, 32);
+                NDS->TouchScreen(85 + 40 * 0, 32);
+                frameAdvance(2);
+                NDS->ReleaseScreen();
+                frameAdvance(2);
+            }
+
+            // switch to missiles
+            if (Input::HotkeyPressed(HK_MetroidWeaponMissile)) {
+                NDS->ReleaseScreen();
+                frameAdvance(2);
+                NDS->TouchScreen(85 + 40 * 1, 32);
                 frameAdvance(2);
                 NDS->ReleaseScreen();
                 frameAdvance(2);
             }
 
             // switch subweapon
-            auto subweaponPrevious = Input::HotkeyPressed(HK_MetroidSubweaponPrevious);
-            auto subweaponNext = Input::HotkeyPressed(HK_MetroidSubweaponNext);
-            if ((subweaponPrevious || subweaponNext) && cooldown == 0) {
-                weapon = 2;
 
-                if (subweaponPrevious) subweapon = (subweapon - 1) % 6;
-                if (subweaponNext) subweapon = (subweapon + 1) % 6;
+            Hotkey weaponHotkeys[] = {
+                HK_MetroidWeapon1,
+                HK_MetroidWeapon2,
+                HK_MetroidWeapon3,
+                HK_MetroidWeapon4,
+                HK_MetroidWeapon5,
+                HK_MetroidWeapon6,
+            };
 
-                melonDS::u16 subX = 93 + 25 * subweapon;
-                melonDS::u16 subY = 48 + 25 * subweapon;
+            for (int i = 0; i < 6; i++) {
+                if (Input::HotkeyPressed(weaponHotkeys[i])) {
+                    melonDS::u16 subX = 93 + 25 * i;
+                    melonDS::u16 subY = 48 + 25 * i;
 
-                NDS->ReleaseScreen();
-                frameAdvance(2);
-                NDS->TouchScreen(232, 34);
-                frameAdvance(2);
-                NDS->TouchScreen(subX, subY);
-                frameAdvance(2);
-                NDS->ReleaseScreen();
-                frameAdvance(2);
+                    NDS->ReleaseScreen();
+                    frameAdvance(2);
+                    NDS->TouchScreen(232, 34);
+                    frameAdvance(2);
+                    NDS->TouchScreen(subX, subY);
+                    frameAdvance(2);
+                    NDS->ReleaseScreen();
+                    frameAdvance(2);
+                }
             }
 
-            // move left and right 
-            float leftStickX = Input::HotkeyAnalogueValue(HK_MetroidLeftStickXAxis);
-            if (leftStickX < -moveDeadzone) {
-                FN_INPUT_PRESS(INPUT_LEFT);
-            } else {
-                FN_INPUT_RELEASE(INPUT_LEFT);
-            }
-            if (leftStickX > moveDeadzone) {
-                FN_INPUT_PRESS(INPUT_RIGHT);
-            } else {
-                FN_INPUT_RELEASE(INPUT_RIGHT);
-            }
+            // move
 
-            // move forward and back 
-            float leftStickY = Input::HotkeyAnalogueValue(HK_MetroidLeftStickYAxis);
-            if (leftStickY < -moveDeadzone) {
+            if (Input::HotkeyDown(HK_MetroidMoveForward)) {
                 FN_INPUT_PRESS(INPUT_UP);
             } else {
                 FN_INPUT_RELEASE(INPUT_UP);
             }
-            if (leftStickY > moveDeadzone) {
+
+            if (Input::HotkeyDown(HK_MetroidMoveBack)) {
                 FN_INPUT_PRESS(INPUT_DOWN);
             } else {
                 FN_INPUT_RELEASE(INPUT_DOWN);
             }
 
-            // look left and right
-            float rightStickX = Input::HotkeyAnalogueValue(HK_MetroidRightStickXAxis);
-            if (abs(rightStickX) > aimDeadzone) {
-                // // interpolate to make it feel more natural
-                // if (rightStickX > 0) rightStickX = INTERP_IN(rightStickX);
-                // else if (rightStickX < 0) rightStickX = -INTERP_IN(abs(rightStickX));
-                NDS->ARM9Write32(aimXAddr, rightStickX * 4 * aimSensitivity);
+            if (Input::HotkeyDown(HK_MetroidMoveLeft)) {
+                FN_INPUT_PRESS(INPUT_LEFT);
+            } else {
+                FN_INPUT_RELEASE(INPUT_LEFT);
+            }
+
+            if (Input::HotkeyDown(HK_MetroidMoveRight)) {
+                FN_INPUT_PRESS(INPUT_RIGHT);
+            } else {
+                FN_INPUT_RELEASE(INPUT_RIGHT);
+            }
+
+            // cursor looking
+            // TODO: aiming in circles translates to ovals in game
+            // TODO: figure out a way to undo aim acceleration
+            
+            if (abs(mouseRel.x()) > 0) {
+                NDS->ARM9Write32(aimXAddr, mouseRel.x() * 4 * mouseAimSensitivity);
                 enableAim = true;
             }
 
-            // look up and down
-            float rightStickY = Input::HotkeyAnalogueValue(HK_MetroidRightStickYAxis);
-            if (abs(rightStickY) > aimDeadzone) {
-                // // interpolate to make it feel more natural
-                // if (rightStickY > 0) rightStickY = INTERP_IN(rightStickY);
-                // else if (rightStickY < 0) rightStickY = -INTERP_IN(abs(rightStickY));
-                NDS->ARM9Write32(aimYAddr, rightStickY * 6 * aimSensitivity);
+            if (abs(mouseRel.y()) > 0) {
+                NDS->ARM9Write32(aimYAddr, mouseRel.y() * 6 * mouseAimSensitivity);
                 enableAim = true;
             }
 
@@ -952,9 +960,9 @@ void EmuThread::run()
             NDS->TouchScreen(128, 96); // required for aiming
         }
         
-        NDS->SetKeyMask(Input::InputMask);
+        NDS->SetKeyMask(Input::GetInputMask());
 
-        if (drawVCur) {
+        if (drawVCur) { 
             const int cursorSize = 11;
             const int cursorOffset = 5;
             const bool cursor[] = {

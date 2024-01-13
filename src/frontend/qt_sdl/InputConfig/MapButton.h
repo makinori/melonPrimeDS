@@ -55,31 +55,40 @@ protected:
         Log(melonDS::Platform::Debug, "KEY PRESSED = %08X %08X | %08X %08X %08X\n", event->key(), (int)event->modifiers(), event->nativeVirtualKey(), event->nativeModifiers(), event->nativeScanCode());
 
         int key = event->key();
-        int mod = event->modifiers();
-        bool ismod = (key == Qt::Key_Control ||
-                      key == Qt::Key_Alt ||
-                      key == Qt::Key_AltGr ||
-                      key == Qt::Key_Shift ||
-                      key == Qt::Key_Meta);
+        // int mod = event->modifiers();
+        // bool ismod = (key == Qt::Key_Control ||
+        //               key == Qt::Key_Alt ||
+        //               key == Qt::Key_AltGr ||
+        //               key == Qt::Key_Shift ||
+        //               key == Qt::Key_Meta);
 
-        if (!mod)
-        {
-            if (key == Qt::Key_Escape) { click(); return; }
-            if (key == Qt::Key_Backspace) { *mapping = -1; click(); return; }
-        }
+        // if (!mod)
+        // {
+        if (key == Qt::Key_Escape) { click(); return; }
+        if (key == Qt::Key_Backspace) { *mapping = -1; click(); return; }
+        // }
 
-        if (isHotkey)
-        {
-            if (ismod)
-                return;
-        }
+        // if (isHotkey)
+        // {
+        //     if (ismod)
+        //         return;
+        // }
 
-        if (!ismod)
-            key |= mod;
-        else if (Input::IsRightModKey(event))
-            key |= (1<<31);
+        // if (!ismod)
+        //     key |= mod;
+        // else if (Input::IsRightModKey(event))
+        //     key |= (1<<31);
 
         *mapping = key;
+        click();
+    }
+
+    void mousePressEvent(QMouseEvent* event) override {
+        if (!isChecked()) return QPushButton::mousePressEvent(event);
+
+        Log(melonDS::Platform::Debug, "MOUSE BUTTON PRESSED = %08X\n", event->button());
+
+        *mapping = event->button() | 0xF0000000;
         click();
     }
 
@@ -115,6 +124,13 @@ private:
         int key = *mapping;
 
         if (key == -1) return "None";
+
+        auto mouseButton = key & ~0xF0000000;
+        if (mouseButton == Qt::LeftButton) return "Mouse Left";
+        if (mouseButton == Qt::MiddleButton) return "Mouse Middle";
+        if (mouseButton == Qt::RightButton) return "Mouse Right";
+        if (mouseButton == Qt::ExtraButton1) return "Mouse 4";
+        if (mouseButton == Qt::ExtraButton2) return "Mouse 5";
 
         QString isright = (key & (1<<31)) ? "Right " : "Left ";
         key &= ~(1<<31);

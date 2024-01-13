@@ -20,13 +20,13 @@
    <string>Interface settings - melonDS</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0" alignment="Qt::AlignLeft">
+   <!-- <item row="1" column="0" alignment="Qt::AlignLeft">
     <widget class="QLabel" name="label">
      <property name="text">
       <string>Hide after</string>
      </property>
     </widget>
-   </item>
+   </item> -->
    <item row="2" column="0" colspan="4">
     <widget class="QCheckBox" name="cbPauseLostFocus">
      <property name="text">
@@ -34,16 +34,16 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0" colspan="5">
+   <!-- <item row="0" column="0" colspan="5">
     <widget class="QCheckBox" name="cbMouseHide">
      <property name="text">
       <string>Hide mouse after inactivity</string>
      </property>
     </widget>
-   </item>
-   <item row="1" column="1" alignment="Qt::AlignLeft">
+   </item> -->
+   <!-- <item row="1" column="1" alignment="Qt::AlignLeft">
     <widget class="QSpinBox" name="spinMouseHideSeconds"/>
-   </item>
+   </item> -->
    <item row="3" column="0" colspan="5">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
@@ -54,13 +54,13 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="2">
+   <!-- <item row="1" column="2">
     <widget class="QLabel" name="label_2">
      <property name="text">
       <string>seconds of inactivity</string>
      </property>
     </widget>
-   </item>
+   </item> -->
   </layout>
  </widget>
  <tabstops>

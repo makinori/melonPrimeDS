@@ -30,24 +30,24 @@ namespace Input
 int JoystickID;
 SDL_Joystick* Joystick = nullptr;
 
-u32 KeyInputMask, JoyInputMask;
-u32 KeyHotkeyMask, JoyHotkeyMask;
-u32 HotkeyMask, LastHotkeyMask;
-u32 HotkeyPress, HotkeyRelease;
+QBitArray KeyInputMask, JoyInputMask;
+QBitArray KeyHotkeyMask, JoyHotkeyMask;
+QBitArray HotkeyMask, LastHotkeyMask;
+QBitArray HotkeyPress, HotkeyRelease;
 
-u32 InputMask;
+QBitArray InputMask;
 
 
 void Init()
 {
-    KeyInputMask = 0xFFF;
-    JoyInputMask = 0xFFF;
-    InputMask = 0xFFF;
+    KeyInputMask.fill(true, 12);
+    JoyInputMask.fill(true, 12);
+    InputMask.fill(true, 12);
 
-    KeyHotkeyMask = 0;
-    JoyHotkeyMask = 0;
-    HotkeyMask = 0;
-    LastHotkeyMask = 0;
+    KeyHotkeyMask.fill(false, HK_MAX);
+    JoyHotkeyMask.fill(false, HK_MAX);
+    HotkeyMask.fill(false, HK_MAX);
+    LastHotkeyMask.fill(false, HK_MAX);
 }
 
 
@@ -78,56 +78,100 @@ void CloseJoystick()
 }
 
 
-int GetEventKeyVal(QKeyEvent* event)
+// int GetEventKeyVal(QKeyEvent* event)
+// {
+//     int key = event->key();
+//     int mod = event->modifiers();
+//     bool ismod = (key == Qt::Key_Control ||
+//                   key == Qt::Key_Alt ||
+//                   key == Qt::Key_AltGr ||
+//                   key == Qt::Key_Shift ||
+//                   key == Qt::Key_Meta);
+
+//     if (!ismod)
+//         key |= mod;
+//     else if (Input::IsRightModKey(event))
+//         key |= (1<<31);
+
+//     return key;
+// }
+
+void printBits(size_t const size, void const * const ptr)
 {
-    int key = event->key();
-    int mod = event->modifiers();
-    bool ismod = (key == Qt::Key_Control ||
-                  key == Qt::Key_Alt ||
-                  key == Qt::Key_AltGr ||
-                  key == Qt::Key_Shift ||
-                  key == Qt::Key_Meta);
-
-    if (!ismod)
-        key |= mod;
-    else if (Input::IsRightModKey(event))
-        key |= (1<<31);
-
-    return key;
+    unsigned char *b = (unsigned char*) ptr;
+    unsigned char byte;
+    int i, j;
+    
+    for (i = size-1; i >= 0; i--) {
+        for (j = 7; j >= 0; j--) {
+            byte = (b[i] >> j) & 1;
+            printf("%u", byte);
+        }
+    }
+    puts("");
 }
 
 void KeyPress(QKeyEvent* event)
 {
-    int keyHK = GetEventKeyVal(event);
-    int keyKP = keyHK;
-    if (event->modifiers() != Qt::KeypadModifier)
-        keyKP &= ~event->modifiers();
+    // int keyHK = GetEventKeyVal(event);
+    // int keyKP = keyHK;
+    // if (event->modifiers() != Qt::KeypadModifier)
+    //     keyKP &= ~event->modifiers();
+
+    int key = event->key();
 
     for (int i = 0; i < 12; i++)
-        if (keyKP == Config::KeyMapping[i])
-            KeyInputMask &= ~(1<<i);
+        if (key == Config::KeyMapping[i])
+            KeyInputMask.setBit(i, false);
 
     for (int i = 0; i < HK_MAX; i++)
-        if (keyHK == Config::HKKeyMapping[i])
-            KeyHotkeyMask |= (1<<i);
+        if (key == Config::HKKeyMapping[i])
+            KeyHotkeyMask.setBit(i, true);
 }
 
 void KeyRelease(QKeyEvent* event)
 {
-    int keyHK = GetEventKeyVal(event);
-    int keyKP = keyHK;
-    if (event->modifiers() != Qt::KeypadModifier)
-        keyKP &= ~event->modifiers();
+    // int keyHK = GetEventKeyVal(event);
+    // int keyKP = keyHK;
+    // if (event->modifiers() != Qt::KeypadModifier)
+    //     keyKP &= ~event->modifiers();
+
+    int key = event->key();
 
     for (int i = 0; i < 12; i++)
-        if (keyKP == Config::KeyMapping[i])
-            KeyInputMask |= (1<<i);
+        if (key == Config::KeyMapping[i])
+            KeyInputMask.setBit(i, true);
 
     for (int i = 0; i < HK_MAX; i++)
-        if (keyHK == Config::HKKeyMapping[i])
-            KeyHotkeyMask &= ~(1<<i);
+        if (key == Config::HKKeyMapping[i])
+            KeyHotkeyMask.setBit(i, false);
 }
 
+void MousePress(QMouseEvent* event)
+{
+    int key = event->button() | 0xF0000000;
+
+    for (int i = 0; i < 12; i++)
+        if (key == Config::KeyMapping[i])
+            KeyInputMask.setBit(i, false);
+
+    for (int i = 0; i < HK_MAX; i++)
+        if (key == Config::HKKeyMapping[i])
+            KeyHotkeyMask.setBit(i, true);
+}
+
+void MouseRelease(QMouseEvent* event)
+{
+    int key = event->button() | 0xF0000000;
+
+    for (int i = 0; i < 12; i++)
+        if (key == Config::KeyMapping[i])
+            KeyInputMask.setBit(i, true);
+
+    for (int i = 0; i < HK_MAX; i++)
+        if (key == Config::HKKeyMapping[i])
+            KeyHotkeyMask.setBit(i, false);
+}
 
 bool JoystickButtonDown(int val)
 {
@@ -203,17 +247,17 @@ void Process()
         OpenJoystick();
     }
 
-    JoyInputMask = 0xFFF;
+    JoyInputMask.fill(true, 12);
     for (int i = 0; i < 12; i++)
         if (JoystickButtonDown(Config::JoyMapping[i]))
-            JoyInputMask &= ~(1<<i);
+            JoyInputMask.setBit(i, false);
 
     InputMask = KeyInputMask & JoyInputMask;
 
-    JoyHotkeyMask = 0;
+    JoyHotkeyMask.fill(false, HK_MAX);
     for (int i = 0; i < HK_MAX; i++)
         if (JoystickButtonDown(Config::HKJoyMapping[i]))
-            JoyHotkeyMask |= (1<<i);
+            JoyHotkeyMask.setBit(i, true);
 
     HotkeyMask = KeyHotkeyMask | JoyHotkeyMask;
     HotkeyPress = HotkeyMask & ~LastHotkeyMask;
@@ -221,11 +265,9 @@ void Process()
     LastHotkeyMask = HotkeyMask;
 }
 
-
-bool HotkeyDown(int id)     { return HotkeyMask    & (1<<id); }
-bool HotkeyPressed(int id)  { return HotkeyPress   & (1<<id); }
-bool HotkeyReleased(int id) { return HotkeyRelease & (1<<id); }
-
+bool HotkeyDown(int id)     { return HotkeyMask.at(id); }
+bool HotkeyPressed(int id)  { return HotkeyPress.at(id); }
+bool HotkeyReleased(int id) { return HotkeyRelease.at(id); }
 
 float HotkeyAnalogueValue(int id) {
     int val = Config::HKJoyMapping[id];
@@ -242,6 +284,14 @@ float HotkeyAnalogueValue(int id) {
     return 0;
 }
 
+melonDS::u32 GetInputMask() {
+    melonDS::u32 mask = 0;
+    for (int i = 0; i < 12; i++) {
+        if (InputMask.at(i)) mask |= (1<<i);
+    }
+
+    return mask;
+}
 
 // distinguish between left and right modifier keys (Ctrl, Alt, Shift)
 // Qt provides no real cross-platform way to do this, so here we go

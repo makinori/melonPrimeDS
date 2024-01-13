@@ -4,7 +4,7 @@
     
 Modded version of melonDS emulator to play Metroid Hunters.
 
-It's a bit of a hack but the goal is to make the game as fun as possible using a controller.
+It's a bit of a hack but the goal is to make the game as fun as possible using mouse and keyboard.
 
 ### Main instructions
 
@@ -12,7 +12,9 @@ It's a bit of a hack but the goal is to make the game as fun as possible using a
     `Config → Input and hotkeys → DS keypad`<br>
     _(click binding and press backspace)_
 
--   Set Metroid Hunters related `Joystick mappings` in<br>
+-   **Will be updated soon! Hunters needs precise input like a mouse because there's no lock-on, so using a controller is a bad idea**
+
+    <strike>Set Metroid Hunters related `Joystick mappings` in<br>
     `Config → Input and hotkeys → Add-ons`<br>
     Recommended Nintendo layout controls have been added in parentheses.
 
@@ -26,7 +28,9 @@ It's a bit of a hack but the goal is to make the game as fun as possible using a
     -   When in map view, press (Y) to zoom out and (LT/RT) to zoom in
 
     <br>
-    <img src="./metroid/hunters%20controls.png" height="250"/>
+    <img src="./metroid/hunters%20controls.png" height="100"/>
+
+</strike>
 
 ### Optional instructions
 
@@ -45,8 +49,5 @@ It's a bit of a hack but the goal is to make the game as fun as possible using a
     `Config → Screen layout → Horizontal`<br>
     `Config → Screen sizing → Emphasize top`<br>
 
--   Hide mouse after inactivity<br>
-    `Config → Interface settings → Hide mouse after inactivity`
-
--   Bind `Toggle fullscreen` to `F` or something else<br>
+-   Bind `Toggle fullscreen` to `F11` or something else<br>
     `Config → Input and hotkeys → General hotkeys`

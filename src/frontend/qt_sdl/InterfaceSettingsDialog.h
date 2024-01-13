@@ -56,7 +56,7 @@ signals:
 private slots:
     void done(int r);
 
-    void on_cbMouseHide_clicked();
+    // void on_cbMouseHide_clicked();
 
 private:
     Ui::InterfaceSettingsDialog* ui;
