@@ -61,6 +61,8 @@
 
 //#include "CLI.h"
 
+#include "RawInputThread.h"
+
 // TODO: uniform variable spelling
 using namespace melonDS;
 
@@ -692,15 +694,21 @@ void EmuThread::run()
     #define FN_INPUT_PRESS(i) Input::InputMask.setBit(i, false);
     #define FN_INPUT_RELEASE(i) Input::InputMask.setBit(i, true);
 
-    const float mouseAimSensitivity = 0.04;
-    const float mouseVCurSensitivity = 0.04;
+    const float aimSensitivity = 0.12;
+    const float virtualCursorSensitivity = 0.12;
 
     bool enableAim = true;
 
-    float vCurX = 128;
-    float vCurY = 96;
+    float virtualCursorX = 128;
+    float virtualCursorY = 96;
 
     bool focusedLastFrame = false;
+
+    const float dsAspectRatio = 256.0 / 192.0; 
+    const float aimAspectRatio = 6.0 / 4.0; // i have no idea
+
+    RawInputThread* rawInputThread = new RawInputThread(parent());
+    rawInputThread->start();
 
 #define METROID_US_1_1 1
 #ifdef METROID_US_1_1
@@ -720,15 +728,17 @@ void EmuThread::run()
 #endif
 
     while (EmuRunning != emuStatus_Exit) {
-        QPoint mouseRel;
+        auto mouseRel = rawInputThread->fetchMouseDelta();
 
         auto isFocused = mainWindow->panel->getFocused();
 
         if (isFocused) {
             auto windowCenterX = mainWindow->pos().x() + mainWindow->size().width() / 2;
             auto windowCenterY = mainWindow->pos().y() + mainWindow->size().height() / 2;
-            if (focusedLastFrame) {
-                mouseRel = QCursor::pos() - QPoint(windowCenterX, windowCenterY);
+            if (!focusedLastFrame) {
+                // fetch will flush but discard values
+                mouseRel.first = 0;
+                mouseRel.second = 0;
             }
             QCursor::setPos(windowCenterX, windowCenterY);
         }
@@ -758,24 +768,24 @@ void EmuThread::run()
             drawVCur = true;
 
             if (Input::HotkeyDown(HK_MetroidShootScan) || Input::HotkeyDown(HK_MetroidScanShoot)) {
-                NDS->TouchScreen(vCurX, vCurY);
+                NDS->TouchScreen(virtualCursorX, virtualCursorY);
             } else {
                 NDS->ReleaseScreen();
             }
 
             // mouse
-            if (abs(mouseRel.x()) > 0) {
-                vCurX += (mouseRel.x() * 4 * mouseVCurSensitivity);
+            if (abs(mouseRel.first) > 0) {
+                virtualCursorX += (mouseRel.first * virtualCursorSensitivity);
             }
 
-            if (abs(mouseRel.y()) > 0) {
-                vCurY += (mouseRel.y() * 6 * mouseVCurSensitivity);
+            if (abs(mouseRel.second) > 0) {
+                virtualCursorY += (mouseRel.second * dsAspectRatio * virtualCursorSensitivity);
             }
 
-            if (vCurX < 0) vCurX = 0;
-            if (vCurX > 255) vCurX = 255;
-            if (vCurY < 0) vCurY = 0;
-            if (vCurY > 191) vCurY = 191;
+            if (virtualCursorX < 0) virtualCursorX = 0;
+            if (virtualCursorX > 255) virtualCursorX = 255;
+            if (virtualCursorY < 0) virtualCursorY = 0;
+            if (virtualCursorY > 191) virtualCursorY = 191;
         } else if (isFocused) {
             drawVCur = false;
 
@@ -909,13 +919,13 @@ void EmuThread::run()
             // TODO: aiming in circles translates to ovals in game
             // TODO: figure out a way to undo aim acceleration
             
-            if (abs(mouseRel.x()) > 0) {
-                NDS->ARM9Write32(aimXAddr, mouseRel.x() * 4 * mouseAimSensitivity);
+            if (abs(mouseRel.first) > 0) {
+                NDS->ARM9Write32(aimXAddr, mouseRel.first * aimSensitivity);
                 enableAim = true;
             }
 
-            if (abs(mouseRel.y()) > 0) {
-                NDS->ARM9Write32(aimYAddr, mouseRel.y() * 6 * mouseAimSensitivity);
+            if (abs(mouseRel.second) > 0) {
+                NDS->ARM9Write32(aimYAddr, mouseRel.second * aimAspectRatio * aimSensitivity);
                 enableAim = true;
             }
 
@@ -1000,8 +1010,8 @@ void EmuThread::run()
                     int value = cursor[y * cursorSize + x];
                     if (!value) continue;
                     setPixel(
-                        vCurX + x - cursorOffset,
-                        vCurY + y - cursorOffset,
+                        virtualCursorX + x - cursorOffset,
+                        virtualCursorY + y - cursorOffset,
                         0xFFFFFFFF
                     );
                 }
@@ -1019,6 +1029,8 @@ void EmuThread::run()
         Platform::FileWrite(&state, sizeof(state), 1, file);
         Platform::CloseFile(file);
     }
+
+    rawInputThread->quit();
 
     EmuStatus = emuStatus_Exit;
 
