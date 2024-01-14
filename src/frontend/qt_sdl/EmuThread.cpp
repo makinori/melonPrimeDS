@@ -694,22 +694,6 @@ void EmuThread::run()
     #define FN_INPUT_PRESS(i) Input::InputMask.setBit(i, false);
     #define FN_INPUT_RELEASE(i) Input::InputMask.setBit(i, true);
 
-    const float aimSensitivity = 0.12;
-    const float virtualCursorSensitivity = 0.12;
-
-    bool enableAim = true;
-
-    float virtualCursorX = 128;
-    float virtualCursorY = 96;
-
-    bool focusedLastFrame = false;
-
-    const float dsAspectRatio = 256.0 / 192.0; 
-    const float aimAspectRatio = 6.0 / 4.0; // i have no idea
-
-    RawInputThread* rawInputThread = new RawInputThread(parent());
-    rawInputThread->start();
-
 #define METROID_US_1_1 1
 #ifdef METROID_US_1_1
     const melonDS::u32 aimXAddr = 0x020DEDA6;
@@ -726,6 +710,51 @@ void EmuThread::run()
 #ifdef ENABLE_MEMORY_DUMP
     int memoryDump = 0;
 #endif
+
+    const float aimSensitivity = 0.12;
+    const float virtualCursorSensitivity = 0.12;
+
+    bool enableAim = true;
+
+    float virtualCursorX = 128;
+    float virtualCursorY = 96;
+
+    bool focusedLastFrame = false;
+
+    const float dsAspectRatio = 256.0 / 192.0; 
+    const float aimAspectRatio = 6.0 / 4.0; // i have no idea
+
+    RawInputThread* rawInputThread = new RawInputThread(parent());
+    rawInputThread->start();
+
+    auto processMoveInput
+    {
+    []() {
+        if (Input::HotkeyDown(HK_MetroidMoveForward)) {
+            FN_INPUT_PRESS(INPUT_UP);
+        } else {
+            FN_INPUT_RELEASE(INPUT_UP);
+        }
+
+        if (Input::HotkeyDown(HK_MetroidMoveBack)) {
+            FN_INPUT_PRESS(INPUT_DOWN);
+        } else {
+            FN_INPUT_RELEASE(INPUT_DOWN);
+        }
+
+        if (Input::HotkeyDown(HK_MetroidMoveLeft)) {
+            FN_INPUT_PRESS(INPUT_LEFT);
+        } else {
+            FN_INPUT_RELEASE(INPUT_LEFT);
+        }
+
+        if (Input::HotkeyDown(HK_MetroidMoveRight)) {
+            FN_INPUT_PRESS(INPUT_RIGHT);
+        } else {
+            FN_INPUT_RELEASE(INPUT_RIGHT);
+        }
+    }
+    };
 
     while (EmuRunning != emuStatus_Exit) {
         auto mouseRel = rawInputThread->fetchMouseDelta();
@@ -811,8 +840,18 @@ void EmuThread::run()
                 // mainWindow->osdAddMessage(0, "in visor %d", inVisor);
 
                 NDS->TouchScreen(128, 173);
-                // TODO: if moving whilst starting scan visor, player loses move control
-                frameAdvance(inVisor ? 2 : 30);
+
+                if (inVisor) {
+                    frameAdvance(2);
+                } else {
+                    for (int i = 0; i < 30; i++) {
+                        // still allow movement whilst we're enabling scan visor
+                        processMoveInput();
+                        NDS->SetKeyMask(Input::GetInputMask());
+                        
+                        frameAdvanceOnce();
+                    }
+                }
                 
                 NDS->ReleaseScreen();
                 frameAdvance(2);
@@ -891,29 +930,7 @@ void EmuThread::run()
 
             // move
 
-            if (Input::HotkeyDown(HK_MetroidMoveForward)) {
-                FN_INPUT_PRESS(INPUT_UP);
-            } else {
-                FN_INPUT_RELEASE(INPUT_UP);
-            }
-
-            if (Input::HotkeyDown(HK_MetroidMoveBack)) {
-                FN_INPUT_PRESS(INPUT_DOWN);
-            } else {
-                FN_INPUT_RELEASE(INPUT_DOWN);
-            }
-
-            if (Input::HotkeyDown(HK_MetroidMoveLeft)) {
-                FN_INPUT_PRESS(INPUT_LEFT);
-            } else {
-                FN_INPUT_RELEASE(INPUT_LEFT);
-            }
-
-            if (Input::HotkeyDown(HK_MetroidMoveRight)) {
-                FN_INPUT_PRESS(INPUT_RIGHT);
-            } else {
-                FN_INPUT_RELEASE(INPUT_RIGHT);
-            }
+            processMoveInput();
 
             // cursor looking
             // TODO: aiming in circles translates to ovals in game
