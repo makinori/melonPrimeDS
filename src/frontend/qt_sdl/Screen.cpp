@@ -327,6 +327,11 @@ void ScreenPanel::unfocus()
     setCursor(Qt::ArrowCursor);
 }
 
+void ScreenPanel::focusOutEvent(QFocusEvent* event)
+{
+    unfocus();
+}
+
 // void ScreenPanel::showCursor()
 // {
 //     mainWindow->panel->setCursor(Qt::ArrowCursor);

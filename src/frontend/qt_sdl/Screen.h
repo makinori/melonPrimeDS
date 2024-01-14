@@ -101,6 +101,8 @@ protected:
     void touchEvent(QTouchEvent* event);
     bool event(QEvent* event) override;
 
+    void focusOutEvent(QFocusEvent* event) override;
+
     float screenMatrix[Frontend::MaxScreenTransforms][6];
     int screenKind[Frontend::MaxScreenTransforms];
     int numScreens;
