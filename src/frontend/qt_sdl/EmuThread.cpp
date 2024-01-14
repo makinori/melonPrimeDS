@@ -711,7 +711,7 @@ void EmuThread::run()
     int memoryDump = 0;
 #endif
 
-    const float aimSensitivity = 0.12;
+    const float aimSensitivity = 0.20;
     const float virtualCursorSensitivity = 0.12;
 
     bool enableAim = true;
