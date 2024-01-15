@@ -427,7 +427,6 @@ static void handle_msg(const MSG *msg) {
     case RIM_TYPEMOUSE:
         if (input.data.mouse.usFlags == MOUSE_MOVE_RELATIVE) {
             if (input.data.mouse.lLastX) {
-                printf("got relx")
                 emit_rel(tag, RA_X, input.data.mouse.lLastX);
             }
             if (input.data.mouse.lLastY) {
