@@ -10,7 +10,7 @@ I originally made this for controller but because there's no lock-on, it wasn't 
 
 Please read the instructions carefully.
 
-### Main instructions
+### Instructions
 
 -   Make sure to set all bindings to `None` in<br>
     `Config → Input and hotkeys → DS keypad`<br>
@@ -40,29 +40,21 @@ Please read the instructions carefully.
 <br>
 <img src="./metroid/keyboard.png"/>
 
-### Other recommended settings
+### Default settings changed from melonDS
 
--   Enable JIT to improve performance. The game has a low framerate and this helps<br>
-    `Config → Emu settings → CPU emulation → Enable JIT recompiler`
+-   Fullscreen toggle set to `F11`
+-   Screen layout set to **horizontal**
+-   Screen sizing set to **emphasize top**
+-   Screen filter set to **false**
+-   3D renderer set to **OpenGL**
+-   3D scale factor set to **8x** for 1440p
+-   JIT recompiler set to **enabled** _(helps with performance)_
 
--   Render game at a high resolution<br>
-
-    -   Disable `Config → Screen filtering`<br>
-    -   `Config → Video settings`<br>
-        Set `3D renderer` to `OpenGL`<br>
-        Disable `VSync` for lower latency<br>
-        Set `Internal resolution` to next highest for your monitor
-
--   My recommended screen layout<br>
-    `Config → Screen layout → Horizontal`<br>
-    `Config → Screen sizing → Emphasize top`<br>
-
--   Bind `Toggle fullscreen` to `F11` or something else<br>
-    `Config → Input and hotkeys → General hotkeys`
+VSync was already disabled but it also helps with performance
 
 ### Build
 
-I developed this on Linux and its pretty straightforward
+I modified melonDS and played Hunters on Linux. Building is straightforward
 
 ```bash
 mkdir build

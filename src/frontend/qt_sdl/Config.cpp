@@ -23,6 +23,7 @@
 #include <QtCore/qnamespace.h>
 #include "Platform.h"
 #include "Config.h"
+#include "FrontendUtil.h"
 
 
 namespace Config
@@ -202,7 +203,7 @@ ConfigEntry ConfigFile[] =
     {"HKKey_Reset",               0, &HKKeyMapping[HK_Reset],               -1, true},
     {"HKKey_FastForward",         0, &HKKeyMapping[HK_FastForward],         -1, true},
     {"HKKey_FastForwardToggle",   0, &HKKeyMapping[HK_FastForwardToggle],   -1, true},
-    {"HKKey_FullscreenToggle",    0, &HKKeyMapping[HK_FullscreenToggle],    -1, true},
+    {"HKKey_FullscreenToggle",    0, &HKKeyMapping[HK_FullscreenToggle],    Qt::Key_F11, true},
     {"HKKey_SwapScreens",         0, &HKKeyMapping[HK_SwapScreens],         -1, true},
     {"HKKey_SwapScreenEmphasis",  0, &HKKeyMapping[HK_SwapScreenEmphasis],  -1, true},
     {"HKKey_SolarSensorDecrease", 0, &HKKeyMapping[HK_SolarSensorDecrease], -1, true},
@@ -266,28 +267,28 @@ ConfigEntry ConfigFile[] =
 
     {"JoystickID", 0, &JoystickID, 0, true},
 
-    {"WindowWidth",  0, &WindowWidth,  256, true},
-    {"WindowHeight", 0, &WindowHeight, 384, true},
+    {"WindowWidth",  0, &WindowWidth,  640, true},
+    {"WindowHeight", 0, &WindowHeight, 480, true},
     {"WindowMax",    1, &WindowMaximized, false, true},
 
     {"ScreenRotation", 0, &ScreenRotation, 0, true},
     {"ScreenGap",      0, &ScreenGap,      0, true},
-    {"ScreenLayout",   0, &ScreenLayout,   0, true},
+    {"ScreenLayout",   0, &ScreenLayout,   2, true}, // Frontend::screenLayout_Horizontal is wrong?
     {"ScreenSwap",     1, &ScreenSwap,     false, true},
-    {"ScreenSizing",   0, &ScreenSizing,   0, true},
+    {"ScreenSizing",   0, &ScreenSizing,   Frontend::screenSizing_EmphTop, true},
     {"IntegerScaling", 1, &IntegerScaling, false, true},
     {"ScreenAspectTop",0, &ScreenAspectTop,0, true},
     {"ScreenAspectBot",0, &ScreenAspectBot,0, true},
-    {"ScreenFilter",   1, &ScreenFilter,   true, true},
+    {"ScreenFilter",   1, &ScreenFilter,   false, true},
 
-    {"ScreenUseGL",         1, &ScreenUseGL,         false, false},
+    {"ScreenUseGL",         1, &ScreenUseGL,         true, false},
     {"ScreenVSync",         1, &ScreenVSync,         false, false},
     {"ScreenVSyncInterval", 0, &ScreenVSyncInterval, 1, false},
 
-    {"3DRenderer", 0, &_3DRenderer, 0, false},
+    {"3DRenderer", 0, &_3DRenderer, 1, false},
     {"Threaded3D", 1, &Threaded3D, true, false},
 
-    {"GL_ScaleFactor", 0, &GL_ScaleFactor, 1, false},
+    {"GL_ScaleFactor", 0, &GL_ScaleFactor, 8, false},
     {"GL_BetterPolygons", 1, &GL_BetterPolygons, false, false},
 
     {"LimitFPS", 1, &LimitFPS, true, false},
@@ -298,7 +299,7 @@ ConfigEntry ConfigFile[] =
     {"DirectBoot", 1, &DirectBoot, true, false},
 
 #ifdef JIT_ENABLED
-    {"JIT_Enable", 1, &JIT_Enable, false, false},
+    {"JIT_Enable", 1, &JIT_Enable, true, false},
     {"JIT_MaxBlockSize", 0, &JIT_MaxBlockSize, 32, false},
     {"JIT_BranchOptimisations", 1, &JIT_BranchOptimisations, true, false},
     {"JIT_LiteralOptimisations", 1, &JIT_LiteralOptimisations, true, false},
