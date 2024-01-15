@@ -201,8 +201,10 @@ void ScreenPanel::mousePressEvent(QMouseEvent* event)
         emuThread->NDS->TouchScreen(x, y);
     }
 
-    isFocused = true;
-    setCursor(Qt::BlankCursor);
+    if (emuThread->NDS->IsRunning()) {
+        isFocused = true;
+        setCursor(Qt::BlankCursor);
+    }
 }
 
 void ScreenPanel::mouseReleaseEvent(QMouseEvent* event)
