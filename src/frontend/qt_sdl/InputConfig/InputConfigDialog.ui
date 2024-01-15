@@ -2267,15 +2267,69 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tabAddons">
-      <attribute name="title">
-       <string>Add-ons</string>
-      </attribute>
-     </widget>
      <widget class="QWidget" name="tabHotkeysGeneral">
       <attribute name="title">
        <string>General hotkeys</string>
       </attribute>
+     </widget>
+     <widget class="QWidget" name="tabAddons">
+      <attribute name="title">
+       <string>Add-ons (Metroid Prime Hunters)</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tabMetroidPrimeHunters">
+      <attribute name="title">
+       <string>Other Metroid Prime Hunters</string>
+      </attribute>
+      <layout class="QFormLayout" name="metroidFormLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="metroidAimSensitvityLabel">
+         <property name="text">
+          <string>Aim sensitivity:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QSpinBox" name="metroidAimSensitvitySpinBox">
+         <property name="minimum">
+          <number>0</number>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="value">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="metroidVirtualStylusSensitvityLabel">
+         <property name="text">
+          <string>Virtual stylus sensitivity:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QSpinBox" name="metroidVirtualStylusSensitvitySpinBox">
+         <property name="minimum">
+          <number>0</number>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="value">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QPushButton" name="metroidResetSensitivityValues">
+         <property name="text">
+          <string>Reset sensitivity values</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
    </item>

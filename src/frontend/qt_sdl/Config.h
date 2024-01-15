@@ -234,6 +234,11 @@ extern int GdbPortARM9;
 extern bool GdbARM7BreakOnStartup;
 extern bool GdbARM9BreakOnStartup;
 
+extern int MetroidAimSensitivity;
+extern int MetroidVirtualStylusSensitivity;
+
+const int MetroidAimSensitivityDefault = 20;
+const int MetroidVirtualStylusSensitivityDefault = 12;
 
 void Load();
 void Save();

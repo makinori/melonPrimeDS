@@ -711,13 +711,10 @@ void EmuThread::run()
     int memoryDump = 0;
 #endif
 
-    const float aimSensitivity = 0.20;
-    const float virtualCursorSensitivity = 0.12;
-
     bool enableAim = true;
 
-    float virtualCursorX = 128;
-    float virtualCursorY = 96;
+    float virtualStylusX = 128;
+    float virtualStylusY = 96;
 
     bool focusedLastFrame = false;
 
@@ -797,24 +794,28 @@ void EmuThread::run()
             drawVCur = true;
 
             if (Input::HotkeyDown(HK_MetroidShootScan) || Input::HotkeyDown(HK_MetroidScanShoot)) {
-                NDS->TouchScreen(virtualCursorX, virtualCursorY);
+                NDS->TouchScreen(virtualStylusX, virtualStylusY);
             } else {
                 NDS->ReleaseScreen();
             }
 
             // mouse
             if (abs(mouseRel.first) > 0) {
-                virtualCursorX += (mouseRel.first * virtualCursorSensitivity);
+                virtualStylusX += (
+                    mouseRel.first * Config::MetroidVirtualStylusSensitivity * 0.01
+                );
             }
 
             if (abs(mouseRel.second) > 0) {
-                virtualCursorY += (mouseRel.second * dsAspectRatio * virtualCursorSensitivity);
+                virtualStylusY += (
+                    mouseRel.second * dsAspectRatio * Config::MetroidVirtualStylusSensitivity * 0.01
+                );
             }
 
-            if (virtualCursorX < 0) virtualCursorX = 0;
-            if (virtualCursorX > 255) virtualCursorX = 255;
-            if (virtualCursorY < 0) virtualCursorY = 0;
-            if (virtualCursorY > 191) virtualCursorY = 191;
+            if (virtualStylusX < 0) virtualStylusX = 0;
+            if (virtualStylusX > 255) virtualStylusX = 255;
+            if (virtualStylusY < 0) virtualStylusY = 0;
+            if (virtualStylusY > 191) virtualStylusY = 191;
         } else if (isFocused) {
             drawVCur = false;
 
@@ -933,16 +934,18 @@ void EmuThread::run()
             processMoveInput();
 
             // cursor looking
-            // TODO: aiming in circles translates to ovals in game
-            // TODO: figure out a way to undo aim acceleration
             
             if (abs(mouseRel.first) > 0) {
-                NDS->ARM9Write32(aimXAddr, mouseRel.first * aimSensitivity);
+                NDS->ARM9Write32(
+                    aimXAddr, mouseRel.first * Config::MetroidAimSensitivity * 0.01
+                );
                 enableAim = true;
             }
 
             if (abs(mouseRel.second) > 0) {
-                NDS->ARM9Write32(aimYAddr, mouseRel.second * aimAspectRatio * aimSensitivity);
+                NDS->ARM9Write32(
+                    aimYAddr, mouseRel.second * aimAspectRatio * Config::MetroidAimSensitivity * 0.01
+                );
                 enableAim = true;
             }
 
@@ -1027,8 +1030,8 @@ void EmuThread::run()
                     int value = cursor[y * cursorSize + x];
                     if (!value) continue;
                     setPixel(
-                        virtualCursorX + x - cursorOffset,
-                        virtualCursorY + y - cursorOffset,
+                        virtualStylusX + x - cursorOffset,
+                        virtualStylusY + y - cursorOffset,
                         0xFFFFFFFF
                     );
                 }

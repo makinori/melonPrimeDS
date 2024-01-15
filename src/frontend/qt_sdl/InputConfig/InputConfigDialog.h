@@ -177,6 +177,8 @@ private slots:
     void on_btnJoyMapSwitch_clicked();
     void on_cbxJoystick_currentIndexChanged(int id);
 
+    void on_metroidResetSensitivityValues_clicked();
+
 private:
     void populatePage(QWidget* page,
         const std::initializer_list<const char*>& labels,

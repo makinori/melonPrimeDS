@@ -91,6 +91,9 @@ InputConfigDialog::InputConfigDialog(QWidget* parent) : QDialog(parent), ui(new 
         ui->lblInstanceNum->setText(QString("Configuring mappings for instance %1").arg(inst+1));
     else
         ui->lblInstanceNum->hide();
+
+    ui->metroidAimSensitvitySpinBox->setValue(Config::MetroidAimSensitivity);
+    ui->metroidVirtualStylusSensitvitySpinBox->setValue(Config::MetroidVirtualStylusSensitivity);
 }
 
 InputConfigDialog::~InputConfigDialog()
@@ -197,6 +200,10 @@ void InputConfigDialog::on_InputConfigDialog_accepted()
     }
 
     Config::JoystickID = Input::JoystickID;
+
+    Config::MetroidAimSensitivity = ui->metroidAimSensitvitySpinBox->value();
+    Config::MetroidVirtualStylusSensitivity = ui->metroidVirtualStylusSensitvitySpinBox->value();
+
     Config::Save();
 
     closeDlg();
@@ -227,4 +234,14 @@ void InputConfigDialog::on_cbxJoystick_currentIndexChanged(int id)
 
     Input::JoystickID = id;
     Input::OpenJoystick();
+}
+
+void InputConfigDialog::on_metroidResetSensitivityValues_clicked()
+{
+    Config::MetroidAimSensitivity = Config::MetroidAimSensitivityDefault;
+    Config::MetroidVirtualStylusSensitivity = Config::MetroidVirtualStylusSensitivityDefault;
+    Config::Save();
+
+    ui->metroidAimSensitvitySpinBox->setValue(Config::MetroidAimSensitivity);
+    ui->metroidVirtualStylusSensitvitySpinBox->setValue(Config::MetroidVirtualStylusSensitivity);
 }
