@@ -10,7 +10,7 @@ I originally made this for controller but because there's no lock-on, it wasn't 
 
 Please read the instructions carefully.
 
-### Instructions
+### Main instructions
 
 -   Make sure to set all bindings to `None` in<br>
     `Config → Input and hotkeys → DS keypad`<br>
@@ -33,14 +33,14 @@ Please read the instructions carefully.
     `Config → Input and hotkeys → Other Metroid Prime Hunters`<br>
     <br>
     When in-game, **make sure to set the aim sensitivty to the lowest!**<br>
-    The DS touchscreen isn't very precise, so keep it set to lowest helps<br>
+    The DS touchscreen isn't very precise, so setting it to lowest helps<br>
     <br>
     _Also recommended to set audio settings in-game to headphones_
 
 <br>
 <img src="./metroid/keyboard.png"/>
 
-### Optional recommended instructions
+### Other recommended settings
 
 -   Enable JIT to improve performance. The game has a low framerate and this helps<br>
     `Config → Emu settings → CPU emulation → Enable JIT recompiler`
