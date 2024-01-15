@@ -8,7 +8,7 @@ It's a bit of a hack but the goal is to make the game as fun as possible using m
 
 I originally made this for controller but because there's no lock-on, it wasn't really fun to play.
 
-Please carefully read the instructions.
+Please read the instructions carefully.
 
 ### Instructions
 
@@ -23,14 +23,16 @@ Please carefully read the instructions.
     Notes:
 
     -   Focusing the window will capture your mouse. Use `ESC` to release.
-    -   The stylus gets places in the middle of the DS screen for aiming which can cause accidental presses
+    -   The stylus gets placed in the middle of the DS screen for aiming which can cause accidental presses
     -   Whilst holding the virtual stylus button `Tab`, use your mouse to click around on the touchscreen
     -   UI OK `F` will press "OK" on the touch screen, which will also jump and briefly break aiming
     -   UI left `Q` and right `E` will also press on the touch screen, for scan visor messages
     -   When in map view, press `Shift` to zoom out and `LMB` to zoom in
 
+-   _wip sensitivity slider_
+
 -   When in-game, **make sure to set the aim sensitivty to the lowest!**<br>
-    _Also recommended to set audio to stereo_
+    _Also recommended to set audio settings to headphones_
 
 <img src="./metroid/keyboard.png"/>
 
