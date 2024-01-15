@@ -160,8 +160,8 @@ void Init(int argc, char** argv)
 #else
     QString confdir;
     QDir config(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation));
-    config.mkdir("melonDS-Metroid-Hunters");
-    confdir = config.absolutePath() + "/melonDS-Metroid-Hunters/";
+    config.mkdir("melonDS-Metroid-Prime-Hunters");
+    confdir = config.absolutePath() + "/melonDS-Metroid-Prime-Hunters/";
     EmuDirectory = confdir.toStdString();
 #endif
 
@@ -289,8 +289,8 @@ FileHandle* OpenLocalFile(const std::string& path, FileMode mode)
 #else
         // Check user configuration directory
         QDir config(QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation));
-        config.mkdir("melonDS-Metroid-Hunters");
-        fullpath = config.absolutePath() + "/melonDS-Metroid-Hunters/";
+        config.mkdir("melonDS-Metroid-Prime-Hunters");
+        fullpath = config.absolutePath() + "/melonDS-Metroid-Prime-Hunters/";
         fullpath.append(qpath);
 #endif
     }

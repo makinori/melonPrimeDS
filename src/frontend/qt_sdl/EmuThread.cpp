@@ -619,9 +619,9 @@ void EmuThread::run()
 
                 int inst = Platform::InstanceID();
                 if (inst == 0)
-                    sprintf(melontitle, "[%d/%.0f] melonDS (Metroid Hunters) " MELONDS_VERSION, fps, fpstarget);
+                    sprintf(melontitle, "[%d/%.0f] melonDS (Metroid Prime Hunters) " MELONDS_VERSION, fps, fpstarget);
                 else
-                    sprintf(melontitle, "[%d/%.0f] melonDS (Metroid Hunters) (%d)", fps, fpstarget, inst+1);
+                    sprintf(melontitle, "[%d/%.0f] melonDS (Metroid Prime Hunters) (%d)", fps, fpstarget, inst+1);
                 changeWindowTitle(melontitle);
             }
         }
@@ -638,9 +638,9 @@ void EmuThread::run()
 
             int inst = Platform::InstanceID();
             if (inst == 0)
-                sprintf(melontitle, "melonDS (Metroid Hunters) " MELONDS_VERSION);
+                sprintf(melontitle, "melonDS (Metroid Prime Hunters) " MELONDS_VERSION);
             else
-                sprintf(melontitle, "melonDS (Metroid Hunters) (%d)", inst+1);
+                sprintf(melontitle, "melonDS (Metroid Prime Hunters) (%d)", inst+1);
             changeWindowTitle(melontitle);
 
             SDL_Delay(75);
@@ -672,7 +672,7 @@ void EmuThread::run()
     }
     };
 
-    // metroid hunters code
+    // metroid prime hunters code
     // adapted from https://forums.desmume.org/viewtopic.php?id=11715
 
     // #define INTERP_IN(t) (t * t)

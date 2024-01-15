@@ -1,8 +1,8 @@
 <p align="center"><img src="./res/icon/melon_128x128.png"></p>
-<h1 align="center"><b>melonDS: Metroid Hunters</b></h1>
+<h1 align="center"><b>melonDS: Metroid Prime Hunters</b></h1>
 <br>
     
-Modded version of melonDS emulator to play Metroid Hunters.
+Modded version of melonDS emulator to play Metroid Prime Hunters.
 
 It's a bit of a hack but the goal is to make the game as fun as possible using mouse and keyboard.
 
@@ -16,7 +16,7 @@ I originally made this for controller but because there's no lock-on, it wasn't 
 
 -   Game sensitivity lowest, headphones optionally
 
--   Find Metroid Hunters related `Keyboard mappings` in<br>
+-   Find Metroid Prime Hunters related `Keyboard mappings` in<br>
     `Config → Input and hotkeys → Add-ons`<br>
     Recommended defaults have already been set, but feel free to change if you need to
 
@@ -31,7 +31,7 @@ I originally made this for controller but because there's no lock-on, it wasn't 
     -   When in map view, press `Shift` to zoom out and `LMB` to zoom in
 
     <br>
-    <img src="./metroid/keyboard.png" height="300"/>
+    ![](./metroid/keyboard.png)
 
 -   When in-game, **make sure to set the aim sensitivty to the lowest!**<br>
     _Also recommended to set audio to stereo_
