@@ -17,7 +17,7 @@ Please read the instructions carefully.
     _(click binding and press backspace)_
 
 -   Find Metroid Prime Hunters related `Keyboard mappings` in<br>
-    `Config → Input and hotkeys → Add-ons`<br>
+    `Config → Input and hotkeys → Add-ons (Metroid Prime Hunters)`<br>
     Recommended defaults have already been set, but feel free to change them if you want to
 
     Notes:
@@ -29,11 +29,15 @@ Please read the instructions carefully.
     -   UI left `Q` and right `E` will also press on the touch screen, for scan visor messages
     -   When in map view, press `Shift` to zoom out and `LMB` to zoom in
 
--   _wip sensitivity slider_
+-   Find Metroid Prime Hunters sensitivity settings in<br>
+    `Config → Input and hotkeys → Other Metroid Prime Hunters`<br>
+    <br>
+    When in-game, **make sure to set the aim sensitivty to the lowest!**<br>
+    The DS touchscreen isn't very precise, so keep it set to lowest helps<br>
+    <br>
+    _Also recommended to set audio settings in-game to headphones_
 
--   When in-game, **make sure to set the aim sensitivty to the lowest!**<br>
-    _Also recommended to set audio settings to headphones_
-
+<br>
 <img src="./metroid/keyboard.png"/>
 
 ### Optional recommended instructions
