@@ -15,7 +15,6 @@ I originally made this for controller but because there's no lock-on, it wasn't 
     _(click binding and press backspace)_
 
 -   Game sensitivity lowest, headphones optionally
-
 -   Find Metroid Prime Hunters related `Keyboard mappings` in<br>
     `Config → Input and hotkeys → Add-ons`<br>
     Recommended defaults have already been set, but feel free to change if you need to
@@ -31,7 +30,7 @@ I originally made this for controller but because there's no lock-on, it wasn't 
     -   When in map view, press `Shift` to zoom out and `LMB` to zoom in
 
     <br>
-    ![](./metroid/keyboard.png)
+    <img src="./metroid/keyboard.png"/>
 
 -   When in-game, **make sure to set the aim sensitivty to the lowest!**<br>
     _Also recommended to set audio to stereo_
