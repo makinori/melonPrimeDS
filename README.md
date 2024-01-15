@@ -10,6 +10,8 @@ I originally made this for controller but because there's no lock-on, it wasn't 
 
 Please read the instructions carefully.
 
+[Download latest build for Windows and Linux here!](https://github.com/makidoll/melonDS-Metroid-Prime-Hunters/releases)
+
 ### Instructions
 
 -   Make sure to set all bindings to `None` in<br>
