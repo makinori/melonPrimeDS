@@ -6,33 +6,37 @@ Modded version of melonDS emulator to play Metroid Hunters.
 
 It's a bit of a hack but the goal is to make the game as fun as possible using mouse and keyboard.
 
-### Main instructions
+I originally made this for controller but because there's no lock-on, it wasn't really fun to play.
+
+### Instructions
 
 -   Make sure to set all bindings to `None` in<br>
     `Config → Input and hotkeys → DS keypad`<br>
     _(click binding and press backspace)_
 
--   **Will be updated soon! Hunters needs precise input like a mouse because there's no lock-on, so using a controller is a bad idea**
+-   Game sensitivity lowest, headphones optionally
 
-    <strike>Set Metroid Hunters related `Joystick mappings` in<br>
+-   Find Metroid Hunters related `Keyboard mappings` in<br>
     `Config → Input and hotkeys → Add-ons`<br>
-    Recommended Nintendo layout controls have been added in parentheses.
+    Recommended defaults have already been set, but feel free to change if you need to
 
     Notes:
 
-    -   Left and Right trigger are the same button.
-    -   UI OK (A) will press "OK" on the touch screen, which will also jump and briefly break aiming.<br>
-        Just be mindful that the dedicated jump button (B) is what you should use.
+    -   Pressing the window will capture your mouse. Use `ESC` to uncapture.
+    -   The stylus gets places in the middle of the screen which can cause accidental presses
+    -   Whilst holding virtual stylus button `Tab`, use your mouse to click around on the touchscreen
+    -   Left and right mouse button are the same
+    -   UI OK `F` will press "OK" on the touch screen, which will also jump and briefly break aiming
     -   UI left and right will also press on the touch screen, for scan visor messages
-    -   Cycle weapon (X) will try to select the 3rd weapon which you won't have yet when you start
-    -   When in map view, press (Y) to zoom out and (LT/RT) to zoom in
+    -   When in map view, press `Shift` to zoom out and `LMB` to zoom in
 
     <br>
-    <img src="./metroid/hunters%20controls.png" height="100"/>
+    <img src="./metroid/keyboard.png" height="300"/>
 
-</strike>
+-   When in-game, **make sure to set the aim sensitivty to the lowest!**<br>
+    _Also recommended to set audio to stereo_
 
-### Optional instructions
+### Optional recommended instructions
 
 -   Enable JIT to improve performance<br>
     `Config → Emu settings → CPU emulation → Enable JIT recompiler`
