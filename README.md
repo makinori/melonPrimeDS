@@ -59,3 +59,16 @@ Please read the instructions carefully.
 
 -   Bind `Toggle fullscreen` to `F11` or something else<br>
     `Config → Input and hotkeys → General hotkeys`
+
+### Build
+
+I developed this on Linux and its pretty straightforward
+
+```bash
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release -GNinja
+ninja
+```
+
+Downloadable builds were made using GitHub actions
