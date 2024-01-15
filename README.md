@@ -8,36 +8,35 @@ It's a bit of a hack but the goal is to make the game as fun as possible using m
 
 I originally made this for controller but because there's no lock-on, it wasn't really fun to play.
 
+Please carefully read the instructions.
+
 ### Instructions
 
 -   Make sure to set all bindings to `None` in<br>
     `Config → Input and hotkeys → DS keypad`<br>
     _(click binding and press backspace)_
 
--   Game sensitivity lowest, headphones optionally
 -   Find Metroid Prime Hunters related `Keyboard mappings` in<br>
     `Config → Input and hotkeys → Add-ons`<br>
-    Recommended defaults have already been set, but feel free to change if you need to
+    Recommended defaults have already been set, but feel free to change them if you want to
 
     Notes:
 
-    -   Pressing the window will capture your mouse. Use `ESC` to uncapture.
-    -   The stylus gets places in the middle of the screen which can cause accidental presses
-    -   Whilst holding virtual stylus button `Tab`, use your mouse to click around on the touchscreen
-    -   Left and right mouse button are the same
+    -   Focusing the window will capture your mouse. Use `ESC` to release.
+    -   The stylus gets places in the middle of the DS screen for aiming which can cause accidental presses
+    -   Whilst holding the virtual stylus button `Tab`, use your mouse to click around on the touchscreen
     -   UI OK `F` will press "OK" on the touch screen, which will also jump and briefly break aiming
-    -   UI left and right will also press on the touch screen, for scan visor messages
+    -   UI left `Q` and right `E` will also press on the touch screen, for scan visor messages
     -   When in map view, press `Shift` to zoom out and `LMB` to zoom in
-
-    <br>
-    <img src="./metroid/keyboard.png"/>
 
 -   When in-game, **make sure to set the aim sensitivty to the lowest!**<br>
     _Also recommended to set audio to stereo_
 
+<img src="./metroid/keyboard.png"/>
+
 ### Optional recommended instructions
 
--   Enable JIT to improve performance<br>
+-   Enable JIT to improve performance. The game has a low framerate and this helps<br>
     `Config → Emu settings → CPU emulation → Enable JIT recompiler`
 
 -   Render game at a high resolution<br>
