@@ -52,7 +52,7 @@ Please read the instructions carefully.
 -   3D scale factor set to **8x** for 1440p
 -   JIT recompiler set to **enabled** _(helps with performance)_
 
-VSync was already disabled but it also helps with performance
+VSync was already disabled but keeping it off also helps with performance
 
 ### Build
 
