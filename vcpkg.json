@@ -2,7 +2,6 @@
 	"dependencies": [
 		"sdl2",
 		"libarchive",
-		"libslirp",
 		"zstd",
 		{
 			"name": "qtbase",
