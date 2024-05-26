@@ -14,9 +14,12 @@ I originally made this for controller but because there's no lock-on, it wasn't 
 
 ### Instructions
 
--   Make sure to set all bindings to `None` in<br>
+-   Aquire a copy of the **USA rom** of Metroid Prime Hunters<br>
+    Other regions don't work beacuse memory injection is used
+
+-   Make sure to set all DS bindings to `None` in<br>
     `Config → Input and hotkeys → DS keypad`<br>
-    Defaults should have already set these to `None`
+    Defaults should already be empty<br>
     _(click binding and press backspace)_
 
 -   Find Metroid related `Keyboard mappings` in<br>
@@ -37,8 +40,8 @@ I originally made this for controller but because there's no lock-on, it wasn't 
     <br>
     When in-game, **make sure to set the aim sensitivty to the lowest!**<br>
     The DS touchscreen isn't very precise, so setting it to lowest helps<br>
-    <br>
-    Also recommended to set audio settings in-game to headphones
+    
+-    Also recommended to set audio settings in-game to headphones
 
 <br>
 <img src="./metroid/keyboard.png"/>
