@@ -57,8 +57,8 @@ set(SOURCES_QT_SDL
     CLI.h
     CLI.cpp
 
-    rawinput/rawinput_common.c
-    RawInputThread.cpp
+    # rawinput/rawinput_common.c
+    # RawInputThread.cpp
 )
 
 if (APPLE)
@@ -105,7 +105,7 @@ if (WIN32)
 
         ../glad/glad_wgl.c
 
-        rawinput/rawinput_win32.c
+        # rawinput/rawinput_win32.c
     )
 elseif (APPLE)
     if (NOT USE_QT6)
@@ -145,7 +145,7 @@ else()
         ../glad/glad_egl.c
         ../glad/glad_glx.c
 
-        rawinput/rawinput_linux.c
+        # rawinput/rawinput_linux.c
     )
     target_link_libraries(melonDS PRIVATE "${X11_LIBRARIES}" "${EGL_LIBRARIES}")
     target_include_directories(melonDS PRIVATE "${X11_INCLUDE_DIR}")

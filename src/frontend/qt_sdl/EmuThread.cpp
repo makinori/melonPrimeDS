@@ -61,7 +61,7 @@
 
 //#include "CLI.h"
 
-#include "RawInputThread.h"
+// #include "RawInputThread.h"
 
 // TODO: uniform variable spelling
 using namespace melonDS;
@@ -721,8 +721,8 @@ void EmuThread::run()
     const float dsAspectRatio = 256.0 / 192.0; 
     const float aimAspectRatio = 6.0 / 4.0; // i have no idea
 
-    RawInputThread* rawInputThread = new RawInputThread(parent());
-    rawInputThread->start();
+    // RawInputThread* rawInputThread = new RawInputThread(parent());
+    // rawInputThread->start();
 
     auto processMoveInput
     {
@@ -754,17 +754,21 @@ void EmuThread::run()
     };
 
     while (EmuRunning != emuStatus_Exit) {
-        auto mouseRel = rawInputThread->fetchMouseDelta();
+        // auto mouseRel = rawInputThread->fetchMouseDelta();
+        QPoint mouseRel;
 
         auto isFocused = mainWindow->panel->getFocused();
 
         if (isFocused) {
             auto windowCenterX = mainWindow->pos().x() + mainWindow->size().width() / 2;
             auto windowCenterY = mainWindow->pos().y() + mainWindow->size().height() / 2;
-            if (!focusedLastFrame) {
-                // fetch will flush but discard values
-                mouseRel.first = 0;
-                mouseRel.second = 0;
+            // if (!focusedLastFrame) {
+            //     // fetch will flush but discard values
+            //     mouseRel.first = 0;
+            //     mouseRel.second = 0;
+            // }
+            if (focusedLastFrame) {
+                mouseRel = QCursor::pos() - QPoint(windowCenterX, windowCenterY);
             }
             QCursor::setPos(windowCenterX, windowCenterY);
         }
@@ -800,15 +804,16 @@ void EmuThread::run()
             }
 
             // mouse
-            if (abs(mouseRel.first) > 0) {
+
+            if (abs(mouseRel.x()) > 0) {
                 virtualStylusX += (
-                    mouseRel.first * Config::MetroidVirtualStylusSensitivity * 0.01
+                    mouseRel.x() * Config::MetroidVirtualStylusSensitivity * 0.01
                 );
             }
 
-            if (abs(mouseRel.second) > 0) {
+            if (abs(mouseRel.y()) > 0) {
                 virtualStylusY += (
-                    mouseRel.second * dsAspectRatio * Config::MetroidVirtualStylusSensitivity * 0.01
+                    mouseRel.y() * dsAspectRatio * Config::MetroidVirtualStylusSensitivity * 0.01
                 );
             }
 
@@ -935,16 +940,16 @@ void EmuThread::run()
 
             // cursor looking
             
-            if (abs(mouseRel.first) > 0) {
+            if (abs(mouseRel.x()) > 0) {
                 NDS->ARM9Write32(
-                    aimXAddr, mouseRel.first * Config::MetroidAimSensitivity * 0.01
+                    aimXAddr, mouseRel.x() * Config::MetroidAimSensitivity * 0.01
                 );
                 enableAim = true;
             }
 
-            if (abs(mouseRel.second) > 0) {
+            if (abs(mouseRel.y()) > 0) {
                 NDS->ARM9Write32(
-                    aimYAddr, mouseRel.second * aimAspectRatio * Config::MetroidAimSensitivity * 0.01
+                    aimYAddr, mouseRel.y() * aimAspectRatio * Config::MetroidAimSensitivity * 0.01
                 );
                 enableAim = true;
             }
@@ -1050,7 +1055,7 @@ void EmuThread::run()
         Platform::CloseFile(file);
     }
 
-    rawInputThread->quit();
+    // rawInputThread->quit();
 
     EmuStatus = emuStatus_Exit;
 
