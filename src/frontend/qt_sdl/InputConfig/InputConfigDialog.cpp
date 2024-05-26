@@ -162,23 +162,27 @@ void InputConfigDialog::populatePage(QWidget* page,
     group->setLayout(group_layout);
     group->setMinimumWidth(275);
 
-    group = new QGroupBox("Joystick mappings:");
-    main_layout->addWidget(group);
-    group_layout = new QGridLayout();
-    group_layout->setSpacing(1);
-    i = 0;
-    for (const char* labelStr : labels)
+    // disable joystick mappings for metroid since config doesnt even have them
+    if (page != ui->tabAddons)
     {
-        QLabel* label = new QLabel(QString(labelStr)+":");
-        JoyMapButton* btn = new JoyMapButton(&joymap[i], ishotkey);
+        group = new QGroupBox("Joystick mappings:");
+        main_layout->addWidget(group);
+        group_layout = new QGridLayout();
+        group_layout->setSpacing(1);
+        i = 0;
+        for (const char* labelStr : labels)
+        {
+            QLabel* label = new QLabel(QString(labelStr)+":");
+            JoyMapButton* btn = new JoyMapButton(&joymap[i], ishotkey);
 
-        group_layout->addWidget(label, i, 0);
-        group_layout->addWidget(btn, i, 1);
-        i++;
+            group_layout->addWidget(label, i, 0);
+            group_layout->addWidget(btn, i, 1);
+            i++;
+        }
+        group_layout->setRowStretch(labels.size(), 1);
+        group->setLayout(group_layout);
+        group->setMinimumWidth(275);
     }
-    group_layout->setRowStretch(labels.size(), 1);
-    group->setLayout(group_layout);
-    group->setMinimumWidth(275);
 
     page->setLayout(main_layout);
 }

@@ -29,8 +29,8 @@ static constexpr int keypad_num = 12;
 
 static constexpr std::initializer_list<int> hk_addons =
 {
-    HK_SolarSensorIncrease,
-    HK_SolarSensorDecrease,
+    // HK_SolarSensorIncrease,
+    // HK_SolarSensorDecrease,
 
     HK_MetroidMoveForward,
     HK_MetroidMoveBack,
@@ -66,8 +66,8 @@ static constexpr std::initializer_list<int> hk_addons =
 
 static constexpr std::initializer_list<const char*> hk_addons_labels =
 {
-    "[Boktai] Sunlight + ",
-    "[Boktai] Sunlight - ",
+    // "[Boktai] Sunlight + ",
+    // "[Boktai] Sunlight - ",
 
     "[Metroid] (W) Move Forward",
     "[Metroid] (S) Move Back",
@@ -88,8 +88,8 @@ static constexpr std::initializer_list<const char*> hk_addons_labels =
     "[Metroid] (Mouse Left) Shoot/Scan, Map Zoom In)",
     "[Metroid] (Mouse Right) Scan/Shoot, Map Zoom In)",
 
-    "[Metroid] (Mouse 5) Weapon Beam",
-    "[Metroid] (Mouse 4) Weapon Missile",
+    "[Metroid] (Mouse 5, Side Top) Weapon Beam",
+    "[Metroid] (Mouse 4, Side Bottom) Weapon Missile",
     "[Metroid] (1) Weapon 1",
     "[Metroid] (2) Weapon 2",
     "[Metroid] (3) Weapon 3",

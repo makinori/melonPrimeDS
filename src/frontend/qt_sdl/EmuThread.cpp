@@ -382,22 +382,22 @@ void EmuThread::run()
             EmuStatus = emuStatus_Running;
             if (EmuRunning == emuStatus_FrameStep) EmuRunning = emuStatus_Paused;
 
-            if (Input::HotkeyPressed(HK_SolarSensorDecrease))
-            {
-                int level = NDS->GBACartSlot.SetInput(GBACart::Input_SolarSensorDown, true);
-                if (level != -1)
-                {
-                    mainWindow->osdAddMessage(0, "Solar sensor level: %d", level);
-                }
-            }
-            if (Input::HotkeyPressed(HK_SolarSensorIncrease))
-            {
-                int level = NDS->GBACartSlot.SetInput(GBACart::Input_SolarSensorUp, true);
-                if (level != -1)
-                {
-                    mainWindow->osdAddMessage(0, "Solar sensor level: %d", level);
-                }
-            }
+            // if (Input::HotkeyPressed(HK_SolarSensorDecrease))
+            // {
+            //     int level = NDS->GBACartSlot.SetInput(GBACart::Input_SolarSensorDown, true);
+            //     if (level != -1)
+            //     {
+            //         mainWindow->osdAddMessage(0, "Solar sensor level: %d", level);
+            //     }
+            // }
+            // if (Input::HotkeyPressed(HK_SolarSensorIncrease))
+            // {
+            //     int level = NDS->GBACartSlot.SetInput(GBACart::Input_SolarSensorUp, true);
+            //     if (level != -1)
+            //     {
+            //         mainWindow->osdAddMessage(0, "Solar sensor level: %d", level);
+            //     }
+            // }
 
             if (NDS->ConsoleType == 1)
             {
