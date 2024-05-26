@@ -73,4 +73,4 @@ Downloadable builds were made using GitHub actions
 ### Todo
 
 -   Change controls when map is open. Need to find memory location
--   Show version fork version in application title bar
+-   Show fork version in application title bar
