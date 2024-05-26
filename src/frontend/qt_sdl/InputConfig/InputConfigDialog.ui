@@ -2274,12 +2274,12 @@
      </widget>
      <widget class="QWidget" name="tabAddons">
       <attribute name="title">
-       <string>Add-ons (Metroid Prime Hunters)</string>
+       <string>Add-ons (Metroid)</string>
       </attribute>
      </widget>
-     <widget class="QWidget" name="tabMetroidPrimeHunters">
+     <widget class="QWidget" name="tabMetroid">
       <attribute name="title">
-       <string>Other Metroid Prime Hunters</string>
+       <string>Other Metroid settings</string>
       </attribute>
       <layout class="QFormLayout" name="metroidFormLayout">
        <item row="0" column="0">

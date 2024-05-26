@@ -169,6 +169,9 @@ public:
         currentDlg = nullptr;
     }
 
+    void switchTabToAddons();
+    void switchTabToMetroid();
+
 private slots:
     void on_InputConfigDialog_accepted();
     void on_InputConfigDialog_rejected();

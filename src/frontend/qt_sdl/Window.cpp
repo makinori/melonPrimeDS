@@ -574,6 +574,15 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
         actAudioSync->setCheckable(true);
         connect(actAudioSync, &QAction::triggered, this, &MainWindow::onChangeAudioSync);
     }
+    {
+        QMenu* menu = menubar->addMenu("Metroid");
+
+        actEmuSettings = menu->addAction("Input settings");
+        connect(actEmuSettings, &QAction::triggered, this, &MainWindow::onOpenMetroidInputSettings);
+
+        actInputConfig = menu->addAction("Other settings");
+        connect(actInputConfig, &QAction::triggered, this, &MainWindow::onOpenMetroidOtherSettings);
+    }
     setMenuBar(menubar);
 
     resize(Config::WindowWidth, Config::WindowHeight);
@@ -2078,4 +2087,24 @@ void MainWindow::onUpdateVideoSettings(bool glchange)
         if (hasOGL) emuThread->initContext();
         emuThread->emuUnpause();
     }
+}
+
+void MainWindow::onOpenMetroidInputSettings()
+{
+    emuThread->emuPause();
+
+    InputConfigDialog* dlg = InputConfigDialog::openDlg(this);
+    dlg->switchTabToAddons();
+
+    connect(dlg, &InputConfigDialog::finished, this, &MainWindow::onInputConfigFinished);
+}
+
+void MainWindow::onOpenMetroidOtherSettings()
+{
+    emuThread->emuPause();
+
+    InputConfigDialog* dlg = InputConfigDialog::openDlg(this);
+    dlg->switchTabToMetroid();
+
+    connect(dlg, &InputConfigDialog::finished, this, &MainWindow::onInputConfigFinished);
 }

@@ -96,6 +96,14 @@ InputConfigDialog::InputConfigDialog(QWidget* parent) : QDialog(parent), ui(new 
     ui->metroidVirtualStylusSensitvitySpinBox->setValue(Config::MetroidVirtualStylusSensitivity);
 }
 
+void InputConfigDialog::switchTabToAddons() {
+    ui->tabWidget->setCurrentWidget(ui->tabAddons);
+}
+
+void InputConfigDialog::switchTabToMetroid() {
+    ui->tabWidget->setCurrentWidget(ui->tabMetroid);
+}
+
 InputConfigDialog::~InputConfigDialog()
 {
     delete ui;
