@@ -237,8 +237,8 @@ extern bool GdbARM9BreakOnStartup;
 extern int MetroidAimSensitivity;
 extern int MetroidVirtualStylusSensitivity;
 
-const int MetroidAimSensitivityDefault = 20;
-const int MetroidVirtualStylusSensitivityDefault = 12;
+const int MetroidAimSensitivityDefault = 30;
+const int MetroidVirtualStylusSensitivityDefault = 20;
 
 void Load();
 void Save();
