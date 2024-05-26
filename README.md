@@ -8,7 +8,7 @@ It's a bit of a hack but the goal is to make the game as fun as possible using m
 
 I originally made this for controller but because there's no lock-on, it wasn't really fun to play.
 
-Please read the instructions carefully.
+**Please read the instructions carefully.**
 
 [Download latest build for Windows and Linux here!](https://github.com/makidoll/melonDS-Metroid-Prime-Hunters/releases)
 
@@ -16,10 +16,11 @@ Please read the instructions carefully.
 
 -   Make sure to set all bindings to `None` in<br>
     `Config → Input and hotkeys → DS keypad`<br>
+    Defaults should have already set these to `None`
     _(click binding and press backspace)_
 
--   Find Metroid Prime Hunters related `Keyboard mappings` in<br>
-    `Config → Input and hotkeys → Add-ons (Metroid Prime Hunters)`<br>
+-   Find Metroid related `Keyboard mappings` in<br>
+    `Metroid → Input settings`<br>
     Recommended defaults have already been set, but feel free to change them if you want to
 
     Notes:
@@ -31,13 +32,13 @@ Please read the instructions carefully.
     -   UI left `Q` and right `E` will also press on the touch screen, for scan visor messages
     -   When in map view, press `Shift` to zoom out and `LMB` to zoom in
 
--   Find Metroid Prime Hunters sensitivity settings in<br>
-    `Config → Input and hotkeys → Other Metroid Prime Hunters`<br>
+-   Find Metroid sensitivity settings in<br>
+    `Metroid → Other settings`<br>
     <br>
     When in-game, **make sure to set the aim sensitivty to the lowest!**<br>
     The DS touchscreen isn't very precise, so setting it to lowest helps<br>
     <br>
-    _Also recommended to set audio settings in-game to headphones_
+    Also recommended to set audio settings in-game to headphones
 
 <br>
 <img src="./metroid/keyboard.png"/>
