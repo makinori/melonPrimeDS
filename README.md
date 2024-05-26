@@ -16,7 +16,7 @@ I originally made this for controller but because there's no lock-on, it wasn't 
 
 -   Fyi. the emulator hack uses a different config path than melonDS, so this won't conflict
 
--   Aquire a copy of the **USA rom** of Metroid Prime Hunters<br>
+-   Aquire a copy of the **USA 1.1 rom** of Metroid Prime Hunters<br>
     Other regions don't work beacuse memory injection is used
 
 -   Make sure to set all DS bindings to `None` in<br>
