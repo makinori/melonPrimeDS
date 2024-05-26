@@ -40,8 +40,7 @@ I originally made this for controller but because there's no lock-on, it wasn't 
     <br>
     When in-game, **make sure to set the aim sensitivty to the lowest!**<br>
     The DS touchscreen isn't very precise, so setting it to lowest helps<br>
-    
--    Also recommended to set audio settings in-game to headphones
+-   Also recommended to set audio settings in-game to headphones
 
 <br>
 <img src="./metroid/keyboard.png"/>
@@ -70,3 +69,8 @@ ninja
 ```
 
 Downloadable builds were made using GitHub actions
+
+### Todo
+
+-   Change controls when map is open. Need to find memory location
+-   Show version fork version in application title bar
