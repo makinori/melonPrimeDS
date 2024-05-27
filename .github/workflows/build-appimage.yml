@@ -43,7 +43,7 @@ jobs:
       run: |
         ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage
         mkdir dist
-        cp ./melonDS*.AppImage ./dist
+        cp ./melonPrimeDS*.AppImage ./dist
     - uses: actions/upload-artifact@v1
       with:
         name: melonPrimeDS-appimage-x86_64

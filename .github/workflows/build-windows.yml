@@ -34,5 +34,5 @@ jobs:
 
     - uses: actions/upload-artifact@v1
       with:
-        name: melonDS-windows-x86_64
+        name: melonPrimeDS-windows-x86_64
         path: ${{runner.workspace}}\build\melonPrimeDS.exe
