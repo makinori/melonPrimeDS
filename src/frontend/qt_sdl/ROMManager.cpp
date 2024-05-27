@@ -29,6 +29,7 @@
 #include <fstream>
 
 #include <QDateTime>
+#include <QMessageBox>
 
 #include <zstd.h>
 #ifdef ARCHIVE_SUPPORT_ENABLED
@@ -1324,6 +1325,15 @@ bool LoadROM(EmuThread* emuthread, QStringList filepath, bool reset)
     if (!cart)
         // If we couldn't parse the ROM...
         return false;
+
+    if (cart->Checksum() != 0x91B46577)
+    {
+        QMessageBox::warning(
+            nullptr,
+            "Unknown ROM",
+            "Please make sure to use\nMetroid Prime Hunters USA version 1.1"
+        );
+    }
 
     if (reset)
     {
