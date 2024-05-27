@@ -1,3 +1,5 @@
+#!/usr/bin/env -S deno run -A
+
 const totalMemoryDumps = 7;
 
 let allDiffs: { [addr: number]: number[] } = {};

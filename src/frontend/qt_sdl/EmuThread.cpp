@@ -698,12 +698,12 @@ void EmuThread::run()
 #ifdef METROID_US_1_1
     const melonDS::u32 aimXAddr = 0x020DEDA6;
     const melonDS::u32 aimYAddr = 0x020DEDAE;
-    const melonDS::u32 ballAddr = 0x020DB098;
-    const melonDS::u32 visorAddr = 0x020D9A7D; // my best guess
+    const melonDS::u32 inBallAddr = 0x020DB098;
+    const melonDS::u32 inVisorOrMapAddr = 0x020D9A7D; // my best guess
 #else
     const melonDS::u32 aimXAddr = 0x020DE526;
     const melonDS::u32 aimYAddr = 0x020DE52E;
-    const melonDS::u32 ballAddr = 0x020DA818;
+    const melonDS::u32 inBallAddr = 0x020DA818;
 #endif
 
 // #define ENABLE_MEMORY_DUMP 1
@@ -777,20 +777,17 @@ void EmuThread::run()
 
         bool drawVCur = false;
 
-#ifdef ENABLE_MEMORY_DUMP
-        if (Input::HotkeyPressed(HK_MetroidVirtualStylus)) {
-            printf("MainRAMMask 0x%.8" PRIXPTR "\n", (uintptr_t)NDS->MainRAMMask);
-            QFile file("memory" + QString::number(memoryDump++) + ".bin");
-            if (file.open(QIODevice::ReadWrite)) {
-                file.write(QByteArray((char*)NDS->MainRAM, NDS->MainRAMMaxSize));
+        #ifdef ENABLE_MEMORY_DUMP
+            if (Input::HotkeyPressed(HK_MetroidUIOk)) {
+                printf("MainRAMMask 0x%.8" PRIXPTR "\n", (uintptr_t)NDS->MainRAMMask);
+                QFile file("memory" + QString::number(memoryDump++) + ".bin");
+                if (file.open(QIODevice::ReadWrite)) {
+                    file.write(QByteArray((char*)NDS->MainRAM, NDS->MainRAMMaxSize));
+                }
             }
-        }
-     
-        if (false) {
-#else
-        if (isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus)) {
-#endif
+        #endif
 
+        if (isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus)) {
             // this exists to just delay the pressing of the screen when you 
             // release the virtual stylus key
             enableAim = false;
@@ -842,7 +839,7 @@ void EmuThread::run()
                 NDS->ReleaseScreen();
                 frameAdvance(2);
 
-                bool inVisor = NDS->ARM9Read8(visorAddr) == 0x1;
+                bool inVisor = NDS->ARM9Read8(inVisorOrMapAddr) == 0x1;
                 // mainWindow->osdAddMessage(0, "in visor %d", inVisor);
 
                 NDS->TouchScreen(128, 173);
@@ -989,7 +986,7 @@ void EmuThread::run()
         }
 
         // is this a good way of detecting morph ball status?
-        bool inBall = NDS->ARM9Read8(ballAddr) == 0x02;
+        bool inBall = NDS->ARM9Read8(inBallAddr) == 0x02;
         if (!inBall && enableAim) {
             // mainWindow->osdAddMessage(0,"touching screen for aim");
             NDS->TouchScreen(128, 96); // required for aiming
