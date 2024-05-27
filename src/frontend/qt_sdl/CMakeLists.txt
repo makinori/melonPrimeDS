@@ -96,6 +96,8 @@ add_compile_definitions(ARCHIVE_SUPPORT_ENABLED)
 
 add_executable(melonDS ${SOURCES_QT_SDL})
 
+set_target_properties(melonDS PROPERTIES OUTPUT_NAME "melonPrimeDS")
+
 option(USE_SYSTEM_LIBSLIRP "Use system libslirp instead of the bundled version" OFF)
 if (USE_SYSTEM_LIBSLIRP)
     pkg_check_modules(Slirp REQUIRED IMPORTED_TARGET slirp)
@@ -238,10 +240,10 @@ if (UNIX AND NOT APPLE)
     foreach(SIZE 16 32 48 64 128 256)
         install(FILES ${CMAKE_SOURCE_DIR}/res/icon/melon_${SIZE}x${SIZE}.png
             DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/${SIZE}x${SIZE}/apps
-            RENAME io.makidoll.melonDSMetroidPrimeHunters.png)
+            RENAME io.makidoll.melonPrimeDS.png)
     endforeach()
 
-    install(FILES ${CMAKE_SOURCE_DIR}/res/io.makidoll.melonDSMetroidPrimeHunters.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)
+    install(FILES ${CMAKE_SOURCE_DIR}/res/io.makidoll.melonPrimeDS.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)
     install(TARGETS melonDS BUNDLE DESTINATION ${CMAKE_BINARY_DIR} RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
     if (NOT USE_QT6)

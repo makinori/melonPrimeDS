@@ -1,8 +1,8 @@
 <p align="center"><img src="./res/icon/melon_128x128.png"></p>
-<h1 align="center"><b>melonDS: Metroid Prime Hunters</b></h1>
+<h1 align="center"><b>melonPrimeDS</b></h1>
 <br>
     
-Modded version of melonDS emulator to play Metroid Prime Hunters.
+Modded version of [melonDS](https://melonds.kuribo64.net/) emulator to play Metroid Prime Hunters.
 
 It's a bit of a hack but the goal is to make the game as fun as possible using mouse and keyboard.
 
@@ -10,7 +10,7 @@ I originally made this for controller but because there's no lock-on, it wasn't 
 
 **Please read the instructions carefully.**
 
-[Download latest build for Windows and Linux here!](https://github.com/makidoll/melonDS-Metroid-Prime-Hunters/releases)
+[Download latest build for Windows and Linux here!](https://github.com/makidoll/melonPrimeDS/releases)
 
 ### Instructions
 

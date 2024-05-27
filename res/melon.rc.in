@@ -20,7 +20,7 @@ FILETYPE VFT_APP
 			VALUE "InternalName", "SDnolem"
 			VALUE "LegalCopyright", "2016-2023 melonDS team"
 			VALUE "LegalTrademarks", ""
-			VALUE "OriginalFilename", "melonDS.exe"
+			VALUE "OriginalFilename", "melonPrimeDS.exe"
 			VALUE "ProductName", "melonDS"
 			VALUE "ProductVersion", "${melonDS_VERSION}"
 		}
