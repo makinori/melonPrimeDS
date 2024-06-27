@@ -10,7 +10,11 @@ I originally made this for controller but because there's no lock-on, it wasn't 
 
 **Please read the instructions carefully.**
 
-[Download latest build for Windows and Linux here!](https://github.com/makidoll/melonPrimeDS/releases)
+### Download
+
+Releases for [Windows and Linux here!](https://github.com/makidoll/melonPrimeDS/releases)
+
+[![aur](https://img.shields.io/aur/version/melonprimeds-bin?style=flat&logo=archlinux)](https://aur.archlinux.org/packages/melonprimeds-bin)
 
 ### Instructions
 
