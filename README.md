@@ -10,7 +10,7 @@ I originally made this for controller but because there's no lock-on, it wasn't 
 
 **Please read the instructions carefully.**
 
-[mph.webm](https://github.com/makidoll/melonPrimeDS/assets/8362329/3ab06f8d-03d6-436a-95bb-e6410d746512)
+[melonPrimeDS.webm](https://github.com/makidoll/melonPrimeDS/assets/8362329/69ab26bb-7205-451a-a11c-70a2ca0b549d)
 
 ### Download
 
