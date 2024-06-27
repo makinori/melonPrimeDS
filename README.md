@@ -10,6 +10,8 @@ I originally made this for controller but because there's no lock-on, it wasn't 
 
 **Please read the instructions carefully.**
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Q5Q0MLBI)
+
 [melonPrimeDS.webm](https://github.com/makidoll/melonPrimeDS/assets/8362329/69ab26bb-7205-451a-a11c-70a2ca0b549d)
 
 ### Download
