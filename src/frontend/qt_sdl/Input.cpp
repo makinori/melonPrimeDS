@@ -149,7 +149,7 @@ void KeyRelease(QKeyEvent* event)
 
 void MousePress(QMouseEvent* event)
 {
-    int key = event->button() | 0xF0000000;
+    int key = event->button() | (int)0xF0000000;
 
     for (int i = 0; i < 12; i++)
         if (key == Config::KeyMapping[i])
@@ -162,7 +162,7 @@ void MousePress(QMouseEvent* event)
 
 void MouseRelease(QMouseEvent* event)
 {
-    int key = event->button() | 0xF0000000;
+    int key = event->button() | (int)0xF0000000;
 
     for (int i = 0; i < 12; i++)
         if (key == Config::KeyMapping[i])
