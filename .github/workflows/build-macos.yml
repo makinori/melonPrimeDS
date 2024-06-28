@@ -33,6 +33,7 @@ jobs:
         run: |
           cd build/release-mac-${{ matrix.arch }}
           mv melonDS.app melonPrimeDS.app
+          mv melonPrimeDS.app/Contents/MacOS/melonDS melonPrimeDS.app/Contents/MacOS/melonPrimeDS
           zip -r -y ../../macOS-${{ matrix.arch }}.zip melonPrimeDS.app
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -61,11 +62,11 @@ jobs:
         run: |
           unzip x86_64/*.zip -d x86_64
           unzip arm64/*.zip -d arm64
-          lipo {x86_64,arm64}/melonDS.app/Contents/MacOS/melonDS -create -output melonDS
-          cp -a arm64/melonDS.app melonDS.app
-          cp melonDS melonDS.app/Contents/MacOS/melonDS
-          codesign -s - --deep melonDS.app
-          zip -r -y macOS-universal.zip melonDS.app
+          lipo {x86_64,arm64}/melonPrimeDS.app/Contents/MacOS/melonPrimeDS -create -output melonPrimeDS
+          cp -a arm64/melonPrimeDS.app melonPrimeDS.app
+          cp melonPrimeDS melonPrimeDS.app/Contents/MacOS/melonPrimeDS
+          codesign -s - --deep melonPrimeDS.app
+          zip -r -y macOS-universal.zip melonPrimeDS.app
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
