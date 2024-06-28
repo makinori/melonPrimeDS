@@ -28,6 +28,8 @@ jobs:
       #   with:
       #     configurePreset: release-mac-${{ matrix.arch }}
       #     buildPreset: release-mac-${{ matrix.arch }}
+      - name: Create build environment
+        run: mkdir ${{runner.workspace}}/build
       - name: Configure
         working-directory: ${{runner.workspace}}/build
         run: cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..
