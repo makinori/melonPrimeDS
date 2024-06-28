@@ -23,16 +23,28 @@ jobs:
         uses: lukka/run-vcpkg@v11
         with:
           vcpkgGitCommitId: c8696863d371ab7f46e213d8f5ca923c4aef2a00
-      - name: Build
-        uses: lukka/run-cmake@v10
-        with:
-          configurePreset: release-mac-${{ matrix.arch }}
-          buildPreset: release-mac-${{ matrix.arch }}
+      # - name: Build
+      #   uses: lukka/run-cmake@v10
+      #   with:
+      #     configurePreset: release-mac-${{ matrix.arch }}
+      #     buildPreset: release-mac-${{ matrix.arch }}
+      - name: Configure
+        working-directory: ${{runner.workspace}}/build
+        run: cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..
+      - name: Make
+        working-directory: ${{runner.workspace}}/build
+        run: cmake --build .
+      # - name: Compress app bundle
+      #   shell: bash
+      #   run: |
+      #     cd build/release-mac-${{ matrix.arch }}
+      #     zip -r -y ../../macOS-${{ matrix.arch }}.zip melonDS.app
       - name: Compress app bundle
         shell: bash
         run: |
-          cd build/release-mac-${{ matrix.arch }}
-          zip -r -y ../../macOS-${{ matrix.arch }}.zip melonDS.app
+          cd build
+          mv melonDS.app melonPrimeDS.app
+          zip -r -y ../macOS-${{ matrix.arch }}.zip melonPrimeDS.app
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
