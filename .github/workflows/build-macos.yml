@@ -10,19 +10,19 @@ jobs:
         arch: [x86_64, arm64]
 
     name: ${{ matrix.arch }}
-    runs-on: macos-13
+    runs-on: macos-14
     steps:
       - name: Check out sources
         uses: actions/checkout@v3
       - name: Install dependencies for package building
         run: |
-          brew install autoconf automake autoconf-archive libtool && pip3 install setuptools
+          brew install autoconf automake autoconf-archive libtool python-setuptools
       - name: Set up CMake
         uses: lukka/get-cmake@latest
       - name: Set up vcpkg
         uses: lukka/run-vcpkg@v11
         with:
-          vcpkgGitCommitId: c8696863d371ab7f46e213d8f5ca923c4aef2a00
+          vcpkgGitCommitId: 53bef8994c541b6561884a8395ea35715ece75db
       - name: Build
         uses: lukka/run-cmake@v10
         with:
@@ -32,7 +32,9 @@ jobs:
         shell: bash
         run: |
           cd build/release-mac-${{ matrix.arch }}
-          zip -r -y ../../macOS-${{ matrix.arch }}.zip melonDS.app
+          mv melonDS.app melonPrimeDS.app
+          mv melonPrimeDS.app/Contents/MacOS/melonDS melonPrimeDS.app/Contents/MacOS/melonPrimeDS
+          zip -r -y ../../macOS-${{ matrix.arch }}.zip melonPrimeDS.app
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -43,6 +45,7 @@ jobs:
     name: Universal binary
     needs: [build-macos]
     runs-on: macos-13
+    continue-on-error: true
     steps:
       - name: Download x86_64
         uses: actions/download-artifact@v4
@@ -59,21 +62,20 @@ jobs:
         run: |
           unzip x86_64/*.zip -d x86_64
           unzip arm64/*.zip -d arm64
-          lipo {x86_64,arm64}/melonDS.app/Contents/MacOS/melonDS -create -output melonDS
-          cp -a arm64/melonDS.app melonDS.app
-          cp melonDS melonDS.app/Contents/MacOS/melonDS
-          codesign -s - --deep melonDS.app
-          zip -r -y macOS-universal.zip melonDS.app
+          lipo {x86_64,arm64}/melonPrimeDS.app/Contents/MacOS/melonPrimeDS -create -output melonPrimeDS
+          cp -a arm64/melonPrimeDS.app melonPrimeDS.app
+          cp melonPrimeDS melonPrimeDS.app/Contents/MacOS/melonPrimeDS
+          codesign -s - --deep melonPrimeDS.app
+          zip -r -y macOS-universal.zip melonPrimeDS.app
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: macOS-universal
           path: macOS-universal.zip
-      - name: Clean up architecture-specific artifacts
-        uses: geekyeggo/delete-artifact@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          failOnError: false
-          name: |
-            macOS-x86_64
-            macOS-arm64
+#     - name: Clean up architecture-specific artifacts
+#       uses: geekyeggo/delete-artifact@v4
+#       with:
+#         failOnError: false
+#         name: |
+#           macOS-x86_64
+#           macOS-arm64
