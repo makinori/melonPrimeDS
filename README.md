@@ -16,9 +16,18 @@ I originally made this for controller but because there's no lock-on, it wasn't 
 
 ### Download
 
-Releases for [Windows and Linux here!](https://github.com/makidoll/melonPrimeDS/releases)
+Releases for [Windows, Linux and macOS here!](https://github.com/makidoll/melonPrimeDS/releases)
 
 [![aur](https://img.shields.io/aur/version/melonprimeds-bin?style=flat&logo=archlinux)](https://aur.archlinux.org/packages/melonprimeds-bin)
+
+
+> **⚠️🖱️ Note if using mouse acceleration!**<br>
+> Please disable mouse acceleration or it will feel strange.<br>
+> Find a [guide for Windows here](https://www.lifewire.com/turn-off-mouse-acceleration-in-windows-11-5193828) and use [SteerMouse if on macOS](https://plentycom.jp/en/steermouse/index.html)
+
+> **⚠️ Note for macOS users!**<br>
+> Once you start the program, you're going to have to go into macOS settings:<br>
+> **Privacy & Security > Accessibility**, and ensure melonPrimeDS is enabled.
 
 ### Instructions
 
