@@ -357,7 +357,8 @@ ConfigEntry ConfigFile[] =
     {"AudioBitDepth", 0, &AudioBitDepth, 0, false},
     {"AudioVolume", 0, &AudioVolume, 256, true},
     {"DSiVolumeSync", 1, &DSiVolumeSync, false, true},
-    {"MicInputType", 0, &MicInputType, 1, false},
+    // disable mic by default or mac will have mic notification
+    {"MicInputType", 0, &MicInputType, 0, false},
     {"MicDevice", 2, &MicDevice, (std::string)"", false},
     {"MicWavPath", 2, &MicWavPath, (std::string)"", false},
 
