@@ -244,11 +244,11 @@ ConfigEntry ConfigFile[] =
     {"HKKey_MetroidUIRight",           0, &HKKeyMapping[HK_MetroidUIRight],           Qt::Key_E, true},
     {"HKKey_MetroidUIOk",              0, &HKKeyMapping[HK_MetroidUIOk],              Qt::Key_F, true},
     
-    {"HKKey_MetroidShootScan",         0, &HKKeyMapping[HK_MetroidShootScan],         (int)Qt::LeftButton | 0xF0000000, true},
-    {"HKKey_MetroidScanShoot",         0, &HKKeyMapping[HK_MetroidScanShoot],         (int)Qt::RightButton | 0xF0000000, true},
+    {"HKKey_MetroidShootScan",         0, &HKKeyMapping[HK_MetroidShootScan],         (int)Qt::LeftButton | (int)0xF0000000, true},
+    {"HKKey_MetroidScanShoot",         0, &HKKeyMapping[HK_MetroidScanShoot],         (int)Qt::RightButton | (int)0xF0000000, true},
 
-    {"HKKey_MetroidWeaponBeam",        0, &HKKeyMapping[HK_MetroidWeaponBeam],        (int)Qt::ExtraButton2 | 0xF0000000, true},
-    {"HKKey_MetroidWeaponMissile",     0, &HKKeyMapping[HK_MetroidWeaponMissile],     (int)Qt::ExtraButton1 | 0xF0000000, true},
+    {"HKKey_MetroidWeaponBeam",        0, &HKKeyMapping[HK_MetroidWeaponBeam],        (int)Qt::ExtraButton2 | (int)0xF0000000, true},
+    {"HKKey_MetroidWeaponMissile",     0, &HKKeyMapping[HK_MetroidWeaponMissile],     (int)Qt::ExtraButton1 | (int)0xF0000000, true},
     {"HKKey_MetroidWeapon1",           0, &HKKeyMapping[HK_MetroidWeapon1],           Qt::Key_1, true},
     {"HKKey_MetroidWeapon2",           0, &HKKeyMapping[HK_MetroidWeapon2],           Qt::Key_2, true},
     {"HKKey_MetroidWeapon3",           0, &HKKeyMapping[HK_MetroidWeapon3],           Qt::Key_3, true},
