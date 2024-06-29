@@ -88,7 +88,7 @@ protected:
 
         Log(melonDS::Platform::Debug, "MOUSE BUTTON PRESSED = %08X\n", event->button());
 
-        *mapping = event->button() | 0xF0000000;
+        *mapping = (int)event->button() | 0xF0000000;
         click();
     }
 

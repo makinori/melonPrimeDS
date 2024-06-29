@@ -939,14 +939,16 @@ void EmuThread::run()
             
             if (abs(mouseRel.x()) > 0) {
                 NDS->ARM9Write32(
-                    aimXAddr, mouseRel.x() * Config::MetroidAimSensitivity * 0.01
+                    aimXAddr, 
+                    (int32_t)(mouseRel.x() * Config::MetroidAimSensitivity * 0.01f)
                 );
                 enableAim = true;
             }
 
             if (abs(mouseRel.y()) > 0) {
                 NDS->ARM9Write32(
-                    aimYAddr, mouseRel.y() * aimAspectRatio * Config::MetroidAimSensitivity * 0.01
+                    aimYAddr, 
+                    (int32_t)(mouseRel.y() * aimAspectRatio * Config::MetroidAimSensitivity * 0.01f)
                 );
                 enableAim = true;
             }
