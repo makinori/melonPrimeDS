@@ -956,7 +956,7 @@ void EmuThread::run()
             // morph ball boost
             if (Input::HotkeyDown(HK_MetroidMorphBallBoost)) {
                 // just incase
-                enableAim = false;
+                enableAim = true;
                 NDS->ReleaseScreen();
                 // then press input
                 FN_INPUT_PRESS(INPUT_R);
