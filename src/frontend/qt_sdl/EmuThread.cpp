@@ -953,12 +953,15 @@ void EmuThread::run()
                 enableAim = true;
             }
 
-            // morph ball boost
+            // morph ball boost, map zoom out, imperialist zoom
             if (Input::HotkeyDown(HK_MetroidMorphBallBoost)) {
-                // just incase
-                enableAim = false;
-                NDS->ReleaseScreen();
-                // then press input
+                bool inBall = NDS->ARM9Read8(inBallAddr) == 0x02;
+                if (inBall) {
+                    // just incase
+                    enableAim = false;
+                    NDS->ReleaseScreen();
+                }
+
                 FN_INPUT_PRESS(INPUT_R);
             } else {
                 FN_INPUT_RELEASE(INPUT_R);
