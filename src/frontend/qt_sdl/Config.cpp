@@ -162,6 +162,7 @@ bool GdbARM9BreakOnStartup;
 
 int MetroidAimSensitivity;
 int MetroidVirtualStylusSensitivity;
+int MetroidVsPlayerInput;
 
 CameraConfig Camera[2];
 
@@ -404,6 +405,7 @@ ConfigEntry ConfigFile[] =
 
     {"MetroidAimSensitivity", 0, &MetroidAimSensitivity, MetroidAimSensitivityDefault, false},
     {"MetroidVirtualStylusSensitivity", 0, &MetroidVirtualStylusSensitivity, MetroidVirtualStylusSensitivityDefault, false},
+    {"MetroidVsPlayerInput", 0, &MetroidVsPlayerInput, MetroidVsPlayerInputDefault, false},
 
     // TODO!!
     // we need a more elegant way to deal with this
