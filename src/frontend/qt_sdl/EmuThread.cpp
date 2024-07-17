@@ -694,15 +694,15 @@ void EmuThread::run()
     #define FN_INPUT_PRESS(i) Input::InputMask.setBit(i, false);
     #define FN_INPUT_RELEASE(i) Input::InputMask.setBit(i, true);
 
+    melonDS::u32 aimXAddr;
+    melonDS::u32 aimYAddr;
+
 #define METROID_US_1_1 1
 #ifdef METROID_US_1_1
-    const melonDS::u32 aimXAddr = 0x020DEDA6;
-    const melonDS::u32 aimYAddr = 0x020DEDAE;
+    const bool metroidUSRev1 = true;
     const melonDS::u32 inBallAddr = 0x020DB098;
     const melonDS::u32 inVisorOrMapAddr = 0x020D9A7D; // my best guess
 #else
-    const melonDS::u32 aimXAddr = 0x020DE526;
-    const melonDS::u32 aimYAddr = 0x020DE52E;
     const melonDS::u32 inBallAddr = 0x020DA818;
 #endif
 
@@ -935,6 +935,45 @@ void EmuThread::run()
 
             processMoveInput();
 
+            // aim addresses for version and player number
+            if(metroidUSRev1) {
+                switch(Config::MetroidVsPlayerInput) {
+                    case 2:
+                        aimXAddr = 0x020DEDEE;
+                        aimYAddr = 0x020DEDF6;
+                        break;
+                    case 3:
+                        aimXAddr = 0x020DEE36;
+                        aimYAddr = 0x020DEE3E;
+                        break;
+                    case 4:
+                        aimXAddr = 0x020DEE7E;
+                        aimYAddr = 0x020DEE86;
+                        break;
+                    default:
+                        aimXAddr = 0x020DEDA6;
+                        aimYAddr = 0x020DEDAE;
+                }
+            }
+            else {
+                switch(Config::MetroidVsPlayerInput) {
+                    case 2:
+                        aimXAddr = 0x020DF66E;
+                        aimYAddr = 0x020DF676;
+                        break;
+                    case 3:
+                        aimXAddr = 0x020DF6B6;
+                        aimYAddr = 0x020DF6BE;
+                        break;
+                    case 4:
+                        aimXAddr = 0x020DF626;
+                        aimYAddr = 0x020DF706;
+                        break;
+                    default:
+                        aimXAddr = 0x020DE526;
+                        aimYAddr = 0x020DE52E;
+                }
+            }
             // cursor looking
             
             if (abs(mouseRel.x()) > 0) {
