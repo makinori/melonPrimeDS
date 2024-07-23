@@ -33,12 +33,16 @@ jobs:
     - name: debug
       run: |
         ls
-        cd ${{runner.workspace}}\build\
+        cd build
         ls
     - uses: actions/upload-artifact@v4
       with:
         name: melonPrimeDS-windows-x86_64
-        path: ${{runner.workspace}}\build\melonPrimeDS.exe
+        path: .\build\melonPrimeDS.exe
+    - uses: actions/upload-artifact@v4
+      with:
+        name: melonPrimeDS-windows-x86_64_2
+        path: .\build\release-mingw-x86_64\melonPrimeDS.exe
 #    - uses: actions/checkout@v1
 #    - uses: msys2/setup-msys2@v2
 #      with:
