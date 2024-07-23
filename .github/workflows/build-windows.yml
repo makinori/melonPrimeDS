@@ -12,10 +12,6 @@ jobs:
     steps:
     - name: Check out sources
       uses: actions/checkout@v3
-    - name: choco install ninja
-      run: |
-        choco install ninja
-        ninja.exe --version
     - name: Set up MSYS2
       uses: msys2/setup-msys2@v2
       with:
@@ -23,6 +19,10 @@ jobs:
         update: true
         install: ninja
         pacboy: gcc:p cmake:p ninja:p
+    - name: choco install ninja
+      run: |
+        choco install ninja
+        ninja.exe --version
     - name: Set up vcpkg
       uses: lukka/run-vcpkg@v11
       with:
