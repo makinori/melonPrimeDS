@@ -23,7 +23,7 @@ jobs:
       with:
         vcpkgGitCommitId: 53bef8994c541b6561884a8395ea35715ece75db
     - name: Install dependencies
-      run: pacman -Sq --noconfirm git pkgconf mingw-w64-x86_64-{cmake,SDL2,qt5-static,libarchive,toolchain}
+      run: pacman -Sq --noconfirm git pkgconf mingw-w64-x86_64-{cmake,SDL2,qt5-static,libarchive,toolchain,ninja}
 
     - name: Configure
       run: cmake --preset=release-mingw-x86_64
