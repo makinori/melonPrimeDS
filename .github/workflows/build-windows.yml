@@ -1,13 +1,7 @@
 name: Windows
 
 on:
-  push:
-    branches:
-      - master
-      - ci/windows-vcpkg
-  pull_request:
-    branches:
-      - master
+  workflow_dispatch:
 
 jobs:
   build:
