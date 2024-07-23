@@ -4,10 +4,12 @@ set(_DEFAULT_VCPKG_ROOT "${CMAKE_SOURCE_DIR}/vcpkg")
 set(VCPKG_ROOT "${_DEFAULT_VCPKG_ROOT}" CACHE STRING "The path to the vcpkg repository")
 
 if (VCPKG_ROOT STREQUAL "${_DEFAULT_VCPKG_ROOT}")
-    file(LOCK "${_DEFAULT_VCPKG_ROOT}" DIRECTORY GUARD FILE)
+    if (APPLE) # this doesn't work on non-macOS
+        file(LOCK "${_DEFAULT_VCPKG_ROOT}" DIRECTORY GUARD FILE)
+    endif()
     FetchContent_Declare(vcpkg
         GIT_REPOSITORY "https://github.com/Microsoft/vcpkg.git"
-        GIT_TAG 2023.12.12
+        GIT_TAG 2024.01.12
         SOURCE_DIR "${CMAKE_SOURCE_DIR}/vcpkg")
     FetchContent_MakeAvailable(vcpkg)
 endif()
@@ -47,7 +49,7 @@ if (USE_RECOMMENDED_TRIPLETS)
     elseif(WIN32)
         # TODO Windows arm64 if possible
         set(_CAN_TARGET_AS_HOST ON)
-        set(_WANTED_TRIPLET x64-mingw-static)
+        set(_WANTED_TRIPLET x64-mingw-static-release)
     endif()
 
     # Don't override it if the user set something else

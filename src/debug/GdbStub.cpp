@@ -1,8 +1,8 @@
 
 #ifdef _WIN32
-#include <WS2tcpip.h>
-#include <winsock.h>
+#include <ws2tcpip.h>
 #include <winsock2.h>
+#include <windows.h>
 #endif
 
 #include <stdarg.h>
