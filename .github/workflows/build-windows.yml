@@ -22,6 +22,9 @@ jobs:
       uses: lukka/run-vcpkg@v11
       with:
         vcpkgGitCommitId: 53bef8994c541b6561884a8395ea35715ece75db
+    - name: Install dependencies
+      run: pacman -Sq --noconfirm git pkgconf mingw-w64-x86_64-{cmake,SDL2,qt5-static,libarchive,toolchain}
+
     - name: Configure
       run: cmake --preset=release-mingw-x86_64
     - name: Build
@@ -35,9 +38,6 @@ jobs:
 #      with:
 #          msystem: MINGW64
 #          update: true
-#
-#    - name: Install dependencies
-#      run: pacman -Sq --noconfirm git pkgconf mingw-w64-x86_64-{cmake,SDL2,qt5-static,libarchive,toolchain}
 #
 #    - name: Configure
 #      working-directory: ${{runner.workspace}}
