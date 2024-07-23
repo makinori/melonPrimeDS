@@ -19,10 +19,6 @@ jobs:
         update: true
         install: ninja
         pacboy: gcc:p cmake:p ninja:p
-    - name: choco install ninja
-      run: |
-        choco install ninja
-        ninja.exe --version
     - name: Set up vcpkg
       uses: lukka/run-vcpkg@v11
       with:
