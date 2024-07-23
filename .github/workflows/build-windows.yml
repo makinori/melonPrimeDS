@@ -30,6 +30,11 @@ jobs:
       run: cmake --preset=release-mingw-x86_64
     - name: Build
       run: cmake --build --preset=release-mingw-x86_64
+    - name: debug
+      run: |
+        ls
+        cd ${{runner.workspace}}\build\
+        ls
     - uses: actions/upload-artifact@v4
       with:
         name: melonPrimeDS-windows-x86_64
