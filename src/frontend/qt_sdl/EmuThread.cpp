@@ -889,9 +889,9 @@ void EmuThread::run()
                 NDS->ReleaseScreen();
                 frameAdvance(2);
                 NDS->TouchScreen(85 + 40 * 0, 32);
-                //frameAdvance(2);
+                frameAdvance(2);
                 NDS->ReleaseScreen();
-                //frameAdvance(2);
+                frameAdvance(2);
             }
 
             // switch to missiles
@@ -899,9 +899,9 @@ void EmuThread::run()
                 NDS->ReleaseScreen();
                 frameAdvance(2);
                 NDS->TouchScreen(85 + 40 * 1, 32);
-                //frameAdvance(2);
+                frameAdvance(2);
                 NDS->ReleaseScreen();
-                //frameAdvance(2);
+                frameAdvance(2);
             }
 
             // switch subweapon
