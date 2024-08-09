@@ -880,8 +880,8 @@ void EmuThread::run()
             if (Input::HotkeyPressed(HK_MetroidUIRight)) {
                 NDS->ReleaseScreen();
                 //frameAdvance(2);
-                //NDS->TouchScreen(185, 141); // optimization ?
-                frameAdvance(2);
+                NDS->TouchScreen(185, 141); // optimization ?
+                //frameAdvance(2);
             }
 
             // switch to beam
