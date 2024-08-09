@@ -23,6 +23,12 @@ jobs:
       run: |
         cmake --build build
         DESTDIR=AppDir cmake --install build
+        dir
+        cd AppDir/usr/bin/
+        dir
+        cd build
+        dir
+
     - uses: actions/upload-artifact@v4
       with:
         name: melonDS-ubuntu-x86_64
@@ -75,7 +81,9 @@ jobs:
         shell: bash
         run: |
           cmake --build build
+          cd build
           dir
+          
       - uses: actions/upload-artifact@v4
         with:
           name: melonDS-ubuntu-aarch64
