@@ -26,13 +26,13 @@ jobs:
         dir
         cd AppDir/usr/bin/
         dir
-        cd build
+        cd melonPrimeDS
         dir
 
     - uses: actions/upload-artifact@v4
       with:
         name: melonDS-ubuntu-x86_64
-        path: AppDir/usr/bin/melonDS
+        path: AppDir/usr/bin/melonPrimeDS
     - name: Fetch AppImage tools
       run: |
         wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
@@ -87,4 +87,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: melonDS-ubuntu-aarch64
-          path: build/melonDS
+          path: build/melonPrimeDS
