@@ -887,21 +887,21 @@ void EmuThread::run()
             // switch to beam
             if (Input::HotkeyPressed(HK_MetroidWeaponBeam)) {
                 NDS->ReleaseScreen();
-                frameAdvance(1);
+                frameAdvance(2);
                 NDS->TouchScreen(85 + 40 * 0, 32);
-                frameAdvance(1);
+                //frameAdvance(2);
                 NDS->ReleaseScreen();
-                frameAdvance(1);
+                //frameAdvance(2);
             }
 
             // switch to missiles
             if (Input::HotkeyPressed(HK_MetroidWeaponMissile)) {
                 NDS->ReleaseScreen();
-                frameAdvance(1);
+                frameAdvance(2);
                 NDS->TouchScreen(85 + 40 * 1, 32);
-                frameAdvance(1);
+                //frameAdvance(2);
                 NDS->ReleaseScreen();
-                frameAdvance(1);
+                //frameAdvance(2);
             }
 
             // switch subweapon
