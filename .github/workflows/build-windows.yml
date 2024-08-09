@@ -17,43 +17,16 @@ jobs:
       with:
         msystem: ucrt64
         update: true
-        install: ninja
-        pacboy: gcc:p cmake:p ninja:p
+        pacboy: gcc:p cmake:p ninja:p make:p
     - name: Set up vcpkg
       uses: lukka/run-vcpkg@v11
       with:
-        vcpkgGitCommitId: 53bef8994c541b6561884a8395ea35715ece75db
-    - name: Install dependencies
-      run: pacman -Sq --noconfirm git make pkgconf mingw-w64-x86_64-{cmake,SDL2,qt5-static,libarchive,toolchain,ninja}
-
+        vcpkgGitCommitId: 1de2026f28ead93ff1773e6e680387643e914ea1
     - name: Configure
       run: cmake --preset=release-mingw-x86_64
     - name: Build
       run: cmake --build --preset=release-mingw-x86_64
-    - name: debug
-      run: |
-        ls
-        cd build
-        ls
     - uses: actions/upload-artifact@v4
       with:
-        name: melonPrimeDS-windows-x86_64
-        path: .\build\melonPrimeDS.exe
-    - uses: actions/upload-artifact@v4
-      with:
-        name: melonPrimeDS-windows-x86_64_2
-        path: .\build\release-mingw-x86_64\melonPrimeDS.exe
-#    - uses: actions/checkout@v1
-#    - uses: msys2/setup-msys2@v2
-#      with:
-#          msystem: MINGW64
-#          update: true
-#
-#    - name: Configure
-#      working-directory: ${{runner.workspace}}
-#      run: cmake -B build $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_STATIC=ON -DCMAKE_PREFIX_PATH=C:/tools/msys64/mingw64/qt5-static
-#
-#    - name: Make
-#      working-directory: ${{runner.workspace}}/build
-#      run: cmake --build .
-#
+        name: melonprimeDS-windows-x86_64
+        path: .\build\release-mingw-x86_64\melonprimeDS.exe

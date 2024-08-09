@@ -879,8 +879,8 @@ void EmuThread::run()
             // right arrow (in scans and messages)
             if (Input::HotkeyPressed(HK_MetroidUIRight)) {
                 NDS->ReleaseScreen();
-                frameAdvance(2);
-                NDS->TouchScreen(185, 141);
+                //frameAdvance(2);
+                //NDS->TouchScreen(185, 141); // optimization ?
                 frameAdvance(2);
             }
 
@@ -1017,7 +1017,7 @@ void EmuThread::run()
                 FN_INPUT_RELEASE(INPUT_R);
             }
 
-            
+
             // shoot
             if (Input::HotkeyDown(HK_MetroidShootScan) || Input::HotkeyDown(HK_MetroidScanShoot)) {
                 FN_INPUT_PRESS(INPUT_L);
