@@ -941,25 +941,25 @@ void EmuThread::run()
             if (NDS->ARM9Read8(PlayerPosAddr) == 0x00) {
                         aimXAddr = 0x020DEDA6;
                         aimYAddr = 0x020DEDAE;
-                        break;
+                        //break;
             }
 
             if (NDS->ARM9Read8(PlayerPosAddr) == 0x01) {
                         aimXAddr = 0x020DEDEE;
                         aimYAddr = 0x020DEDF6;
-                        break;
+                        //break;
             }
 
             if (NDS->ARM9Read8(PlayerPosAddr) == 0x02) {
                         aimXAddr = 0x020DEE36;
                         aimYAddr = 0x020DEE3E;
-                        break;
+                        //break;
             }
 
             if (NDS->ARM9Read8(PlayerPosAddr) == 0x03) {
                         aimXAddr = 0x020DEE7E;
                         aimYAddr = 0x020DEE86;
-                        break;
+                        //break;
             }
 
             // cursor looking
