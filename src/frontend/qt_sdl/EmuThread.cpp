@@ -701,6 +701,7 @@ void EmuThread::run()
 #ifdef METROID_US_1_1
     const bool metroidUSRev1 = true;
     const melonDS::u32 inBallAddr = 0x020DB098;
+    const melonDS::u32 PlayerPosAddr = 0x020DA538;
     const melonDS::u32 inVisorOrMapAddr = 0x020D9A7D; // my best guess
 #else
     const melonDS::u32 inBallAddr = 0x020DA818;
@@ -937,25 +938,25 @@ void EmuThread::run()
 
             // aim addresses for version and player number
 
-            if (NDS->ARM9Read8(020DA538) == 0x00) {
+            if (NDS->ARM9Read8(PlayerPosAddr) == 0x00) {
                         aimXAddr = 0x020DEDA6;
                         aimYAddr = 0x020DEDAE;
                         break;
             }
 
-            if (NDS->ARM9Read8(020DA538) == 0x01) {
+            if (NDS->ARM9Read8(PlayerPosAddr) == 0x01) {
                         aimXAddr = 0x020DEDEE;
                         aimYAddr = 0x020DEDF6;
                         break;
             }
 
-            if (NDS->ARM9Read8(020DA538) == 0x02) {
+            if (NDS->ARM9Read8(PlayerPosAddr) == 0x02) {
                         aimXAddr = 0x020DEE36;
                         aimYAddr = 0x020DEE3E;
                         break;
             }
 
-            if (NDS->ARM9Read8(020DA538) == 0x03) {
+            if (NDS->ARM9Read8(PlayerPosAddr) == 0x03) {
                         aimXAddr = 0x020DEE7E;
                         aimYAddr = 0x020DEE86;
                         break;
