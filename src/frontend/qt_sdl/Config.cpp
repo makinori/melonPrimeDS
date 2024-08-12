@@ -162,7 +162,7 @@ bool GdbARM9BreakOnStartup;
 
 int MetroidAimSensitivity;
 int MetroidVirtualStylusSensitivity;
-int MetroidVsPlayerInput;
+//int MetroidVsPlayerInput;
 
 CameraConfig Camera[2];
 

@@ -936,44 +936,31 @@ void EmuThread::run()
             processMoveInput();
 
             // aim addresses for version and player number
-            if(metroidUSRev1) {
-                switch(Config::MetroidVsPlayerInput) {
-                    case 2:
+
+            if (NDS->ARM9Read8(020DA538) == 0x00) {
+                        aimXAddr = 0x020DEDA6;
+                        aimYAddr = 0x020DEDAE;
+                        break;
+            }
+
+            if (NDS->ARM9Read8(020DA538) == 0x01) {
                         aimXAddr = 0x020DEDEE;
                         aimYAddr = 0x020DEDF6;
                         break;
-                    case 3:
+            }
+
+            if (NDS->ARM9Read8(020DA538) == 0x02) {
                         aimXAddr = 0x020DEE36;
                         aimYAddr = 0x020DEE3E;
                         break;
-                    case 4:
+            }
+
+            if (NDS->ARM9Read8(020DA538) == 0x03) {
                         aimXAddr = 0x020DEE7E;
                         aimYAddr = 0x020DEE86;
                         break;
-                    default:
-                        aimXAddr = 0x020DEDA6;
-                        aimYAddr = 0x020DEDAE;
-                }
             }
-            else {
-                switch(Config::MetroidVsPlayerInput) {
-                    case 2:
-                        aimXAddr = 0x020DF66E;
-                        aimYAddr = 0x020DF676;
-                        break;
-                    case 3:
-                        aimXAddr = 0x020DF6B6;
-                        aimYAddr = 0x020DF6BE;
-                        break;
-                    case 4:
-                        aimXAddr = 0x020DF626;
-                        aimYAddr = 0x020DF706;
-                        break;
-                    default:
-                        aimXAddr = 0x020DE526;
-                        aimYAddr = 0x020DE52E;
-                }
-            }
+
             // cursor looking
             
             if (abs(mouseRel.x()) > 0) {

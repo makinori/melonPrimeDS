@@ -2329,26 +2329,6 @@
          </property>
         </widget>
        </item>
-	   <item row="3" column="0">
-        <widget class="QLabel" name="metroidVsPlayerInputLabel">
-         <property name="text">
-          <string>Vs. mode player input:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QSpinBox" name="metroidVsPlayerInputSpinBox">
-         <property name="minimum">
-          <number>1</number>
-         </property>
-         <property name="maximum">
-          <number>4</number>
-         </property>
-         <property name="value">
-          <number>0</number>
-         </property>
-        </widget>
-       </item>
       </layout>
      </widget>
     </widget>

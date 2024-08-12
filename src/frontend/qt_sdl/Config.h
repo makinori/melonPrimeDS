@@ -236,11 +236,11 @@ extern bool GdbARM9BreakOnStartup;
 
 extern int MetroidAimSensitivity;
 extern int MetroidVirtualStylusSensitivity;
-extern int MetroidVsPlayerInput;
+//extern int MetroidVsPlayerInput;
 
 const int MetroidAimSensitivityDefault = 30;
 const int MetroidVirtualStylusSensitivityDefault = 20;
-const int MetroidVsPlayerInputDefault = 1;
+//const int MetroidVsPlayerInputDefault = 1;
 
 void Load();
 void Save();
