@@ -899,7 +899,7 @@ void EmuThread::run()
             if (Input::HotkeyPressed(HK_MetroidWeaponMissile)) {
                 
                 NDS->ARM9Write8(0x020DB45B,11);
-                NDS->ARM9Write8(0x020DB463,4);
+                NDS->ARM9Write8(0x020DB463,2);
                 //NDS->ReleaseScreen();
                 //frameAdvance(2);
                 //NDS->TouchScreen(85 + 40 * 1, 32);
