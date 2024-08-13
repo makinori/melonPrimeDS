@@ -901,8 +901,8 @@ void EmuThread::run()
                 
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,2);
-                NDS->ReleaseScreen();
-                //frameAdvance(2);
+                //NDS->ReleaseScreen();
+                frameAdvance(2);
                 NDS->ReleaseScreen();
                 //frameAdvance(2);
                 //NDS->ReleaseScreen();
