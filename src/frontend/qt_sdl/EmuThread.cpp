@@ -920,35 +920,35 @@ void EmuThread::run()
                 frameAdvance(2);
             }
 
-                 if (Input::HotkeyPressed(weaponHotkeys[1])) {
+            if (Input::HotkeyPressed(weaponHotkeys[1])) {
                 NDS->ReleaseScreen();
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,6);
                 frameAdvance(2); 
             }
 
-                        if (Input::HotkeyPressed(weaponHotkeys[2])) {
+            if (Input::HotkeyPressed(weaponHotkeys[2])) {
                 NDS->ReleaseScreen();
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,5);
                 frameAdvance(2);
             }
 
-                        if (Input::HotkeyPressed(weaponHotkeys[3])) {
+            if (Input::HotkeyPressed(weaponHotkeys[3])) {
                 NDS->ReleaseScreen();
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,4);
                 frameAdvance(2);
             }
 
-                        if (Input::HotkeyPressed(weaponHotkeys[4])) {
+            if (Input::HotkeyPressed(weaponHotkeys[4])) {
                 NDS->ReleaseScreen();
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,3);
                 frameAdvance(2);
             }
 
-                        if (Input::HotkeyPressed(weaponHotkeys[5])) {
+            if (Input::HotkeyPressed(weaponHotkeys[5])) {
                 NDS->ReleaseScreen();
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,1);
