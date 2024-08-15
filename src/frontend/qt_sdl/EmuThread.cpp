@@ -904,7 +904,8 @@ void EmuThread::run()
                 NDS->ARM9Write8(0x020DB463,0);
 
                 // debug
-                mainWindow->osdAddMessage(0, NDS->ARM9Read8(inJumpAddr));
+                int jumpStatus = NDS->ARM9Read8(0x020DB45B);
+                mainWindow->osdAddMessage(0, "jump value", jumpStatus);
                 //
                 frameAdvance(2);
             }
@@ -917,8 +918,12 @@ void EmuThread::run()
                 
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,2);
-                mainWindow->osdAddMessage(0, NDS->ARM9Read8(0x020DB45B));
-                mainWindow->osdAddMessage(0, NDS->ARM9Read8(0x020DB463));
+
+                int touchStatus = NDS->ARM9Read8(0x020DB45B);
+                int weaponStatus = NDS->ARM9Read8(0x020DB463);
+
+                mainWindow->osdAddMessage(0, "touch status", touchStatus);
+                mainWindow->osdAddMessage(0, "weapon value", weaponStatus);
                 frameAdvance(2);
                 NDS->ARM9Write8(inJumpAddr,0);
             }
