@@ -35,7 +35,7 @@ Releases for [Windows, Linux and macOS here!](https://github.com/makidoll/melonP
 -   Fyi. the emulator hack uses a different config path than melonDS, so this won't conflict
 
 -   Aquire a copy of the **USA 1.1 rom** of Metroid Prime Hunters<br>
-    Other regions don't work beacuse memory injection is used
+    Other regions don't work because memory injection is used
 
 -   Make sure to set all DS bindings to `None` in<br>
     `Config → Input and hotkeys → DS keypad`<br>
