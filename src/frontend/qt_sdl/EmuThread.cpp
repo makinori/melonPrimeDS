@@ -918,6 +918,7 @@ void EmuThread::run()
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,2);
                 mainWindow->osdAddMessage(0, NDS->ARM9Read8(0x020DB45B));
+                mainWindow->osdAddMessage(0, NDS->ARM9Read8(0x020DB463));
                 frameAdvance(2);
                 NDS->ARM9Write8(inJumpAddr,0);
             }
