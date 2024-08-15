@@ -902,8 +902,9 @@ void EmuThread::run()
                 NDS->ARM9Write8(inJumpAddr,1);
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,0);
-                NDS->ARM9Write8(inJumpAddr,0);
+                
                 frameAdvance(2);
+                NDS->ARM9Write8(inJumpAddr,0);
             }
 
             // switch to missiles
@@ -913,8 +914,9 @@ void EmuThread::run()
                 NDS->ARM9Write8(inJumpAddr,1);
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,2);
-                NDS->ARM9Write8(inJumpAddr,0);
+                
                 frameAdvance(2);
+                NDS->ARM9Write8(inJumpAddr,0);
             }
 
             // switch subweapon
@@ -933,8 +935,9 @@ void EmuThread::run()
                 NDS->ARM9Write8(inJumpAddr,1);
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,7);
-                NDS->ARM9Write8(inJumpAddr,0);
+                
                 frameAdvance(2);
+                NDS->ARM9Write8(inJumpAddr,0);
             }
 
             if (Input::HotkeyPressed(weaponHotkeys[1])) {
@@ -942,8 +945,9 @@ void EmuThread::run()
                 NDS->ARM9Write8(inJumpAddr,1);
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,6);
-                NDS->ARM9Write8(inJumpAddr,0);
-                frameAdvance(2); 
+                
+                frameAdvance(2);
+                NDS->ARM9Write8(inJumpAddr,0); 
             }
 
             if (Input::HotkeyPressed(weaponHotkeys[2])) {
@@ -951,8 +955,9 @@ void EmuThread::run()
                 NDS->ARM9Write8(inJumpAddr,1);
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,5);
-                NDS->ARM9Write8(inJumpAddr,0);
+                
                 frameAdvance(2);
+                NDS->ARM9Write8(inJumpAddr,0);
             }
 
             if (Input::HotkeyPressed(weaponHotkeys[3])) {
@@ -960,8 +965,9 @@ void EmuThread::run()
                 NDS->ARM9Write8(inJumpAddr,1);
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,4);
-                NDS->ARM9Write8(inJumpAddr,0);
+                
                 frameAdvance(2);
+                NDS->ARM9Write8(inJumpAddr,0);
             }
 
             if (Input::HotkeyPressed(weaponHotkeys[4])) {
@@ -969,8 +975,9 @@ void EmuThread::run()
                 NDS->ARM9Write8(inJumpAddr,1);
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,3);
-                NDS->ARM9Write8(inJumpAddr,0);
+                
                 frameAdvance(2);
+                NDS->ARM9Write8(inJumpAddr,0);
             }
 
             if (Input::HotkeyPressed(weaponHotkeys[5])) {
@@ -978,8 +985,9 @@ void EmuThread::run()
                 NDS->ARM9Write8(inJumpAddr,1);
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,1);
-                NDS->ARM9Write8(inJumpAddr,0);
+                
                 frameAdvance(2);
+                NDS->ARM9Write8(inJumpAddr,0);
             }
             } else {
                  // switch to beam
