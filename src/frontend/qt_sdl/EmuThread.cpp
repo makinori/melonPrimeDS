@@ -892,21 +892,21 @@ void EmuThread::run()
 
 
 
-            bool JumpAvailable = NDS->ARM9Read8(inJumpAddr) != 0x1 && NDS->ARM9Read8(inJumpAddr) != 0x33;
+            bool JumpAvailable = NDS->ARM9Read8(inJumpAddr) != 0x1 && NDS->ARM9Read8(inJumpAddr) != 0x21;
 
             if (JumpAvailable) {
 
             // switch to beam
             if (Input::HotkeyPressed(HK_MetroidWeaponBeam)) {
-                NDS->ARM9Write8(inJumpAddr,1);
                 NDS->ReleaseScreen();
                 
                 NDS->ARM9Write8(0x020DB45B,11);
-                NDS->ARM9Write8(inJumpAddr,1);
                 NDS->ARM9Write8(0x020DB463,0);
-                NDS->ARM9Write8(inJumpAddr,1);
+
+                // debug
+                mainWindow->osdAddMessage(0, NDS->ARM9Read8(inJumpAddr));
+                //
                 frameAdvance(2);
-                NDS->ARM9Write8(inJumpAddr,0);
             }
 
             // switch to missiles
@@ -917,7 +917,7 @@ void EmuThread::run()
                 
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,2);
-                
+                mainWindow->osdAddMessage(0, NDS->ARM9Read8(0x020DB45B));
                 frameAdvance(2);
                 NDS->ARM9Write8(inJumpAddr,0);
             }
