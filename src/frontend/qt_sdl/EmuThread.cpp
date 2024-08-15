@@ -892,7 +892,7 @@ void EmuThread::run()
 
 
 
-            bool JumpAvailable = NDS->ARM9Read8(inJumpAddr) != 0x1;
+            bool JumpAvailable = NDS->ARM9Read8(inJumpAddr) != 0x1 && NDS->ARM9Read8(inJumpAddr) != 0x21;
 
             if (JumpAvailable) {
 
