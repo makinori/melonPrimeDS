@@ -892,17 +892,19 @@ void EmuThread::run()
 
 
 
-            bool JumpAvailable = NDS->ARM9Read8(inJumpAddr) != 0x1 && NDS->ARM9Read8(inJumpAddr) != 0x21;
+            bool JumpAvailable = NDS->ARM9Read8(inJumpAddr) != 0x1 && NDS->ARM9Read8(inJumpAddr) != 0x33;
 
             if (JumpAvailable) {
 
             // switch to beam
             if (Input::HotkeyPressed(HK_MetroidWeaponBeam)) {
-                NDS->ReleaseScreen();
                 NDS->ARM9Write8(inJumpAddr,1);
-                NDS->ARM9Write8(0x020DB45B,11);
-                NDS->ARM9Write8(0x020DB463,0);
+                NDS->ReleaseScreen();
                 
+                NDS->ARM9Write8(0x020DB45B,11);
+                NDS->ARM9Write8(inJumpAddr,1);
+                NDS->ARM9Write8(0x020DB463,0);
+                NDS->ARM9Write8(inJumpAddr,1);
                 frameAdvance(2);
                 NDS->ARM9Write8(inJumpAddr,0);
             }
@@ -910,8 +912,9 @@ void EmuThread::run()
             // switch to missiles
             if (Input::HotkeyPressed(HK_MetroidWeaponMissile)) {
                 
-                NDS->ReleaseScreen();
                 NDS->ARM9Write8(inJumpAddr,1);
+                NDS->ReleaseScreen();
+                
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,2);
                 
@@ -931,8 +934,9 @@ void EmuThread::run()
             };
 
             if (Input::HotkeyPressed(weaponHotkeys[0])) {
-                NDS->ReleaseScreen();
                 NDS->ARM9Write8(inJumpAddr,1);
+                NDS->ReleaseScreen();
+                
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,7);
                 
@@ -941,8 +945,9 @@ void EmuThread::run()
             }
 
             if (Input::HotkeyPressed(weaponHotkeys[1])) {
-                NDS->ReleaseScreen();
                 NDS->ARM9Write8(inJumpAddr,1);
+                NDS->ReleaseScreen();
+                
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,6);
                 
@@ -951,8 +956,9 @@ void EmuThread::run()
             }
 
             if (Input::HotkeyPressed(weaponHotkeys[2])) {
-                NDS->ReleaseScreen();
                 NDS->ARM9Write8(inJumpAddr,1);
+                NDS->ReleaseScreen();
+                
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,5);
                 
@@ -961,8 +967,9 @@ void EmuThread::run()
             }
 
             if (Input::HotkeyPressed(weaponHotkeys[3])) {
-                NDS->ReleaseScreen();
                 NDS->ARM9Write8(inJumpAddr,1);
+                NDS->ReleaseScreen();
+                
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,4);
                 
@@ -971,8 +978,9 @@ void EmuThread::run()
             }
 
             if (Input::HotkeyPressed(weaponHotkeys[4])) {
-                NDS->ReleaseScreen();
                 NDS->ARM9Write8(inJumpAddr,1);
+                NDS->ReleaseScreen();
+                
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,3);
                 
@@ -981,8 +989,9 @@ void EmuThread::run()
             }
 
             if (Input::HotkeyPressed(weaponHotkeys[5])) {
-                NDS->ReleaseScreen();
                 NDS->ARM9Write8(inJumpAddr,1);
+                NDS->ReleaseScreen();
+                
                 NDS->ARM9Write8(0x020DB45B,11);
                 NDS->ARM9Write8(0x020DB463,1);
                 
