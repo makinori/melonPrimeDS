@@ -743,7 +743,7 @@ void MainWindow::createScreenPanel()
         panel->show();
     }
     setCentralWidget(panel);
-    LuaScript::panel = panelWidget; //So LuaScript can track mouse pos.
+    LuaScript::panel = panel; //So LuaScript can track mouse pos.
     actScreenFiltering->setEnabled(hasOGL);
     panel->osdSetEnabled(Config::ShowOSD);
 
