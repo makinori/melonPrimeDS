@@ -353,6 +353,11 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
         actPowerManagement = menu->addAction("Power management");
         connect(actPowerManagement, &QAction::triggered, this, &MainWindow::onOpenPowerManagement);
 
+        actLuaScript = menu->addAction("Lua Script");
+        connect(actLuaScript,&QAction::triggered,this,&MainWindow::onOpenLuaScript);
+
+        menu->addSeparator();
+
         actDateTime = menu->addAction("Date and time");
         connect(actDateTime, &QAction::triggered, this, &MainWindow::onOpenDateTime);
 
@@ -738,7 +743,7 @@ void MainWindow::createScreenPanel()
         panel->show();
     }
     setCentralWidget(panel);
-
+    LuaScript::panel = panelWidget; //So LuaScript can track mouse pos.
     actScreenFiltering->setEnabled(hasOGL);
     panel->osdSetEnabled(Config::ShowOSD);
 
@@ -1412,6 +1417,13 @@ void MainWindow::onEjectGBACart()
     updateCartInserted(true);
 }
 
+void MainWindow::onLuaSaveState(const QString& filename)
+{
+    emuThread->emuPause();
+    ROMManager::SaveState(filename.toStdString());
+    emuThread->emuUnpause();
+}
+
 void MainWindow::onSaveState()
 {
     int slot = ((QAction*)sender())->data().toInt();
@@ -1451,6 +1463,13 @@ void MainWindow::onSaveState()
         osdAddMessage(0xFFA0A0, "State save failed");
     }
 
+    emuThread->emuUnpause();
+}
+
+void MainWindow::onLuaLoadState(const QString& filename)
+{
+    emuThread->emuPause();
+    ROMManager::LoadState(filename.toStdString());
     emuThread->emuUnpause();
 }
 
@@ -1627,6 +1646,16 @@ void MainWindow::onOpenDateTime()
 void MainWindow::onOpenPowerManagement()
 {
     PowerManagementDialog* dlg = PowerManagementDialog::openDlg(this, emuThread);
+}
+
+void MainWindow::onOpenLuaScript()
+{
+    if (LuaScript::LuaDialog) // only one at a time.
+        return;
+    LuaScript::LuaDialog = new LuaScript::LuaConsoleDialog(this);
+    LuaScript::LuaDialog->show();
+    connect(emuThread,&EmuThread::signalLuaSaveState,mainWindow,&MainWindow::onLuaSaveState);
+    connect(emuThread,&EmuThread::signalLuaLoadState,mainWindow,&MainWindow::onLuaLoadState);
 }
 
 void MainWindow::onEnableCheats(bool checked)
@@ -2072,6 +2101,7 @@ void MainWindow::onUpdateVideoSettings(bool glchange)
 {
     if (glchange)
     {
+        LuaScript::luaResetOSD();
         emuThread->emuPause();
         if (hasOGL) emuThread->deinitContext();
 

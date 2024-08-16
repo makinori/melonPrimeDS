@@ -36,7 +36,7 @@ QBitArray HotkeyMask, LastHotkeyMask;
 QBitArray HotkeyPress, HotkeyRelease;
 
 QBitArray InputMask;
-
+std::vector<int> Keystrokes;
 
 void Init()
 {
@@ -117,6 +117,7 @@ void KeyPress(QKeyEvent* event)
     // int keyKP = keyHK;
     // if (event->modifiers() != Qt::KeypadModifier)
     //     keyKP &= ~event->modifiers();
+    Keystrokes.push_back(keyHK); //work??
 
     int key = event->key();
 

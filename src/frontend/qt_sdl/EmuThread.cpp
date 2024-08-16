@@ -662,6 +662,9 @@ void EmuThread::run()
                 ContextRequest = contextRequest_None;
             }
         }
+        //luaScript
+        LuaScript::createLuaState();
+        LuaScript::luaUpdate(); //run _Update
     }
     };
 
