@@ -54,7 +54,7 @@
 #include "GPU3D_OpenGL.h"
 
 #include "Savestate.h"
-
+#include "LuaMain.h"
 #include "ROMManager.h"
 //#include "ArchiveUtil.h"
 //#include "CameraManager.h"
@@ -910,7 +910,6 @@ void EmuThread::run()
                 int jumpStatus = NDS->ARM9Read8(0x020DB45B);
                 mainWindow->osdAddMessage(0, "jump value", jumpStatus);
                 printf("jumpStatus %d", jumpStatus);
-                Platform::Log(LogLevel::Debug, "jumpStatus loglevel %u", jumpStatus);
 
                 //
                 frameAdvance(2);
@@ -933,8 +932,6 @@ void EmuThread::run()
                 mainWindow->osdAddMessage(0, "touch status", touchStatus);
                 mainWindow->osdAddMessage(0, "weapon value", weaponStatus);
 
-                Platform::Log(LogLevel::Debug, "weaponStatus loglevel %u", weaponStatus);
-                Platform::Log(LogLevel::Debug, "touchStatus loglevel %u", touchStatus);
 
                 frameAdvance(2);
                 NDS->ARM9Write8(inJumpAddr,0);

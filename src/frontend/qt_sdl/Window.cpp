@@ -74,7 +74,7 @@
 #include "Config.h"
 #include "Savestate.h"
 #include "LocalMP.h"
-
+#include "LuaMain.h"
 //#include "main_shaders.h"
 
 #include "ROMManager.h"
