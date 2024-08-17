@@ -57,6 +57,8 @@
 
 using namespace melonDS;
 
+GLint uScreenSize, uOSDPos, uOSDSize;
+
 
 // TEMP
 extern MainWindow* mainWindow;
