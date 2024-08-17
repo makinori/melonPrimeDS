@@ -113,7 +113,7 @@ void printBits(size_t const size, void const * const ptr)
 
 void KeyPress(QKeyEvent* event)
 {
-    // int keyHK = GetEventKeyVal(event);
+     int keyHK = GetEventKeyVal(event);
     // int keyKP = keyHK;
     // if (event->modifiers() != Qt::KeypadModifier)
     //     keyKP &= ~event->modifiers();
