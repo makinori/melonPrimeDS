@@ -62,6 +62,7 @@
 //#include "CLI.h"
 
 // #include "RawInputThread.h"
+#include "overlay_shaders.h"
 
 // TODO: uniform variable spelling
 using namespace melonDS;
@@ -999,23 +1000,14 @@ void EmuThread::run()
         
         NDS->SetKeyMask(Input::GetInputMask());
 
-        if (drawVCur) { 
-            const int cursorSize = 11;
-            const int cursorOffset = 5;
-            const bool cursor[] = {
-                0,0,0,1,1,1,1,1,0,0,0,
-                0,0,1,0,0,0,0,0,1,0,0,
-                0,1,0,0,0,0,0,0,0,1,0,
-                1,0,0,0,0,0,0,0,0,0,1,
-                1,0,0,0,0,1,0,0,0,0,1,
-                1,0,0,0,1,1,1,0,0,0,1,
-                1,0,0,0,0,1,0,0,0,0,1,
-                1,0,0,0,0,0,0,0,0,0,1,
-                0,1,0,0,0,0,0,0,0,1,0,
-                0,0,1,0,0,0,0,0,1,0,0,
-                0,0,0,1,1,1,1,1,0,0,0,
-            };
-
+        if (screenGL) {
+            screenGL->virtualCursorShow = drawVCur;
+            screenGL->virtualCursorX = virtualStylusX;
+            screenGL->virtualCursorY = virtualStylusY;
+        } else if (drawVCur) { 
+            const int cursorSize = virtualCursorSize;
+            const int cursorOffset = virtualCursorSize / 2;
+            
             auto setPixel {
                 [&](int x, int y, melonDS::u32 color) {
                     if (x < 0) return;
@@ -1034,7 +1026,7 @@ void EmuThread::run()
 
             for (int y = 0; y < cursorSize; y++) {
                 for (int x = 0; x < cursorSize; x++) {
-                    int value = cursor[y * cursorSize + x];
+                    int value = virtualCursorPixels[y * cursorSize + x];
                     if (!value) continue;
                     setPixel(
                         virtualStylusX + x - cursorOffset,

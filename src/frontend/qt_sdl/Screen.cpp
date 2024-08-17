@@ -52,6 +52,7 @@
 
 #include "main_shaders.h"
 #include "OSD_shaders.h"
+#include "overlay_shaders.h"
 #include "font.h"
 
 using namespace melonDS;
@@ -833,6 +834,51 @@ void ScreenPanelGL::initOpenGL()
 
     glContext->SetSwapInterval(Config::ScreenVSync ? Config::ScreenVSyncInterval : 0);
     transferLayout();
+
+    // metroid prime related
+
+    OpenGL::BuildShaderProgram(kScreenVS, kScreenFS_overlay, overlayShader, "OverlayShader");
+
+    pid = overlayShader[2];
+    glBindAttribLocation(pid, 0, "vPosition");
+    glBindAttribLocation(pid, 1, "vTexcoord");
+    glBindFragDataLocation(pid, 0, "oColor");
+
+    OpenGL::LinkShaderProgram(overlayShader);
+
+    overlayScreenSizeULoc = glGetUniformLocation(pid, "uScreenSize");
+    overlayTransformULoc = glGetUniformLocation(pid, "uTransform");
+
+    overlayPosULoc = glGetUniformLocation(pid, "uOverlayPos");
+    overlaySizeULoc = glGetUniformLocation(pid, "uOverlaySize");
+
+    glGenTextures(1, &virtualCursorTexture);
+    glBindTexture(GL_TEXTURE_2D, virtualCursorTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // QImage virtualCursorImage;
+    // virtualCursorImage.load("/home/maki/cursor.png");
+    // virtualCursorImage.convertTo(QImage::Format_RGBA8888);
+
+    char virtualCursorBytes[virtualCursorSize * virtualCursorSize * 4];
+
+    for (int i = 0; i < virtualCursorSize * virtualCursorSize; i++) {
+        virtualCursorBytes[i * 4 + 0] = 0xff;
+        virtualCursorBytes[i * 4 + 1] = 0xff;
+        virtualCursorBytes[i * 4 + 2] = 0xff;
+        virtualCursorBytes[i * 4 + 3] = virtualCursorPixels[i] ? 0xff : 0x00;
+    }
+
+    glTexImage2D(
+        GL_TEXTURE_2D, 0, GL_RGBA,
+        // virtualCursorImage.width(), virtualCursorImage.height(), 0,
+        virtualCursorSize, virtualCursorSize, 0,
+        // GL_ALPHA, GL_UNSIGNED_BYTE, virtualCursorImage.bits()
+        GL_RGBA, GL_UNSIGNED_BYTE, &virtualCursorBytes
+    );
 }
 
 void ScreenPanelGL::deinitOpenGL()
@@ -858,6 +904,9 @@ void ScreenPanelGL::deinitOpenGL()
 
     OpenGL::DeleteShaderProgram(osdShader);
 
+    OpenGL::DeleteShaderProgram(overlayShader);
+
+    glDeleteTextures(1, &virtualCursorTexture);
 
     glContext->DoneCurrent();
 
@@ -954,6 +1003,38 @@ void ScreenPanelGL::drawScreenGL()
     }
 
     screenSettingsLock.unlock();
+
+    // metroid related
+
+    glUseProgram(overlayShader[2]);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+    glUniform2f(overlayScreenSizeULoc, w / factor, h / factor);
+
+    glBindBuffer(GL_ARRAY_BUFFER, screenVertexBuffer);
+    glBindVertexArray(screenVertexArray);
+
+    screenSettingsLock.lock();
+
+    if (virtualCursorShow) {
+        glBindTexture(GL_TEXTURE_2D, virtualCursorTexture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        // 0.5 for pad pixel, still not super precise tho but its okay
+        glUniform2f(overlayPosULoc, virtualCursorX - 5, virtualCursorY - 5 + 0.5);
+        glUniform2f(overlaySizeULoc, 11, 11);
+
+        glUniformMatrix2x3fv(overlayTransformULoc, 1, GL_TRUE, screenMatrix[1]);
+        glDrawArrays(GL_TRIANGLES, 2*3, 2*3);
+    }
+
+    screenSettingsLock.unlock();
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
 
     osdUpdate();
     if (osdEnabled)
