@@ -1417,12 +1417,12 @@ void MainWindow::onEjectGBACart()
     updateCartInserted(true);
 }
 
-void MainWindow::onLuaSaveState(const QString& filename)
-{
-    emuThread->emuPause();
-    ROMManager::SaveState(filename.toStdString());
-    emuThread->emuUnpause();
-}
+// void MainWindow::onLuaSaveState(const QString& filename)
+// {
+//     emuThread->emuPause();
+//     ROMManager::SaveState(filename.toStdString());
+//     emuThread->emuUnpause();
+// }
 
 void MainWindow::onSaveState()
 {
@@ -1466,12 +1466,12 @@ void MainWindow::onSaveState()
     emuThread->emuUnpause();
 }
 
-void MainWindow::onLuaLoadState(const QString& filename)
-{
-    emuThread->emuPause();
-    ROMManager::LoadState(filename.toStdString());
-    emuThread->emuUnpause();
-}
+// void MainWindow::onLuaLoadState(const QString& filename)
+// {
+//     emuThread->emuPause();
+//     ROMManager::LoadState(filename.toStdString());
+//     emuThread->emuUnpause();
+// }
 
 void MainWindow::onLoadState()
 {
