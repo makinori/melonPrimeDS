@@ -54,7 +54,7 @@
 #include "GPU3D_OpenGL.h"
 
 #include "Savestate.h"
-#include "LuaMain.h"
+
 #include "ROMManager.h"
 //#include "ArchiveUtil.h"
 //#include "CameraManager.h"
@@ -62,6 +62,7 @@
 //#include "CLI.h"
 
 // #include "RawInputThread.h"
+#include "overlay_shaders.h"
 
 // TODO: uniform variable spelling
 using namespace melonDS;
@@ -662,9 +663,6 @@ void EmuThread::run()
                 ContextRequest = contextRequest_None;
             }
         }
-        //luaScript
-        LuaScript::createLuaState();
-        LuaScript::luaUpdate(); //run _Update
     }
     };
 
@@ -706,7 +704,6 @@ void EmuThread::run()
     const melonDS::u32 inBallAddr = 0x020DB098;
     const melonDS::u32 PlayerPosAddr = 0x020DA538;
     const melonDS::u32 inVisorOrMapAddr = 0x020D9A7D; // my best guess
-    const melonDS::u32 inJumpAddr = 0x020DB459;
 #else
     const melonDS::u32 inBallAddr = 0x020DA818;
 #endif
@@ -889,145 +886,23 @@ void EmuThread::run()
                 //frameAdvance(2);
             }
 
-
-
-
-
-
-
-            bool JumpAvailable = NDS->ARM9Read8(inJumpAddr) != 0x1 && NDS->ARM9Read8(inJumpAddr) != 0x21;
-
-            if (JumpAvailable) {
-
             // switch to beam
             if (Input::HotkeyPressed(HK_MetroidWeaponBeam)) {
                 NDS->ReleaseScreen();
-                
-                NDS->ARM9Write8(0x020DB45B,11);
-                NDS->ARM9Write8(0x020DB463,0);
-
-                // debug
-                int jumpStatus = NDS->ARM9Read8(0x020DB45B);
-                mainWindow->osdAddMessage(0, "jump value", jumpStatus);
-                printf("jumpStatus %d", jumpStatus);
-
-                //
+                frameAdvance(2);
+                NDS->TouchScreen(85 + 40 * 0, 32);
+                frameAdvance(2);
+                NDS->ReleaseScreen();
                 frameAdvance(2);
             }
 
             // switch to missiles
             if (Input::HotkeyPressed(HK_MetroidWeaponMissile)) {
-                
-                NDS->ARM9Write8(inJumpAddr,1);
                 NDS->ReleaseScreen();
-                
-                NDS->ARM9Write8(0x020DB45B,11);
-                NDS->ARM9Write8(0x020DB463,2);
-
-                int touchStatus = NDS->ARM9Read8(0x020DB45B);
-                int weaponStatus = NDS->ARM9Read8(0x020DB463);
-                printf("touchStatus %d", touchStatus);
-                printf("weaponStatus %d", weaponStatus);
-
-                mainWindow->osdAddMessage(0, "touch status", touchStatus);
-                mainWindow->osdAddMessage(0, "weapon value", weaponStatus);
-
-
                 frameAdvance(2);
-                NDS->ARM9Write8(inJumpAddr,0);
-            }
-
-            // switch subweapon
-
-            Hotkey weaponHotkeys[] = {
-                HK_MetroidWeapon1,
-                HK_MetroidWeapon2,
-                HK_MetroidWeapon3,
-                HK_MetroidWeapon4,
-                HK_MetroidWeapon5,
-                HK_MetroidWeapon6,
-            };
-
-            if (Input::HotkeyPressed(weaponHotkeys[0])) {
-                NDS->ARM9Write8(inJumpAddr,1);
-                NDS->ReleaseScreen();
-                
-                NDS->ARM9Write8(0x020DB45B,11);
-                NDS->ARM9Write8(0x020DB463,7);
-                
+                NDS->TouchScreen(85 + 40 * 1, 32);
                 frameAdvance(2);
-                NDS->ARM9Write8(inJumpAddr,0);
-            }
-
-            if (Input::HotkeyPressed(weaponHotkeys[1])) {
-                NDS->ARM9Write8(inJumpAddr,1);
                 NDS->ReleaseScreen();
-                
-                NDS->ARM9Write8(0x020DB45B,11);
-                NDS->ARM9Write8(0x020DB463,6);
-                
-                frameAdvance(2);
-                NDS->ARM9Write8(inJumpAddr,0); 
-            }
-
-            if (Input::HotkeyPressed(weaponHotkeys[2])) {
-                NDS->ARM9Write8(inJumpAddr,1);
-                NDS->ReleaseScreen();
-                
-                NDS->ARM9Write8(0x020DB45B,11);
-                NDS->ARM9Write8(0x020DB463,5);
-                
-                frameAdvance(2);
-                NDS->ARM9Write8(inJumpAddr,0);
-            }
-
-            if (Input::HotkeyPressed(weaponHotkeys[3])) {
-                NDS->ARM9Write8(inJumpAddr,1);
-                NDS->ReleaseScreen();
-                
-                NDS->ARM9Write8(0x020DB45B,11);
-                NDS->ARM9Write8(0x020DB463,4);
-                
-                frameAdvance(2);
-                NDS->ARM9Write8(inJumpAddr,0);
-            }
-
-            if (Input::HotkeyPressed(weaponHotkeys[4])) {
-                NDS->ARM9Write8(inJumpAddr,1);
-                NDS->ReleaseScreen();
-                
-                NDS->ARM9Write8(0x020DB45B,11);
-                NDS->ARM9Write8(0x020DB463,3);
-                
-                frameAdvance(2);
-                NDS->ARM9Write8(inJumpAddr,0);
-            }
-
-            if (Input::HotkeyPressed(weaponHotkeys[5])) {
-                NDS->ARM9Write8(inJumpAddr,1);
-                NDS->ReleaseScreen();
-                
-                NDS->ARM9Write8(0x020DB45B,11);
-                NDS->ARM9Write8(0x020DB463,1);
-                
-                frameAdvance(2);
-                NDS->ARM9Write8(inJumpAddr,0);
-            }
-            } else {
-                 // switch to beam
-            if (Input::HotkeyPressed(HK_MetroidWeaponBeam)) {
-                NDS->ReleaseScreen();
-                NDS->ARM9Write8(0x020DB45B,11);
-                NDS->ARM9Write8(0x020DB463,0);
-                frameAdvance(2);
-            }
-
-            // switch to missiles
-            if (Input::HotkeyPressed(HK_MetroidWeaponMissile)) {
-                
-                NDS->ReleaseScreen();
-                NDS->ARM9Write8(0x020DB45B,11);
-                NDS->ARM9Write8(0x020DB463,2);
                 frameAdvance(2);
             }
 
@@ -1042,50 +917,21 @@ void EmuThread::run()
                 HK_MetroidWeapon6,
             };
 
-            if (Input::HotkeyPressed(weaponHotkeys[0])) {
-                NDS->ReleaseScreen();
-                NDS->ARM9Write8(0x020DB45B,11);
-                NDS->ARM9Write8(0x020DB463,7);
-                frameAdvance(2);
-            }
+            for (int i = 0; i < 6; i++) {
+                if (Input::HotkeyPressed(weaponHotkeys[i])) {
+                    melonDS::u16 subX = 93 + 25 * i;
+                    melonDS::u16 subY = 48 + 25 * i;
 
-            if (Input::HotkeyPressed(weaponHotkeys[1])) {
-                NDS->ReleaseScreen();
-                NDS->ARM9Write8(0x020DB45B,11);
-                NDS->ARM9Write8(0x020DB463,6);
-                frameAdvance(2); 
+                    NDS->ReleaseScreen();
+                    frameAdvance(2);
+                    NDS->TouchScreen(232, 34);
+                    frameAdvance(2);
+                    NDS->TouchScreen(subX, subY);
+                    frameAdvance(2);
+                    NDS->ReleaseScreen();
+                    frameAdvance(2);
+                }
             }
-
-            if (Input::HotkeyPressed(weaponHotkeys[2])) {
-                NDS->ReleaseScreen();
-                NDS->ARM9Write8(0x020DB45B,11);
-                NDS->ARM9Write8(0x020DB463,5);
-                frameAdvance(2);
-            }
-
-            if (Input::HotkeyPressed(weaponHotkeys[3])) {
-                NDS->ReleaseScreen();
-                NDS->ARM9Write8(0x020DB45B,11);
-                NDS->ARM9Write8(0x020DB463,4);
-                frameAdvance(2);
-            }
-
-            if (Input::HotkeyPressed(weaponHotkeys[4])) {
-                NDS->ReleaseScreen();
-                NDS->ARM9Write8(0x020DB45B,11);
-                NDS->ARM9Write8(0x020DB463,3);
-                frameAdvance(2);
-            }
-
-            if (Input::HotkeyPressed(weaponHotkeys[5])) {
-                NDS->ReleaseScreen();
-                NDS->ARM9Write8(0x020DB45B,11);
-                NDS->ARM9Write8(0x020DB463,1);
-                frameAdvance(2);
-            }
-            }
-
-
 
             // move
 
@@ -1193,22 +1039,13 @@ void EmuThread::run()
         
         NDS->SetKeyMask(Input::GetInputMask());
 
-        if (drawVCur) { 
-            const int cursorSize = 11;
-            const int cursorOffset = 5;
-            const bool cursor[] = {
-                0,0,0,1,1,1,1,1,0,0,0,
-                0,0,1,0,0,0,0,0,1,0,0,
-                0,1,0,0,0,0,0,0,0,1,0,
-                1,0,0,0,0,0,0,0,0,0,1,
-                1,0,0,0,0,1,0,0,0,0,1,
-                1,0,0,0,1,1,1,0,0,0,1,
-                1,0,0,0,0,1,0,0,0,0,1,
-                1,0,0,0,0,0,0,0,0,0,1,
-                0,1,0,0,0,0,0,0,0,1,0,
-                0,0,1,0,0,0,0,0,1,0,0,
-                0,0,0,1,1,1,1,1,0,0,0,
-            };
+        if (screenGL) {
+            screenGL->virtualCursorShow = drawVCur;
+            screenGL->virtualCursorX = virtualStylusX;
+            screenGL->virtualCursorY = virtualStylusY;
+        } else if (drawVCur) { 
+            const int cursorSize = virtualCursorSize;
+            const int cursorOffset = virtualCursorSize / 2;
 
             auto setPixel {
                 [&](int x, int y, melonDS::u32 color) {
@@ -1228,7 +1065,7 @@ void EmuThread::run()
 
             for (int y = 0; y < cursorSize; y++) {
                 for (int x = 0; x < cursorSize; x++) {
-                    int value = cursor[y * cursorSize + x];
+                    int value = virtualCursorPixels[y * cursorSize + x];
                     if (!value) continue;
                     setPixel(
                         virtualStylusX + x - cursorOffset,

@@ -33,7 +33,6 @@
 #include <QScreen>
 #include <QCloseEvent>
 
-
 #include "Screen.h"
 
 
@@ -143,9 +142,7 @@ private slots:
     void onInsertGBACart();
     void onInsertGBAAddon();
     void onEjectGBACart();
-    void onLuaSaveState(const QString& filename);
     void onSaveState();
-    void onLuaLoadState(const QString& filename);
     void onLoadState();
     void onUndoStateLoad();
     void onImportSavefile();
@@ -156,7 +153,6 @@ private slots:
     void onStop();
     void onFrameStep();
     void onOpenPowerManagement();
-    void onOpenLuaScript();
     void onOpenDateTime();
     void onEnableCheats(bool checked);
     void onSetupCheats();
@@ -258,7 +254,6 @@ public:
     QAction* actStop;
     QAction* actFrameStep;
     QAction* actPowerManagement;
-    QAction* actLuaScript;
     QAction* actDateTime;
     QAction* actEnableCheats;
     QAction* actSetupCheats;

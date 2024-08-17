@@ -23,7 +23,6 @@
 #include <SDL2/SDL.h>
 
 #include "types.h"
-#include <vector>
 
 namespace Input
 {
@@ -33,7 +32,7 @@ extern int JoystickID;
 extern SDL_Joystick* Joystick;
 
 extern QBitArray InputMask;
-extern std::vector<int> Keystrokes; //used by Luascripts
+
 void Init();
 
 // set joystickID before calling openJoystick()

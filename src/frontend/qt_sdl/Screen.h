@@ -197,6 +197,17 @@ private:
 
     void osdRenderItem(OSDItem* item) override;
     void osdDeleteItem(OSDItem* item) override;
+
+    // metroid prime related
+    GLuint overlayShader[3];
+    GLuint overlayScreenSizeULoc, overlayTransformULoc;
+    GLuint overlayPosULoc, overlaySizeULoc;
+
+    GLuint virtualCursorTexture;
+public:
+    bool virtualCursorShow = false;
+    float virtualCursorX;
+    float virtualCursorY;
 };
 
 #endif // SCREEN_H
