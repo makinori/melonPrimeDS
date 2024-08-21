@@ -27,7 +27,7 @@ smooth in vec2 fTexcoord;
 
 uniform vec2 uOverlayPos;
 uniform vec2 uOverlaySize;
-uniform int uOverlayScreenKind;
+uniform int uOverlayScreenType;
 
 out vec4 oColor;
 
@@ -37,7 +37,7 @@ void main()
 
     vec2 uv = fTexcoord * vec2(1.0, 2.0);
 
-    if (uOverlayScreenKind < 1) {
+    if (uOverlayScreenType < 1) {
         // top screen
         uv -= uOverlayPos / dsSize;
         uv *= dsSize / uOverlaySize;
