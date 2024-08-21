@@ -851,6 +851,7 @@ void ScreenPanelGL::initOpenGL()
 
     overlayPosULoc = glGetUniformLocation(pid, "uOverlayPos");
     overlaySizeULoc = glGetUniformLocation(pid, "uOverlaySize");
+    overlayScreenKindULoc = glGetUniformLocation(pid, "uOverlayScreenKind");
 
     glGenTextures(1, &virtualCursorTexture);
     glBindTexture(GL_TEXTURE_2D, virtualCursorTexture);
@@ -1024,11 +1025,12 @@ void ScreenPanelGL::drawScreenGL()
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
         // 0.5 for pad pixel, still not super precise tho but its okay
-        glUniform2f(overlayPosULoc, virtualCursorX - 5, virtualCursorY - 5 + 0.5);
+        glUniform2f(overlayPosULoc, virtualCursorX - 5, virtualCursorY - 5);
         glUniform2f(overlaySizeULoc, 11, 11);
 
-        glUniformMatrix2x3fv(overlayTransformULoc, 1, GL_TRUE, screenMatrix[1]);
-        glDrawArrays(GL_TRIANGLES, 2*3, 2*3);
+        const int i = 1; // bottom screen
+        glUniformMatrix2x3fv(overlayTransformULoc, 1, GL_TRUE, screenMatrix[i]);
+        glUniform1i(overlayScreenKindULoc, i);
     }
 
     screenSettingsLock.unlock();

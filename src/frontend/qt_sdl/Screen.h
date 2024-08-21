@@ -201,7 +201,7 @@ private:
     // metroid prime related
     GLuint overlayShader[3];
     GLuint overlayScreenSizeULoc, overlayTransformULoc;
-    GLuint overlayPosULoc, overlaySizeULoc;
+    GLuint overlayPosULoc, overlaySizeULoc, overlayScreenKindULoc;
 
     GLuint virtualCursorTexture;
 public:

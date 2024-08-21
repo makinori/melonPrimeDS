@@ -27,16 +27,26 @@ smooth in vec2 fTexcoord;
 
 uniform vec2 uOverlayPos;
 uniform vec2 uOverlaySize;
+uniform int uOverlayScreenKind;
 
 out vec4 oColor;
 
 void main()
 {
-    const vec2 dsSize = vec2(256.0, 192.0);
+    const vec2 dsSize = vec2(256.0, 193.0); // +1 on y for pixel gap
 
-	vec2 uv = fTexcoord * vec2(1.0, 2.0) - vec2(0.0, 1.0);
-    uv -= uOverlayPos / dsSize;
-    uv *= dsSize / uOverlaySize;
+    vec2 uv = fTexcoord * vec2(1.0, 2.0);
+
+    if (uOverlayScreenKind < 1) {
+        // top screen
+        uv -= uOverlayPos / dsSize;
+        uv *= dsSize / uOverlaySize;
+    } else {
+        // bottom screen
+        uv -= vec2(0.0, 1.0);
+        uv -= (uOverlayPos + vec2(0.0, 1.0)) / dsSize;
+        uv *= dsSize / uOverlaySize;
+    }
 
     vec4 pixel = texture(OverlayTex, uv);
     pixel.rgb *= pixel.a;
