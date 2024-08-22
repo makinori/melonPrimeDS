@@ -94,6 +94,7 @@ InputConfigDialog::InputConfigDialog(QWidget* parent) : QDialog(parent), ui(new 
 
     ui->metroidAimSensitvitySpinBox->setValue(Config::MetroidAimSensitivity);
     ui->metroidVirtualStylusSensitvitySpinBox->setValue(Config::MetroidVirtualStylusSensitivity);
+	ui->metroidVsPlayerInputSpinBox->setValue(Config::MetroidVsPlayerInput);
 }
 
 void InputConfigDialog::switchTabToAddons() {
@@ -215,6 +216,7 @@ void InputConfigDialog::on_InputConfigDialog_accepted()
 
     Config::MetroidAimSensitivity = ui->metroidAimSensitvitySpinBox->value();
     Config::MetroidVirtualStylusSensitivity = ui->metroidVirtualStylusSensitvitySpinBox->value();
+	Config::MetroidVsPlayerInput = ui->metroidVsPlayerInputSpinBox->value();
 
     Config::Save();
 
