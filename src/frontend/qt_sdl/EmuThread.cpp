@@ -381,14 +381,6 @@ void EmuThread::run()
 
     char melontitle[100];
 
-    // 武器の変更処理を関数化(重複を避けるため)
-    void SwitchWeapon(int weaponIndex) {
-        NDS->ReleaseScreen();  // 画面をリリース(武器変更のため)
-        NDS->ARM9Write8(weaponChangeAddr, 11);  // 武器変更命令をARM9に書き込む(常に11)
-        NDS->ARM9Write8(weaponAddr, weaponIndex);  // 対応する武器のアドレスを書き込む
-        frameAdvance(2);  // フレームを進める(反映するため)
-    }
-
     auto frameAdvanceOnce {
     [&]()
     {
@@ -773,6 +765,13 @@ void EmuThread::run()
         }
     };
 
+    // 武器の変更処理を関数化(重複を避けるため)
+    void SwitchWeapon(int weaponIndex) {
+        NDS->ReleaseScreen();  // 画面をリリース(武器変更のため)
+        NDS->ARM9Write8(weaponChangeAddr, 11);  // 武器変更命令をARM9に書き込む(常に11)
+        NDS->ARM9Write8(weaponAddr, weaponIndex);  // 対応する武器のアドレスを書き込む
+        frameAdvance(2);  // フレームを進める(反映するため)
+    }
 
     while (EmuRunning != emuStatus_Exit) {
         // auto mouseRel = rawInputThread->fetchMouseDelta();
