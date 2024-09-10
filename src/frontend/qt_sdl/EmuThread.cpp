@@ -739,7 +739,7 @@ void EmuThread::run()
 
     bool focusedLastFrame = false;
 
-    const float dsAspectRatio = 256.0 / 192.0; 
+    const float dsAspectRatio = 256.0 / 192.0;
     const float aimAspectRatio = 6.0 / 4.0; // i have no idea
 
     // RawInputThread* rawInputThread = new RawInputThread(parent());
@@ -764,8 +764,6 @@ void EmuThread::run()
             }
         }
     };
-
-    bool isVirtualStylusActive = false;
 
     while (EmuRunning != emuStatus_Exit) {
         // auto mouseRel = rawInputThread->fetchMouseDelta();
@@ -801,15 +799,9 @@ void EmuThread::run()
             }
         #endif
 
+        if (isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus)) {
 
-        if (Input::HotkeyPressed(HK_MetroidVirtualStylus)) {
-            isVirtualStylusActive = !isVirtualStylusActive;
-        }
-
-        // メインのアップデートループ内
-        if (isFocused && isVirtualStylusActive) {
-
-            // this exists to just delay the pressing of the screen when you 
+            // this exists to just delay the pressing of the screen when you
             // release the virtual stylus key
             enableAim = false;
 
@@ -879,11 +871,11 @@ void EmuThread::run()
                         // still allow movement whilst we're enabling scan visor
                         processMoveInput();
                         NDS->SetKeyMask(Input::GetInputMask());
-                        
+
                         frameAdvanceOnce();
                     }
                 }
-                
+
                 NDS->ReleaseScreen();
                 frameAdvance(2);
             }
@@ -1035,7 +1027,7 @@ void EmuThread::run()
             } else {
                 FN_INPUT_RELEASE(INPUT_START);
             }
-        
+
         }
 
         // is this a good way of detecting morph ball status?
@@ -1044,14 +1036,14 @@ void EmuThread::run()
             // mainWindow->osdAddMessage(0,"touching screen for aim");
             NDS->TouchScreen(128, 96); // required for aiming
         }
-        
+
         NDS->SetKeyMask(Input::GetInputMask());
 
         if (screenGL) {
             screenGL->virtualCursorShow = drawVCur;
             screenGL->virtualCursorX = virtualStylusX;
             screenGL->virtualCursorY = virtualStylusY;
-        } else if (drawVCur) { 
+        } else if (drawVCur) {
             const int cursorSize = virtualCursorSize;
             const int cursorOffset = virtualCursorSize / 2;
 
