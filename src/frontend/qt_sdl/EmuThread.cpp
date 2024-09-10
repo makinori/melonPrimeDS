@@ -823,6 +823,32 @@ void EmuThread::run()
         } else if (isFocused) {
             drawVCur = false;
 
+            // Read the player position
+            uint8_t playerPosition = NDS->ARM9Read8(PlayerPosAddr);
+
+            // プレイヤーアドレス取得関数
+            uint32_t calculatePlayerAddress(uint32_t baseAddress, uint8_t playerPosition, int32_t increment) {
+                // If player position is 0, return the base address without modification
+                if (playerPosition == 0) {
+                    return baseAddress;
+                }
+
+                // Calculate using 64-bit integers to prevent overflow
+                // Use playerPosition as is (no subtraction)
+                int64_t result = static_cast<int64_t>(baseAddress) + (static_cast<int64_t>(playerPosition) * increment);
+
+                // Ensure the result is within the 32-bit range
+                if (result < 0 || result > UINT32_MAX) {
+                    return baseAddress;  // Return the original address if out of range
+                }
+
+                return static_cast<uint32_t>(result);
+            }
+
+            const int32_t playerAddressIncrement = 0xF30;
+            uint32_t weaponChangeAddr = calculatePlayerAddress(0x020DB45B, playerPosition, playerAddressIncrement );
+            uint32_t weaponAddr = calculatePlayerAddress(0x020DB463, playerPosition, playerAddressIncrement );
+
             // morph ball
             if (Input::HotkeyPressed(HK_MetroidMorphBall)) {
                 enableAim = false; // in case inBall isnt immediately true
@@ -889,21 +915,30 @@ void EmuThread::run()
             // switch to beam
             if (Input::HotkeyPressed(HK_MetroidWeaponBeam)) {
                 NDS->ReleaseScreen();
-                frameAdvance(2);
-                NDS->TouchScreen(85 + 40 * 0, 32);
-                frameAdvance(2);
-                NDS->ReleaseScreen();
+
+                NDS->ARM9Write8(weaponChangeAddr , 11);
+                NDS->ARM9Write8(weaponAddr , 1);
                 frameAdvance(2);
             }
 
             // switch to missiles
             if (Input::HotkeyPressed(HK_MetroidWeaponMissile)) {
+
+                NDS->ReleaseScreen();
+
+                NDS->ARM9Write8(weaponChangeAddr , 11);
+                NDS->ARM9Write8(weaponAddr , 2);
+
+                frameAdvance(2);
+
+                /*
                 NDS->ReleaseScreen();
                 frameAdvance(2);
                 NDS->TouchScreen(85 + 40 * 1, 32);
                 frameAdvance(2);
                 NDS->ReleaseScreen();
                 frameAdvance(2);
+                */
             }
 
             // switch subweapon
@@ -917,6 +952,7 @@ void EmuThread::run()
                 HK_MetroidWeapon6,
             };
 
+            /*
             for (int i = 0; i < 6; i++) {
                 if (Input::HotkeyPressed(weaponHotkeys[i])) {
                     melonDS::u16 subX = 93 + 25 * i;
@@ -932,6 +968,67 @@ void EmuThread::run()
                     frameAdvance(2);
                 }
             }
+            */
+
+            // ShockCoil
+            if (Input::HotkeyPressed(weaponHotkeys[0])) {
+                NDS->ReleaseScreen();
+
+                NDS->ARM9Write8(weaponChangeAddr , 11);
+                NDS->ARM9Write8(weaponAddr , 7);
+
+                frameAdvance(2);
+            }
+
+            // Magmaul
+            if (Input::HotkeyPressed(weaponHotkeys[1])) {
+                NDS->ReleaseScreen();
+
+                NDS->ARM9Write8(weaponChangeAddr , 11);
+                NDS->ARM9Write8(weaponAddr , 6);
+
+                frameAdvance(2);
+            }
+            // Judicator
+            if (Input::HotkeyPressed(weaponHotkeys[2])) {
+                NDS->ReleaseScreen();
+
+                NDS->ARM9Write8(weaponChangeAddr , 11);
+                NDS->ARM9Write8(weaponAddr , 5);
+
+                frameAdvance(2);
+            }
+
+            // Impelialist
+            if (Input::HotkeyPressed(weaponHotkeys[3])) {
+                NDS->ReleaseScreen();
+
+                NDS->ARM9Write8(weaponChangeAddr , 11);
+                NDS->ARM9Write8(weaponAddr , 4);
+
+                frameAdvance(2);
+            }
+
+            // Battlehammer
+            if (Input::HotkeyPressed(weaponHotkeys[4])) {
+                NDS->ReleaseScreen();
+
+                NDS->ARM9Write8(weaponChangeAddr , 11);
+                NDS->ARM9Write8(weaponAddr , 3);
+
+                frameAdvance(2);
+            }
+
+            // VoltDriver
+            if (Input::HotkeyPressed(weaponHotkeys[5])) {
+                NDS->ReleaseScreen();
+
+                NDS->ARM9Write8(weaponChangeAddr , 11);
+                NDS->ARM9Write8(weaponAddr , 1);
+
+                frameAdvance(2);
+            }
+
 
             // move
 
@@ -939,6 +1036,7 @@ void EmuThread::run()
 
             // aim addresses for version and player number
 
+            /*
             if (NDS->ARM9Read8(PlayerPosAddr) == 0x00) {
                         aimXAddr = 0x020DEDA6;
                         aimYAddr = 0x020DEDAE;
@@ -962,6 +1060,9 @@ void EmuThread::run()
                         aimYAddr = 0x020DEE86;
                         //break;
             }
+            */
+            aimXAddr = calculatePlayerAddress(0x020DEDA6, playerPosition, 0x2E);
+            aimYAddr = calculatePlayerAddress(0x020DEDAE, playerPosition, 0x2E);
 
             // cursor looking
             
