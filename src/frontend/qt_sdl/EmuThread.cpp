@@ -765,16 +765,7 @@ void EmuThread::run()
         }
     };
 
-    // トグルキーの状態を保持するための変数
     bool isVirtualStylusActive = false;
-
-    // トグル機能を持つラムダ関数を定義
-    auto toggleVirtualStylus = [&]() {
-        if (Input::HotkeyPressed(HK_MetroidVirtualStylus)) {
-            // トグル状態を切り替え
-            isVirtualStylusActive = !isVirtualStylusActive;
-        }
-    };
 
     while (EmuRunning != emuStatus_Exit) {
         // auto mouseRel = rawInputThread->fetchMouseDelta();
@@ -811,13 +802,18 @@ void EmuThread::run()
         #endif
 
 
+        // トグル状態を切り替える関数
+        auto toggleVirtualStylus = []() {
+            virtualStylusToggled = !virtualStylusToggled;
+        };
 
-        // トグルのチェックを行う
-        toggleVirtualStylus();
+        if (Input::HotkeyPressed(HK_MetroidVirtualStylus)) {
+            toggleVirtualStylus(isVirtualStylusActive);
+        }
 
+        // メインのアップデートループ内
         if (isFocused && isVirtualStylusActive) {
-            // トグルが有効な場合に仮想スタイラスの動作を実行
-            
+
             // this exists to just delay the pressing of the screen when you 
             // release the virtual stylus key
             enableAim = false;
