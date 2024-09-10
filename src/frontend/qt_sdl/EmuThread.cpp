@@ -321,6 +321,14 @@ uint32_t calculatePlayerAddress(uint32_t baseAddress, uint8_t playerPosition, in
     return static_cast<uint32_t>(result);
 }
 
+// 武器の変更処理を関数化(重複を避けるため)
+void SwitchWeapon(int weaponIndex) {
+    NDS->ReleaseScreen();  // 画面をリリース(武器変更のため)
+    NDS->ARM9Write8(weaponChangeAddr, 11);  // 武器変更命令をARM9に書き込む(常に11)
+    NDS->ARM9Write8(weaponAddr, weaponIndex);  // 対応する武器のアドレスを書き込む
+    frameAdvance(2);  // フレームを進める(反映するため)
+}
+
 void EmuThread::run()
 {
     u32 mainScreenPos[3];
@@ -912,123 +920,34 @@ void EmuThread::run()
                 //frameAdvance(2);
             }
 
-            // switch to beam
+            // ビーム武器に切り替え
             if (Input::HotkeyPressed(HK_MetroidWeaponBeam)) {
-                NDS->ReleaseScreen();
-
-                NDS->ARM9Write8(weaponChangeAddr , 11);
-                NDS->ARM9Write8(weaponAddr , 1);
-                frameAdvance(2);
+                SwitchWeapon(0);  // ビームのアドレスは0
             }
 
-            // switch to missiles
+            // ミサイルに切り替え
             if (Input::HotkeyPressed(HK_MetroidWeaponMissile)) {
-
-                NDS->ReleaseScreen();
-
-                NDS->ARM9Write8(weaponChangeAddr , 11);
-                NDS->ARM9Write8(weaponAddr , 2);
-
-                frameAdvance(2);
-
-                /*
-                NDS->ReleaseScreen();
-                frameAdvance(2);
-                NDS->TouchScreen(85 + 40 * 1, 32);
-                frameAdvance(2);
-                NDS->ReleaseScreen();
-                frameAdvance(2);
-                */
+                SwitchWeapon(2);  // ミサイルのアドレスは2
             }
 
-            // switch subweapon
-
+            // サブ武器ホットキーの配列(ホットキーの定義と武器のインデックスを対応させる)
             Hotkey weaponHotkeys[] = {
-                HK_MetroidWeapon1,
-                HK_MetroidWeapon2,
-                HK_MetroidWeapon3,
-                HK_MetroidWeapon4,
-                HK_MetroidWeapon5,
-                HK_MetroidWeapon6,
+                HK_MetroidWeapon1,  // ShockCoil
+                HK_MetroidWeapon2,  // Magmaul
+                HK_MetroidWeapon3,  // Judicator
+                HK_MetroidWeapon4,  // Imperialist
+                HK_MetroidWeapon5,  // Battlehammer
+                HK_MetroidWeapon6   // VoltDriver
             };
 
-            /*
+            int weaponIndices[] = {7, 6, 5, 4, 3, 1};  // 各ホットキーに対応する武器のアドレス
+
+            // サブ武器の処理(ループで処理する)
             for (int i = 0; i < 6; i++) {
                 if (Input::HotkeyPressed(weaponHotkeys[i])) {
-                    melonDS::u16 subX = 93 + 25 * i;
-                    melonDS::u16 subY = 48 + 25 * i;
-
-                    NDS->ReleaseScreen();
-                    frameAdvance(2);
-                    NDS->TouchScreen(232, 34);
-                    frameAdvance(2);
-                    NDS->TouchScreen(subX, subY);
-                    frameAdvance(2);
-                    NDS->ReleaseScreen();
-                    frameAdvance(2);
+                    SwitchWeapon(weaponIndices[i]);  // 対応する武器に切り替える
                 }
             }
-            */
-
-            // ShockCoil
-            if (Input::HotkeyPressed(weaponHotkeys[0])) {
-                NDS->ReleaseScreen();
-
-                NDS->ARM9Write8(weaponChangeAddr , 11);
-                NDS->ARM9Write8(weaponAddr , 7);
-
-                frameAdvance(2);
-            }
-
-            // Magmaul
-            if (Input::HotkeyPressed(weaponHotkeys[1])) {
-                NDS->ReleaseScreen();
-
-                NDS->ARM9Write8(weaponChangeAddr , 11);
-                NDS->ARM9Write8(weaponAddr , 6);
-
-                frameAdvance(2);
-            }
-            // Judicator
-            if (Input::HotkeyPressed(weaponHotkeys[2])) {
-                NDS->ReleaseScreen();
-
-                NDS->ARM9Write8(weaponChangeAddr , 11);
-                NDS->ARM9Write8(weaponAddr , 5);
-
-                frameAdvance(2);
-            }
-
-            // Impelialist
-            if (Input::HotkeyPressed(weaponHotkeys[3])) {
-                NDS->ReleaseScreen();
-
-                NDS->ARM9Write8(weaponChangeAddr , 11);
-                NDS->ARM9Write8(weaponAddr , 4);
-
-                frameAdvance(2);
-            }
-
-            // Battlehammer
-            if (Input::HotkeyPressed(weaponHotkeys[4])) {
-                NDS->ReleaseScreen();
-
-                NDS->ARM9Write8(weaponChangeAddr , 11);
-                NDS->ARM9Write8(weaponAddr , 3);
-
-                frameAdvance(2);
-            }
-
-            // VoltDriver
-            if (Input::HotkeyPressed(weaponHotkeys[5])) {
-                NDS->ReleaseScreen();
-
-                NDS->ARM9Write8(weaponChangeAddr , 11);
-                NDS->ARM9Write8(weaponAddr , 1);
-
-                frameAdvance(2);
-            }
-
 
             // move
 
@@ -1036,31 +955,6 @@ void EmuThread::run()
 
             // aim addresses for version and player number
 
-            /*
-            if (NDS->ARM9Read8(PlayerPosAddr) == 0x00) {
-                        aimXAddr = 0x020DEDA6;
-                        aimYAddr = 0x020DEDAE;
-                        //break;
-            }
-
-            if (NDS->ARM9Read8(PlayerPosAddr) == 0x01) {
-                        aimXAddr = 0x020DEDEE;
-                        aimYAddr = 0x020DEDF6;
-                        //break;
-            }
-
-            if (NDS->ARM9Read8(PlayerPosAddr) == 0x02) {
-                        aimXAddr = 0x020DEE36;
-                        aimYAddr = 0x020DEE3E;
-                        //break;
-            }
-
-            if (NDS->ARM9Read8(PlayerPosAddr) == 0x03) {
-                        aimXAddr = 0x020DEE7E;
-                        aimYAddr = 0x020DEE86;
-                        //break;
-            }
-            */
             aimXAddr = calculatePlayerAddress(0x020DEDA6, playerPosition, 0x2E);
             aimYAddr = calculatePlayerAddress(0x020DEDAE, playerPosition, 0x2E);
 
