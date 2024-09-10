@@ -726,6 +726,25 @@ void EmuThread::run()
     // RawInputThread* rawInputThread = new RawInputThread(parent());
     // rawInputThread->start();
 
+    // プレイヤーアドレス取得関数
+    uint32_t calculatePlayerAddress(uint32_t baseAddress, uint8_t playerPosition, int32_t increment) {
+        // If player position is 0, return the base address without modification
+        if (playerPosition == 0) {
+            return baseAddress;
+        }
+
+        // Calculate using 64-bit integers to prevent overflow
+        // Use playerPosition as is (no subtraction)
+        int64_t result = static_cast<int64_t>(baseAddress) + (static_cast<int64_t>(playerPosition) * increment);
+
+        // Ensure the result is within the 32-bit range
+        if (result < 0 || result > UINT32_MAX) {
+            return baseAddress;  // Return the original address if out of range
+        }
+
+        return static_cast<uint32_t>(result);
+    }
+
     auto processMoveInput
     {
     []() {
@@ -825,25 +844,6 @@ void EmuThread::run()
 
             // Read the player position
             uint8_t playerPosition = NDS->ARM9Read8(PlayerPosAddr);
-
-            // プレイヤーアドレス取得関数
-            uint32_t calculatePlayerAddress(uint32_t baseAddress, uint8_t playerPosition, int32_t increment) {
-                // If player position is 0, return the base address without modification
-                if (playerPosition == 0) {
-                    return baseAddress;
-                }
-
-                // Calculate using 64-bit integers to prevent overflow
-                // Use playerPosition as is (no subtraction)
-                int64_t result = static_cast<int64_t>(baseAddress) + (static_cast<int64_t>(playerPosition) * increment);
-
-                // Ensure the result is within the 32-bit range
-                if (result < 0 || result > UINT32_MAX) {
-                    return baseAddress;  // Return the original address if out of range
-                }
-
-                return static_cast<uint32_t>(result);
-            }
 
             const int32_t playerAddressIncrement = 0xF30;
             uint32_t weaponChangeAddr = calculatePlayerAddress(0x020DB45B, playerPosition, playerAddressIncrement );
