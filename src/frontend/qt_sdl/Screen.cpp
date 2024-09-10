@@ -851,6 +851,7 @@ void ScreenPanelGL::initOpenGL()
 
     overlayPosULoc = glGetUniformLocation(pid, "uOverlayPos");
     overlaySizeULoc = glGetUniformLocation(pid, "uOverlaySize");
+    overlayScreenTypeULoc = glGetUniformLocation(pid, "uOverlayScreenType");
 
     glGenTextures(1, &virtualCursorTexture);
     glBindTexture(GL_TEXTURE_2D, virtualCursorTexture);
@@ -1023,12 +1024,19 @@ void ScreenPanelGL::drawScreenGL()
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-        // 0.5 for pad pixel, still not super precise tho but its okay
-        glUniform2f(overlayPosULoc, virtualCursorX - 5, virtualCursorY - 5 + 0.5);
+        glUniform2f(overlayPosULoc, virtualCursorX - 5, virtualCursorY - 5);
         glUniform2f(overlaySizeULoc, 11, 11);
 
-        glUniformMatrix2x3fv(overlayTransformULoc, 1, GL_TRUE, screenMatrix[1]);
-        glDrawArrays(GL_TRIANGLES, 2*3, 2*3);
+        const int screenType = 1; // bottom screen
+
+        if (numScreens > 1 || (numScreens == 1 && screenKind[0] == screenType)) {
+            glUniform1i(overlayScreenTypeULoc, screenType);
+            glUniformMatrix2x3fv(
+                overlayTransformULoc, 1, GL_TRUE,
+                numScreens == 1 ? screenMatrix[0] : screenMatrix[screenType]
+            );
+            glDrawArrays(GL_TRIANGLES, screenKind[screenType] == 0 ? 0 : 2*3, 2*3);
+        }
     }
 
     screenSettingsLock.unlock();
