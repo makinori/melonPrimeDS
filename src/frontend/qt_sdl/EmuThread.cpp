@@ -323,6 +323,7 @@ uint32_t calculatePlayerAddress(uint32_t baseAddress, uint8_t playerPosition, in
 
 void EmuThread::run()
 {
+
     u32 mainScreenPos[3];
     Platform::FileHandle* file;
 
@@ -732,6 +733,7 @@ void EmuThread::run()
     int memoryDump = 0;
 #endif
 
+    bool virtualStylusEnabled = false;
     bool enableAim = true;
 
     float virtualStylusX = 128;
@@ -799,7 +801,18 @@ void EmuThread::run()
             }
         #endif
 
-        if (isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus)) {
+        // VirtualStylusのトグル処理
+        if (Input::HotkeyPressed(HK_MetroidVirtualStylus)) {
+            virtualStylusEnabled = !virtualStylusEnabled;
+            if (!virtualStylusEnabled) {
+                NDS->ReleaseScreen();
+            }
+            // オプション：状態変更をOSDメッセージで表示
+            mainWindow->osdAddMessage(0, virtualStylusEnabled ? "Virtual Stylus: ON" : "Virtual Stylus: OFF");
+        }
+
+        if (isFocused && virtualStylusEnabled) {
+            // VirtualStylusキー押下時
 
             // this exists to just delay the pressing of the screen when you
             // release the virtual stylus key
@@ -832,6 +845,8 @@ void EmuThread::run()
             if (virtualStylusY < 0) virtualStylusY = 0;
             if (virtualStylusY > 191) virtualStylusY = 191;
         } else if (isFocused) {
+            // VirtualStylusキー押下時以外
+
             drawVCur = false;
 
             // Read the player position
