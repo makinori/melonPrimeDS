@@ -753,34 +753,26 @@ void EmuThread::run()
     // RawInputThread* rawInputThread = new RawInputThread(parent());
     // rawInputThread->start();
 
-    auto processMoveInput
-    {
-    []() {
-        if (Input::HotkeyDown(HK_MetroidMoveForward)) {
-            FN_INPUT_PRESS(INPUT_UP);
-        } else {
-            FN_INPUT_RELEASE(INPUT_UP);
-        }
+    auto processMoveInput = []() {
+        const struct {
+            int hotkey;
+            int input;
+        } moves[] = {
+            {HK_MetroidMoveForward, INPUT_UP},
+            {HK_MetroidMoveBack, INPUT_DOWN},
+            {HK_MetroidMoveLeft, INPUT_LEFT},
+            {HK_MetroidMoveRight, INPUT_RIGHT}
+        };
 
-        if (Input::HotkeyDown(HK_MetroidMoveBack)) {
-            FN_INPUT_PRESS(INPUT_DOWN);
-        } else {
-            FN_INPUT_RELEASE(INPUT_DOWN);
+        for (const auto& move : moves) {
+            if (Input::HotkeyDown(move.hotkey)) {
+                FN_INPUT_PRESS(move.input);
+            } else {
+                FN_INPUT_RELEASE(move.input);
+            }
         }
-
-        if (Input::HotkeyDown(HK_MetroidMoveLeft)) {
-            FN_INPUT_PRESS(INPUT_LEFT);
-        } else {
-            FN_INPUT_RELEASE(INPUT_LEFT);
-        }
-
-        if (Input::HotkeyDown(HK_MetroidMoveRight)) {
-            FN_INPUT_PRESS(INPUT_RIGHT);
-        } else {
-            FN_INPUT_RELEASE(INPUT_RIGHT);
-        }
-    }
     };
+
 
     while (EmuRunning != emuStatus_Exit) {
         // auto mouseRel = rawInputThread->fetchMouseDelta();
@@ -816,7 +808,19 @@ void EmuThread::run()
             }
         #endif
 
-        if (isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus)) {
+
+        bool isVirtualStylusActive = false;
+
+        // この関数をホットキーが押されたときに呼び出す
+        void toggleVirtualStylus() {
+            isVirtualStylusActive = !isVirtualStylusActive;
+        }
+
+        // メインのアップデートループ内
+        if (isFocused && (Input::HotkeyDown(HK_MetroidVirtualStylus) || isVirtualStylusActive)) {
+            if (Input::HotkeyPressed(HK_MetroidVirtualStylus)) {
+                toggleVirtualStylus();
+            }
             // this exists to just delay the pressing of the screen when you 
             // release the virtual stylus key
             enableAim = false;
@@ -959,19 +963,26 @@ void EmuThread::run()
             aimYAddr = calculatePlayerAddress(0x020DEDAE, playerPosition, 0x2E);
 
             // cursor looking
-            
-            if (abs(mouseRel.x()) > 0) {
+
+            // 感度係数を定数として定義
+            const float SENSITIVITY_FACTOR = Config::MetroidAimSensitivity * 0.01f;
+
+            // X軸の処理
+            float mouseX = mouseRel.x();
+            if (abs(mouseX) != 0) {
                 NDS->ARM9Write32(
-                    aimXAddr, 
-                    (int32_t)(mouseRel.x() * Config::MetroidAimSensitivity * 0.01f)
+                    aimXAddr,
+                    static_cast<int32_t>(mouseX * SENSITIVITY_FACTOR)
                 );
                 enableAim = true;
             }
 
-            if (abs(mouseRel.y()) > 0) {
+            // Y軸の処理
+            float mouseY = mouseRel.y();
+            if (abs(mouseY) != 0) {
                 NDS->ARM9Write32(
-                    aimYAddr, 
-                    (int32_t)(mouseRel.y() * aimAspectRatio * Config::MetroidAimSensitivity * 0.01f)
+                    aimYAddr,
+                    static_cast<int32_t>(mouseY * aimAspectRatio * SENSITIVITY_FACTOR)
                 );
                 enableAim = true;
             }
