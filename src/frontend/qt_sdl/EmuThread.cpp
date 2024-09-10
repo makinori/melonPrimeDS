@@ -321,10 +321,6 @@ uint32_t calculatePlayerAddress(uint32_t baseAddress, uint8_t playerPosition, in
     return static_cast<uint32_t>(result);
 }
 
-void toggleVirtualStylus(bool isVirtualStylusActive) {
-    isVirtualStylusActive = !isVirtualStylusActive;
-}
-
 void EmuThread::run()
 {
     u32 mainScreenPos[3];
@@ -769,6 +765,17 @@ void EmuThread::run()
         }
     };
 
+    // トグルキーの状態を保持するための変数
+    bool isVirtualStylusActive = false;
+
+    // トグル機能を持つラムダ関数を定義
+    auto toggleVirtualStylus = [&]() {
+        if (Input::HotkeyPressed(HK_MetroidVirtualStylus)) {
+            // トグル状態を切り替え
+            isVirtualStylusActive = !isVirtualStylusActive;
+        }
+    };
+
     while (EmuRunning != emuStatus_Exit) {
         // auto mouseRel = rawInputThread->fetchMouseDelta();
         QPoint mouseRel;
@@ -804,13 +811,13 @@ void EmuThread::run()
         #endif
 
 
-        bool isVirtualStylusActive = false;
 
-        // メインのアップデートループ内
-        if (isFocused && (Input::HotkeyDown(HK_MetroidVirtualStylus) || isVirtualStylusActive)) {
-            if (Input::HotkeyPressed(HK_MetroidVirtualStylus)) {
-                toggleVirtualStylus(isVirtualStylusActive);
-            }
+        // トグルのチェックを行う
+        toggleVirtualStylus();
+
+        if (isFocused && isVirtualStylusActive) {
+            // トグルが有効な場合に仮想スタイラスの動作を実行
+            
             // this exists to just delay the pressing of the screen when you 
             // release the virtual stylus key
             enableAim = false;
