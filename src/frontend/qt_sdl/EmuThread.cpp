@@ -325,15 +325,6 @@ void toggleVirtualStylus(bool isVirtualStylusActive) {
     isVirtualStylusActive = !isVirtualStylusActive;
 }
 
-// 武器の変更処理を関数化(重複を避けるため)
-// NDSへの参照を引数に追加
-void SwitchWeapon(melonDS::NDS& nds, int weaponIndex) {
-    nds.ReleaseScreen();  // 画面をリリース(武器変更のため)
-    nds.ARM9Write8(weaponChangeAddr, 11);  // 武器変更命令をARM9に書き込む(常に11)
-    nds.ARM9Write8(weaponAddr, weaponIndex);  // 対応する武器のアドレスを書き込む
-    frameAdvance(2);  // フレームを進める(反映するため)
-}
-
 void EmuThread::run()
 {
     u32 mainScreenPos[3];
@@ -923,14 +914,28 @@ void EmuThread::run()
                 //frameAdvance(2);
             }
 
+            // 武器を切り替えるラムダ関数を定義
+            auto SwitchWeapon = [&](int weaponIndex) {
+                // 画面をリリース(武器変更のため)
+                NDS->ReleaseScreen();
+
+                // 武器変更命令をARM9に書き込む
+                NDS->ARM9Write8(weaponChangeAddr, 11);  // 常に11
+                NDS->ARM9Write8(weaponAddr, weaponIndex);  // 対応する武器のアドレスを書き込む
+
+                // フレームを進める(反映のため)
+                frameAdvance(2);
+            };
+
+
             // ビーム武器に切り替え
             if (Input::HotkeyPressed(HK_MetroidWeaponBeam)) {
-                SwitchWeapon(*NDS, 0);  // ビームのアドレスは0
+                SwitchWeapon(0);  // ビームのアドレスは0
             }
 
             // ミサイルに切り替え
             if (Input::HotkeyPressed(HK_MetroidWeaponMissile)) {
-                SwitchWeapon(*NDS, 2);  // ミサイルのアドレスは2
+                SwitchWeapon(2);  // ミサイルのアドレスは2
             }
 
             // サブ武器ホットキーの配列(ホットキーの定義と武器のインデックスを対応させる)
@@ -948,7 +953,7 @@ void EmuThread::run()
             // サブ武器の処理(ループで処理する)
             for (int i = 0; i < 6; i++) {
                 if (Input::HotkeyPressed(weaponHotkeys[i])) {
-                    SwitchWeapon(*NDS, weaponIndices[i]);  // 対応する武器に切り替える
+                    SwitchWeapon(weaponIndices[i]);  // 対応する武器に切り替える
                 }
             }
 
