@@ -802,13 +802,8 @@ void EmuThread::run()
         #endif
 
 
-        // トグル状態を切り替える関数
-        auto toggleVirtualStylus = []() {
-            virtualStylusToggled = !virtualStylusToggled;
-        };
-
         if (Input::HotkeyPressed(HK_MetroidVirtualStylus)) {
-            toggleVirtualStylus(isVirtualStylusActive);
+            isVirtualStylusActive = !isVirtualStylusActive;
         }
 
         // メインのアップデートループ内
