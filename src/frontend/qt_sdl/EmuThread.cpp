@@ -323,7 +323,6 @@ uint32_t calculatePlayerAddress(uint32_t baseAddress, uint8_t playerPosition, in
 
 void EmuThread::run()
 {
-
     u32 mainScreenPos[3];
     Platform::FileHandle* file;
 
@@ -721,7 +720,7 @@ void EmuThread::run()
 #define METROID_US_1_1 1
 #ifdef METROID_US_1_1
     const bool metroidUSRev1 = true;
-    const melonDS::u32 inBallAddr = 0x020DB098;
+    const melonDS::u32 inBallAddr = 0x020C0588; // not only host. this is for all position. 00 normal, 01 alt.
     const melonDS::u32 PlayerPosAddr = 0x020DA538;
     const melonDS::u32 inVisorOrMapAddr = 0x020D9A7D; // my best guess
 #else
@@ -733,7 +732,6 @@ void EmuThread::run()
     int memoryDump = 0;
 #endif
 
-    bool virtualStylusEnabled = false;
     bool enableAim = true;
 
     float virtualStylusX = 128;
@@ -801,13 +799,14 @@ void EmuThread::run()
             }
         #endif
 
-        // VirtualStylusのトグル処理
-        if (Input::HotkeyPressed(HK_MetroidVirtualStylus)) {
-            virtualStylusEnabled = !virtualStylusEnabled;
+        bool isVirtualStylusEnabled = false;
+
+        if(isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus){
+            isVirtualStylusEnabled = !isVirtualStylusEnabled;
         }
 
-        if (isFocused && virtualStylusEnabled) {
-            // VirtualStylusキー押下時
+        if (isFocused && isVirtualStylusEnabled) {
+        //if (isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus)) {
 
             // this exists to just delay the pressing of the screen when you
             // release the virtual stylus key
@@ -840,8 +839,6 @@ void EmuThread::run()
             if (virtualStylusY < 0) virtualStylusY = 0;
             if (virtualStylusY > 191) virtualStylusY = 191;
         } else if (isFocused) {
-            // VirtualStylusキー押下時以外
-
             drawVCur = false;
 
             // Read the player position
@@ -1004,7 +1001,7 @@ void EmuThread::run()
 
             // morph ball boost, map zoom out, imperialist zoom
             if (Input::HotkeyDown(HK_MetroidMorphBallBoost)) {
-                bool inBall = NDS->ARM9Read8(inBallAddr) == 0x02;
+                bool inBall = NDS->ARM9Read8(inBallAddr) == 0x01;
                 if (inBall) {
                     // just incase
                     enableAim = false;
@@ -1041,7 +1038,7 @@ void EmuThread::run()
         }
 
         // is this a good way of detecting morph ball status?
-        bool inBall = NDS->ARM9Read8(inBallAddr) == 0x02;
+        bool inBall = NDS->ARM9Read8(inBallAddr) == 0x01;
         if (!inBall && enableAim) {
             // mainWindow->osdAddMessage(0,"touching screen for aim");
             NDS->TouchScreen(128, 96); // required for aiming
