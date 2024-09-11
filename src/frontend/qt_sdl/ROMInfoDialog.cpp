@@ -101,15 +101,15 @@ ROMInfoDialog::ROMInfoDialog(QWidget* parent, const melonDS::NDSCart::CartCommon
 
 
     // GET CRC
-    u32 crc = CRC32(rom.get(), 0x40);
+    u32 crc = CRC32(rom, 0x40);
 
-    crc = CRC32(&ROM[header.ARM9ROMOffset], header.ARM9Size, crc);
-    crc = CRC32(&ROM[header.ARM7ROMOffset], header.ARM7Size, crc);
+    crc = CRC32(header.ARM9ROMOffset, header.ARM9Size, crc);
+    crc = CRC32(header.ARM7ROMOffset, header.ARM7Size, crc);
 
     if (IsDSi)
     {
-        crc = CRC32(&ROM[header.DSiARM9iROMOffset], header.DSiARM9iSize, crc);
-        crc = CRC32(&ROM[header.DSiARM7iROMOffset], header.DSiARM7iSize, crc);
+        crc = CRC32(header.DSiARM9iROMOffset, header.DSiARM9iSize, crc);
+        crc = CRC32(header.DSiARM7iROMOffset, header.DSiARM7iSize, crc);
     }
 
 
