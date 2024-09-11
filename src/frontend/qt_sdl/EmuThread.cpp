@@ -717,6 +717,8 @@ void EmuThread::run()
     melonDS::u32 aimXAddr;
     melonDS::u32 aimYAddr;
 
+
+
 #define METROID_US_1_1 1
 #ifdef METROID_US_1_1
     const bool metroidUSRev1 = true;
