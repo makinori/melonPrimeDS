@@ -833,18 +833,23 @@ void EmuThread::run()
 
         if(isFocused && Input::HotkeyReleased(HK_MetroidVirtualStylus)){
             isVirtualStylusEnabled = !isVirtualStylusEnabled;
-            mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
+            if(isVirtualStylusEnabled){
+                mainWindow->osdAddMessage(0, "Virtual Stylus enabled");
+            }else {
+                mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
+            }
         }
 
         /*
-        if(isInGame){
+        if(isInGame && isVirtualStylusEnabled){
             isVirtualStylusEnabled = false;
+            mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
         }
         */
 
         if (isFocused && isVirtualStylusEnabled) {
         //if (isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus)) {
-            mainWindow->osdAddMessage(0, "Virtual Stylus enabled");
+
             // this exists to just delay the pressing of the screen when you
             // release the virtual stylus key
             enableAim = false;
