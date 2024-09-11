@@ -948,7 +948,6 @@ void EmuThread::run()
                 // 画面をリリース(武器変更のため)
                 NDS->ReleaseScreen();
 
-
                 // Lambda to set the weapon-changing state
                 auto setChangingWeapon = [](int value) -> int {
                     // Apply mask to set the lower 4 bits to 1011 (B in hexadecimal)
@@ -966,6 +965,9 @@ void EmuThread::run()
 
                 // フレームを進める(反映のため)
                 frameAdvance(2);
+
+                // 画面をリリース
+                NDS->ReleaseScreen();
             };
 
 
