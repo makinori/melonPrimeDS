@@ -870,7 +870,10 @@ void EmuThread::run()
 
             // morph ball
             if (Input::HotkeyPressed(HK_MetroidMorphBall)) {
-                enableAim = false; // in case isAltForm isnt immediately true
+                bool isSamus = NDS->ARM9Read8(chosenHunterAddr) == 0x00;
+                if(isSamus){
+                    enableAim = false; // in case isAltForm isnt immediately true
+                }
                 NDS->ReleaseScreen();
                 frameAdvance(2);
                 NDS->TouchScreen(231, 167);
