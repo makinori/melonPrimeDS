@@ -100,10 +100,23 @@ ROMInfoDialog::ROMInfoDialog(QWidget* parent, const melonDS::NDSCart::CartCommon
     ui->gameTitle->setText(QString::fromLatin1(header.GameTitle, 12));
 
 
-    auto cart = NDSCart::ParseROM(std::move(filedata), filelen, std::move(cartargs));
+    // GET CRC
+    u32 crc = CRC32(rom.get(), 0x40);
+
+    crc = CRC32(&ROM[header.ARM9ROMOffset], header.ARM9Size, crc);
+    crc = CRC32(&ROM[header.ARM7ROMOffset], header.ARM7Size, crc);
+
+    if (IsDSi)
+    {
+        crc = CRC32(&ROM[header.DSiARM9iROMOffset], header.DSiARM9iSize, crc);
+        crc = CRC32(&ROM[header.DSiARM7iROMOffset], header.DSiARM7iSize, crc);
+    }
+
 
     // cart->Checksum()の結果を16進数に変換し、QStringに設定する
-    QString checksumHexString = QString::number(cart->Checksum(), 16).toUpper(); // 16進数形式で大文字に変換
+    QString checksumHexString = QString::number(crc, 16).toUpper(); // 16進数形式で大文字に変換
+    // GET CRC END
+
 
     // 4文字のゲームコードと16進数のチェックサムを連結して表示する
     ui->gameCode->setText(QString::fromLatin1(header.GameCode, 4) + " " + checksumHexString);
