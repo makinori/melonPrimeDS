@@ -101,9 +101,13 @@ ROMInfoDialog::ROMInfoDialog(QWidget* parent, const melonDS::NDSCart::CartCommon
 
 
     auto cart = NDSCart::ParseROM(std::move(filedata), filelen, std::move(cartargs));
-  
 
-    ui->gameCode->setText(QString::fromLatin1(header.GameCode, 4 +" " + cart->Checksum() ));
+    // cart->Checksum()の結果を16進数に変換し、QStringに設定する
+    QString checksumHexString = QString::number(cart->Checksum(), 16).toUpper(); // 16進数形式で大文字に変換
+
+    // 4文字のゲームコードと16進数のチェックサムを連結して表示する
+    ui->gameCode->setText(QString::fromLatin1(header.GameCode, 4) + " " + checksumHexString);
+
     ui->makerCode->setText(QString::fromLatin1(header.MakerCode, 2));
     ui->cardSize->setText(QString::number(128 << header.CardSize) + " KB");
 
