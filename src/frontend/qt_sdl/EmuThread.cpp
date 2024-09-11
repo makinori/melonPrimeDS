@@ -845,11 +845,22 @@ Korea 1.0 0xE54682F3
             if(isVirtualStylusEnabled){
                 mainWindow->osdAddMessage(0, "Virtual Stylus enabled");
             }else {
-                mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
-                QLabel *label = new QLabel(nullptr);
+                // Créer une nouvelle fenêtre pour le label
+                QWidget *labelWindow = new QWidget;
+                QLabel *label = new QLabel(labelWindow);
                 label->setFrameStyle(QFrame::Panel | QFrame::Sunken);
                 label->setText("first line\nsecond line");
                 label->setAlignment(Qt::AlignBottom | Qt::AlignRight);
+
+                // Disposition et taille de la fenêtre
+                QVBoxLayout *layout = new QVBoxLayout(labelWindow);
+                layout->addWidget(label);
+                labelWindow->setLayout(layout);
+                labelWindow->resize(200, 100);  // Ajuster la taille selon vos besoins
+                labelWindow->setWindowTitle("Virtual Stylus Status");
+
+                // Afficher la fenêtre
+                labelWindow->show();
             }
         }
 
