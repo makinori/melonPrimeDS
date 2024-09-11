@@ -721,6 +721,9 @@ void EmuThread::run()
 #ifdef METROID_US_1_1
     const bool metroidUSRev1 = true;
     const melonDS::u32 baseInBallAddr = 0x020DB098; // 1p(host)
+    const melonDS::u32 baseWeaponChangeAddr = 0x020DB45B; // 1p(host)
+    const melonDS::u32 baseWeaponAddr = 0x020DB463; // 1p(host)
+
     // const melonDS::u32 baseInBallAddr = 0x020C0588; // not only host. this is for all position. 00 normal, 01 alt.
     const melonDS::u32 PlayerPosAddr = 0x020DA538;
     const melonDS::u32 inVisorOrMapAddr = 0x020D9A7D; // my best guess
@@ -806,13 +809,14 @@ void EmuThread::run()
             isVirtualStylusEnabled = !isVirtualStylusEnabled;
         }
 
-        uint32_t inBallAddr = calculatePlayerAddress(baseInBallAddr, playerPosition, playerAddressIncrement);
+
         // Read the player position
         uint8_t playerPosition = NDS->ARM9Read8(PlayerPosAddr);
 
         const int32_t playerAddressIncrement = 0xF30;
-        uint32_t weaponChangeAddr = calculatePlayerAddress(0x020DB45B, playerPosition, playerAddressIncrement);
-        uint32_t weaponAddr = calculatePlayerAddress(0x020DB463, playerPosition, playerAddressIncrement);
+        uint32_t weaponChangeAddr = calculatePlayerAddress(baseWeaponChangeAddr, playerPosition, playerAddressIncrement);
+        uint32_t weaponAddr = calculatePlayerAddress(baseWeaponAddr, playerPosition, playerAddressIncrement);
+        uint32_t inBallAddr = calculatePlayerAddress(baseInBallAddr, playerPosition, playerAddressIncrement);
 
         if (isFocused && isVirtualStylusEnabled) {
         //if (isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus)) {
