@@ -722,17 +722,17 @@ void EmuThread::run()
 #define METROID_US_1_1 1
 #ifdef METROID_US_1_1
     const bool metroidUSRev1 = true;
-    const melonDS::u32 baseInBallAddr = 0x020DB098; // 1p(host)
+    const melonDS::u32 baseisAltFormAddr = 0x020DB098; // 1p(host)
     const melonDS::u32 baseWeaponChangeAddr = 0x020DB45B; // 1p(host)
     const melonDS::u32 baseWeaponAddr = 0x020DB463; // 1p(host)
     const melonDS::u32 baseChosenHunterAddr = 0x020CBDA4; // BattleConfig:ChosenHunter
 
 
-    // const melonDS::u32 baseInBallAddr = 0x020C0588; // not only host. this is for all position. 00 normal, 01 alt.
+    // const melonDS::u32 baseisAltFormAddr = 0x020C0588; // not only host. this is for all position. 00 normal, 01 alt.
     const melonDS::u32 PlayerPosAddr = 0x020DA538;
     const melonDS::u32 inVisorOrMapAddr = 0x020D9A7D; // my best guess
 #else
-    const melonDS::u32 baseInBallAddr = 0x020DA818;
+    const melonDS::u32 baseisAltFormAddr = 0x020DA818;
 #endif
 
 // #define ENABLE_MEMORY_DUMP 1
@@ -820,7 +820,7 @@ void EmuThread::run()
         const int32_t playerAddressIncrement = 0xF30;
         uint32_t weaponChangeAddr = calculatePlayerAddress(baseWeaponChangeAddr, playerPosition, playerAddressIncrement);
         uint32_t weaponAddr = calculatePlayerAddress(baseWeaponAddr, playerPosition, playerAddressIncrement);
-        uint32_t inBallAddr = calculatePlayerAddress(baseInBallAddr, playerPosition, playerAddressIncrement);
+        uint32_t isAltFormAddr = calculatePlayerAddress(baseisAltFormAddr, playerPosition, playerAddressIncrement);
         uint32_t chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
 
 
@@ -863,7 +863,7 @@ void EmuThread::run()
 
             // morph ball
             if (Input::HotkeyPressed(HK_MetroidMorphBall)) {
-                enableAim = false; // in case inBall isnt immediately true
+                enableAim = false; // in case isAltForm isnt immediately true
                 NDS->ReleaseScreen();
                 frameAdvance(2);
                 NDS->TouchScreen(231, 167);
@@ -1041,9 +1041,9 @@ void EmuThread::run()
 
             // morph ball boost, map zoom out, imperialist zoom
             if (Input::HotkeyDown(HK_MetroidMorphBallBoost)) {
-                bool inBall = NDS->ARM9Read8(inBallAddr) == 0x02;
+                bool isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
                 bool isSamus = NDS->ARM9Read8(chosenHunterAddr) == 0x00;
-                if (inBall && isSamus) {
+                if (isAltForm && isSamus) {
                     // just incase
                     enableAim = false;
                     NDS->ReleaseScreen();
@@ -1079,8 +1079,9 @@ void EmuThread::run()
         }
 
         // is this a good way of detecting morph ball status?
-        bool inBall = NDS->ARM9Read8(inBallAddr) == 0x02;
-        if (!inBall && enableAim) {
+        bool isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
+        bool isSamus = NDS->ARM9Read8(chosenHunterAddr) == 0x00;
+        if (!isAltForm && isSamus && enableAim) {
             // mainWindow->osdAddMessage(0,"touching screen for aim");
             NDS->TouchScreen(128, 96); // required for aiming
         }
