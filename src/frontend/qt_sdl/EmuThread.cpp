@@ -826,9 +826,11 @@ void EmuThread::run()
             isVirtualStylusEnabled = !isVirtualStylusEnabled;
         }
 
+        /*
         if(isInGame){
             isVirtualStylusEnabled = false;
         }
+        */
 
         if (isFocused && isVirtualStylusEnabled) {
         //if (isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus)) {
@@ -932,7 +934,7 @@ void EmuThread::run()
             // 武器を切り替えるラムダ関数を定義
             auto SwitchWeapon = [&](int weaponIndex) {
                 // 画面をリリース(武器変更のため)
-                NDS->ReleaseScreen();
+                /* NDS->ReleaseScreen(); */
 
                 // 武器変更命令をARM9に書き込む
                 NDS->ARM9Write8(weaponChangeAddr, 11);  // 常に11
