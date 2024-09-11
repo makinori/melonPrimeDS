@@ -720,11 +720,12 @@ void EmuThread::run()
 #define METROID_US_1_1 1
 #ifdef METROID_US_1_1
     const bool metroidUSRev1 = true;
-    const melonDS::u32 inBallAddr = 0x020C0588; // not only host. this is for all position. 00 normal, 01 alt.
+    const melonDS::u32 baseInBallAddr = 0x020DB098;
+    // const melonDS::u32 baseInBallAddr = 0x020C0588; // not only host. this is for all position. 00 normal, 01 alt.
     const melonDS::u32 PlayerPosAddr = 0x020DA538;
     const melonDS::u32 inVisorOrMapAddr = 0x020D9A7D; // my best guess
 #else
-    const melonDS::u32 inBallAddr = 0x020DA818;
+    const melonDS::u32 baseInBallAddr = 0x020DA818;
 #endif
 
 // #define ENABLE_MEMORY_DUMP 1
@@ -847,6 +848,8 @@ void EmuThread::run()
             const int32_t playerAddressIncrement = 0xF30;
             uint32_t weaponChangeAddr = calculatePlayerAddress(0x020DB45B, playerPosition, playerAddressIncrement );
             uint32_t weaponAddr = calculatePlayerAddress(0x020DB463, playerPosition, playerAddressIncrement );
+
+            uint32_t inBallAddr = calculatePlayerAddress(baseInBallAddr, playerPosition, playerAddressIncrement );
 
             // morph ball
             if (Input::HotkeyPressed(HK_MetroidMorphBall)) {
@@ -1001,7 +1004,7 @@ void EmuThread::run()
 
             // morph ball boost, map zoom out, imperialist zoom
             if (Input::HotkeyDown(HK_MetroidMorphBallBoost)) {
-                bool inBall = NDS->ARM9Read8(inBallAddr) == 0x01;
+                bool inBall = NDS->ARM9Read8(inBallAddr) == 0x02;
                 if (inBall) {
                     // just incase
                     enableAim = false;
@@ -1038,7 +1041,7 @@ void EmuThread::run()
         }
 
         // is this a good way of detecting morph ball status?
-        bool inBall = NDS->ARM9Read8(inBallAddr) == 0x01;
+        bool inBall = NDS->ARM9Read8(inBallAddr) == 0x02;
         if (!inBall && enableAim) {
             // mainWindow->osdAddMessage(0,"touching screen for aim");
             NDS->TouchScreen(128, 96); // required for aiming

@@ -55,7 +55,7 @@ const inline char* kScreenFS_overlay = R"(#version 140
     }
 )";
 
-/*
+
 const inline int virtualCursorSize = 11;
 const inline bool virtualCursorPixels[] = {
     0,0,0,1,1,1,1,1,0,0,0,
@@ -71,7 +71,6 @@ const inline bool virtualCursorPixels[] = {
     0,0,0,1,1,1,1,1,0,0,0,
 };
 
-*/
 
 /*
 const inline int virtualCursorSize = 37;
@@ -120,6 +119,7 @@ const inline bool virtualCursorPixels[] = {
 
 };
 */
+    /*
     const inline int virtualCursorSize = 41;
     const inline bool virtualCursorPixels[] = {
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -163,7 +163,7 @@ const inline bool virtualCursorPixels[] = {
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,
-
+    */
 };
 
 #endif // OVERLAY_SHADERS_H
