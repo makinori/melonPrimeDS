@@ -113,8 +113,6 @@ ROMInfoDialog::ROMInfoDialog(QWidget* parent, const melonDS::NDSCart::CartCommon
     }
 
 
-    auto cart = NDSCart::ParseROM(std::move(filedata), filelen, std::move(cartargs));
-
     // cart->Checksum()の結果を16進数に変換し、QStringに設定する
     QString checksumHexString = QString::number(crc, 16).toUpper(); // 16進数形式で大文字に変換
     // GET CRC END
