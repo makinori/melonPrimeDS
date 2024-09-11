@@ -726,7 +726,7 @@ void EmuThread::run()
     const melonDS::u32 baseWeaponChangeAddr = 0x020DB45B; // 1p(host)
     const melonDS::u32 baseWeaponAddr = 0x020DB463; // 1p(host)
     const melonDS::u32 baseChosenHunterAddr = 0x020CBDA4; // BattleConfig:ChosenHunter
-
+    const melonDS::u32 inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
 
     // const melonDS::u32 baseisAltFormAddr = 0x020C0588; // not only host. this is for all position. 00 normal, 01 alt.
     const melonDS::u32 PlayerPosAddr = 0x020DA538;
@@ -809,9 +809,6 @@ void EmuThread::run()
         #endif
 
   
-        if(isFocused && Input::HotkeyReleased(HK_MetroidVirtualStylus)){
-            isVirtualStylusEnabled = !isVirtualStylusEnabled;
-        }
 
 
         // Read the player position
@@ -823,7 +820,15 @@ void EmuThread::run()
         uint32_t isAltFormAddr = calculatePlayerAddress(baseisAltFormAddr, playerPosition, playerAddressIncrement);
         uint32_t chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
 
+        bool isInGame = NDS->ARM9Read32(chosenHunterAddr) == 0xFFFFFFFF;
 
+        if(isFocused && Input::HotkeyReleased(HK_MetroidVirtualStylus)){
+            isVirtualStylusEnabled = !isVirtualStylusEnabled;
+        }
+
+        if(isInGame){
+            isVirtualStylusEnabled = false;
+        }
 
         if (isFocused && isVirtualStylusEnabled) {
         //if (isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus)) {
