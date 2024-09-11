@@ -723,6 +723,15 @@ void EmuThread::run()
 #ifdef METROID_US_1_1
     const bool metroidUSRev1 = true;
     const melonDS::u32 baseisAltFormAddr = 0x020DB098; // 1p(host)
+
+    /*
+    about weapon changing addr
+    000000XY
+    X=0 Not Using Jump-pad
+    X=1 Using Jump-Pad
+    Y=B Changing Weappon
+    Y=8 Not Changing Weapon
+     */
     const melonDS::u32 baseWeaponChangeAddr = 0x020DB45B; // 1p(host)
     const melonDS::u32 baseWeaponAddr = 0x020DB463; // 1p(host)
     const melonDS::u32 baseChosenHunterAddr = 0x020CBDA4; // BattleConfig:ChosenHunter
@@ -940,7 +949,19 @@ void EmuThread::run()
                 NDS->ReleaseScreen();
 
                 // 武器変更命令をARM9に書き込む
-                NDS->ARM9Write8(weaponChangeAddr, 11);  // 常に11
+
+                // Lambda to set the weapon-changing state
+                auto setChangingWeapon = [](int value) -> int {
+                    // Apply mask to set the lower 4 bits to 1011 (B in hexadecimal)
+                    return (value & 0xF0) | 0x0B; // Keep the upper 4 bits, set lower 4 bits to 1011
+                };
+
+                // Modify the value using the lambda
+                int valueOfWeaponChange = setChangingWeapon(NDS->ARM9Read8(weaponChangingAddr));
+
+                NDS->ARM9Write8(weaponChangeAddr, valueOfWeaponChange); //下位4ビットのみをBに変更。
+
+                // 武器を変更する。
                 NDS->ARM9Write8(weaponAddr, weaponIndex);  // 対応する武器のアドレスを書き込む
 
                 // フレームを進める(反映のため)
