@@ -1326,11 +1326,10 @@ bool LoadROM(EmuThread* emuthread, QStringList filepath, bool reset)
         // If we couldn't parse the ROM...
         return false;
 
-    // cart->Checksum()の結果を16進数に変換し、QStringに設定する
-    QString checksumHexString = QString::number(cart->Checksum(), 16).toUpper(); // 16進数形式で大文字に変換
 
+    /*
     // checksumHexStringは既にQStringで保持されていると仮定
-    QString message = QString("Please make sure to use\nMetroid Prime Hunters USA version 1.1")
+    QString message = QString("FYI")
                     + " Your ROM's checksum = " + checksumHexString;
 
     QMessageBox::warning(
@@ -1339,12 +1338,14 @@ bool LoadROM(EmuThread* emuthread, QStringList filepath, bool reset)
         message
     );
 
+     */
+
     if (cart->Checksum() != 0x91B46577)
     {
         QMessageBox::warning(
             nullptr,
             "Unknown ROM",
-            message
+            "Please make sure to use\nMetroid Prime Hunters USA version 1.1"
         );
     }
 
