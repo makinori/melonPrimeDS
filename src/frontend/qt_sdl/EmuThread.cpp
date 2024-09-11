@@ -833,11 +833,9 @@ void EmuThread::run()
 
         if(isFocused && Input::HotkeyReleased(HK_MetroidVirtualStylus)){
             isVirtualStylusEnabled = !isVirtualStylusEnabled;
-            if(isVirtualStylusEnabled){
-                mainWindow->osdAddMessage(0, "Virtual Stylus enabled");
-            }else {
-                mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
-            }
+            // 仮想スタイラスの状態に応じたメッセージを表示
+            QString message = isVirtualStylusEnabled ? "Virtual Stylus enabled" : "Virtual Stylus disabled";
+            mainWindow->osdAddMessage(0, message);
         }
 
         /*
