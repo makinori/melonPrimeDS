@@ -820,7 +820,7 @@ void EmuThread::run()
         uint32_t isAltFormAddr = calculatePlayerAddress(baseisAltFormAddr, playerPosition, playerAddressIncrement);
         uint32_t chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
 
-        bool isInGame = NDS->ARM9Read32(chosenHunterAddr) == 0xFFFFFFFF;
+        bool isInGame = NDS->ARM9Read32(inGameAddr) == 0xFFFFFFFF;
 
         if(isFocused && Input::HotkeyReleased(HK_MetroidVirtualStylus)){
             isVirtualStylusEnabled = !isVirtualStylusEnabled;
@@ -1085,8 +1085,9 @@ void EmuThread::run()
 
         // is this a good way of detecting morph ball status?
         bool isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
-        bool isSamus = NDS->ARM9Read8(chosenHunterAddr) == 0x00;
-        if (!isAltForm && isSamus && enableAim) {
+ //       bool isSamus = NDS->ARM9Read8(chosenHunterAddr) == 0x00;
+//        if (!isAltForm && isSamus && enableAim) {
+        if (!isAltForm && enableAim) {
             // mainWindow->osdAddMessage(0,"touching screen for aim");
             NDS->TouchScreen(128, 96); // required for aiming
         }
