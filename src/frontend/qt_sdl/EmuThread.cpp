@@ -801,7 +801,7 @@ void EmuThread::run()
 
         bool isVirtualStylusEnabled = false;
 
-        if(isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus){
+        if(isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus)){
             isVirtualStylusEnabled = !isVirtualStylusEnabled;
         }
 
