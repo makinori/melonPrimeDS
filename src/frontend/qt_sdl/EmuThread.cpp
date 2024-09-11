@@ -725,6 +725,8 @@ void EmuThread::run()
     const melonDS::u32 baseInBallAddr = 0x020DB098; // 1p(host)
     const melonDS::u32 baseWeaponChangeAddr = 0x020DB45B; // 1p(host)
     const melonDS::u32 baseWeaponAddr = 0x020DB463; // 1p(host)
+    const melonDS::u32 baseChosenHunterAddr = 0x020CBDA4; // BattleConfig:ChosenHunter
+
 
     // const melonDS::u32 baseInBallAddr = 0x020C0588; // not only host. this is for all position. 00 normal, 01 alt.
     const melonDS::u32 PlayerPosAddr = 0x020DA538;
@@ -819,6 +821,9 @@ void EmuThread::run()
         uint32_t weaponChangeAddr = calculatePlayerAddress(baseWeaponChangeAddr, playerPosition, playerAddressIncrement);
         uint32_t weaponAddr = calculatePlayerAddress(baseWeaponAddr, playerPosition, playerAddressIncrement);
         uint32_t inBallAddr = calculatePlayerAddress(baseInBallAddr, playerPosition, playerAddressIncrement);
+        uint32_t chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
+
+
 
         if (isFocused && isVirtualStylusEnabled) {
         //if (isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus)) {
@@ -1037,7 +1042,8 @@ void EmuThread::run()
             // morph ball boost, map zoom out, imperialist zoom
             if (Input::HotkeyDown(HK_MetroidMorphBallBoost)) {
                 bool inBall = NDS->ARM9Read8(inBallAddr) == 0x02;
-                if (inBall) {
+                bool isSamus = NDS->ARM9Read8(chosenHunterAddr) == 0x00;
+                if (inBall && isSamus) {
                     // just incase
                     enableAim = false;
                     NDS->ReleaseScreen();
