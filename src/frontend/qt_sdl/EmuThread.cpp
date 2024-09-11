@@ -717,7 +717,16 @@ void EmuThread::run()
     melonDS::u32 aimXAddr;
     melonDS::u32 aimYAddr;
 
-
+/*
+ROM ver   CheckSum
+USA       0x218DA42C
+USA1.1    0x91B46577
+EU1.0     0xA4A8FE5A
+EU1.1     0x910018A5
+Japan1.0  0xD75F539D
+Japan1.1  0x42EBF348
+Korea 1.0 0xE54682F3
+*/
 
 #define METROID_US_1_1 1
 #ifdef METROID_US_1_1
@@ -1016,33 +1025,6 @@ void EmuThread::run()
 
             aimXAddr = calculatePlayerAddress(0x020DEDA6, playerPosition, 0x48);
             aimYAddr = calculatePlayerAddress(0x020DEDAE, playerPosition, 0x48);
-
-            /*
-            if (NDS->ARM9Read8(PlayerPosAddr) == 0x00) {
-                aimXAddr = 0x020DEDA6;
-                aimYAddr = 0x020DEDAE;
-                //break;
-            }
-
-            if (NDS->ARM9Read8(PlayerPosAddr) == 0x01) {
-                aimXAddr = 0x020DEDEE;
-                aimYAddr = 0x020DEDF6;
-                //break;
-            }
-
-            if (NDS->ARM9Read8(PlayerPosAddr) == 0x02) {
-                aimXAddr = 0x020DEE36;
-                aimYAddr = 0x020DEE3E;
-                //break;
-            }
-
-            if (NDS->ARM9Read8(PlayerPosAddr) == 0x03) {
-                aimXAddr = 0x020DEE7E;
-                aimYAddr = 0x020DEE86;
-                //break;
-            }
-
-            */
 
             // cursor looking
 
