@@ -97,7 +97,7 @@ static constexpr std::initializer_list<const char*> hk_addons_labels =
     "[Metroid] (5) Weapon 5",
     "[Metroid] (6) Weapon 6",
 
-    "[Metroid] (Tab) Virtual Stylus",
+    "[Metroid] (Tab) Virtual Stylus [Toggle]",
     "[Metroid] (V) Menu/Map",
 };
 
