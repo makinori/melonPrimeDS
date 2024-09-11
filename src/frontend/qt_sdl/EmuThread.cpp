@@ -948,7 +948,6 @@ void EmuThread::run()
                 // 画面をリリース(武器変更のため)
                 NDS->ReleaseScreen();
 
-                // 武器変更命令をARM9に書き込む
 
                 // Lambda to set the weapon-changing state
                 auto setChangingWeapon = [](int value) -> int {
@@ -957,8 +956,9 @@ void EmuThread::run()
                 };
 
                 // Modify the value using the lambda
-                int valueOfWeaponChange = setChangingWeapon(NDS->ARM9Read8(weaponChangingAddr));
+                int valueOfWeaponChange = setChangingWeapon(NDS->ARM9Read8(weaponChangeAddr));
 
+                // 武器変更命令をARM9に書き込む
                 NDS->ARM9Write8(weaponChangeAddr, valueOfWeaponChange); //下位4ビットのみをBに変更。
 
                 // 武器を変更する。
