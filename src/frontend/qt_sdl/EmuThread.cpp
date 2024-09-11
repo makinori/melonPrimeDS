@@ -804,11 +804,6 @@ void EmuThread::run()
         // VirtualStylusのトグル処理
         if (Input::HotkeyPressed(HK_MetroidVirtualStylus)) {
             virtualStylusEnabled = !virtualStylusEnabled;
-            if (!virtualStylusEnabled) {
-                NDS->ReleaseScreen();
-            }
-            // オプション：状態変更をOSDメッセージで表示
-            mainWindow->osdAddMessage(0, virtualStylusEnabled ? "Virtual Stylus: ON" : "Virtual Stylus: OFF");
         }
 
         if (isFocused && virtualStylusEnabled) {
