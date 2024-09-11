@@ -1333,6 +1333,11 @@ bool LoadROM(EmuThread* emuthread, QStringList filepath, bool reset)
     QString message = QString("Please make sure to use\nMetroid Prime Hunters USA version 1.1")
                     + " Your ROM's checksum = " + checksumHexString;
 
+    QMessageBox::warning(
+        nullptr,
+        "CheckSum",
+        message
+    );
 
     if (cart->Checksum() != 0x91B46577)
     {
