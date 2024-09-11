@@ -738,7 +738,7 @@ void EmuThread::run()
     int memoryDump = 0;
 #endif
 
-    bool isVirtualStylusEnabled = false;
+    bool isVirtualStylusEnabled = true;
     bool enableAim = true;
 
     float virtualStylusX = 128;
