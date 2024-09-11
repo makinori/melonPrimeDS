@@ -968,6 +968,8 @@ void EmuThread::run()
 
                 // 画面をリリース
                 NDS->ReleaseScreen();
+                // エイムのためにタッチ
+                NDS->TouchScreen(128, 96);
             };
 
 
