@@ -20,7 +20,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
-
+#include <QLabel>
 #include <optional>
 #include <vector>
 #include <string>
@@ -846,6 +846,10 @@ Korea 1.0 0xE54682F3
                 mainWindow->osdAddMessage(0, "Virtual Stylus enabled");
             }else {
                 mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
+                QLabel *label = new QLabel(this);
+                label->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+                label->setText("first line\nsecond line");
+                label->setAlignment(Qt::AlignBottom | Qt::AlignRight);
             }
         }
 
