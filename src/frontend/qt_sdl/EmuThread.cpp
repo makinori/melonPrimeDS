@@ -20,7 +20,8 @@
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
-#include <QVBoxLayout> 
+#include <QImage>
+#include <QPainter>
 #include <QLabel>      
 #include <QWidget>     
 #include <optional>
@@ -849,22 +850,25 @@ Korea 1.0 0xE54682F3
             }else {
                 mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
 
-                // Créer une nouvelle fenêtre pour le label
-                QWidget *labelWindow = new QWidget;
-                QLabel *label = new QLabel(labelWindow);
-                label->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-                label->setText("first line\nsecond line");
-                label->setAlignment(Qt::AlignBottom | Qt::AlignRight);
+                        // Créer une image vide de 200x100 pixels avec un fond transparent
+                QImage image(200, 100, QImage::Format_ARGB32);
+                image.fill(Qt::transparent);  // Remplir avec de la transparence
 
-                // Utiliser QVBoxLayout pour organiser le QLabel
-                QVBoxLayout *layout = new QVBoxLayout(labelWindow);
-                layout->addWidget(label);
-                labelWindow->setLayout(layout);
-                labelWindow->resize(200, 100);  // Ajuster la taille selon vos besoins
-                labelWindow->setWindowTitle("Virtual Stylus Status");
+                // Créer un QPainter pour dessiner sur l'image
+                QPainter painter(&image);
+                painter.setRenderHint(QPainter::Antialiasing);
+                painter.setPen(QPen(Qt::black));  // Définir la couleur du texte
 
-                // Afficher la fenêtre
-                labelWindow->show();
+                // Définir la police et la taille du texte
+                QFont font("Arial", 12);
+                painter.setFont(font);
+
+                // Dessiner le texte
+                painter.drawText(image.rect(), Qt::AlignBottom | Qt::AlignRight, "first line\nsecond line");
+
+                // Terminer le dessin
+                painter.end();
+
             }
         }
 
