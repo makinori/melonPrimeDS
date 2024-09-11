@@ -98,7 +98,12 @@ ROMInfoDialog::ROMInfoDialog(QWidget* parent, const melonDS::NDSCart::CartCommon
         ui->koreanTitle->setText("None");
 
     ui->gameTitle->setText(QString::fromLatin1(header.GameTitle, 12));
-    ui->gameCode->setText(QString::fromLatin1(header.GameCode, 4));
+
+
+    auto cart = NDSCart::ParseROM(std::move(filedata), filelen, std::move(cartargs));
+  
+
+    ui->gameCode->setText(QString::fromLatin1(header.GameCode, 4 +" " + cart->Checksum() ));
     ui->makerCode->setText(QString::fromLatin1(header.MakerCode, 2));
     ui->cardSize->setText(QString::number(128 << header.CardSize) + " KB");
 
