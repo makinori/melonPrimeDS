@@ -807,6 +807,12 @@ void EmuThread::run()
         }
 
         uint32_t inBallAddr = calculatePlayerAddress(baseInBallAddr, playerPosition, playerAddressIncrement);
+        // Read the player position
+        uint8_t playerPosition = NDS->ARM9Read8(PlayerPosAddr);
+
+        const int32_t playerAddressIncrement = 0xF30;
+        uint32_t weaponChangeAddr = calculatePlayerAddress(0x020DB45B, playerPosition, playerAddressIncrement);
+        uint32_t weaponAddr = calculatePlayerAddress(0x020DB463, playerPosition, playerAddressIncrement);
 
         if (isFocused && isVirtualStylusEnabled) {
         //if (isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus)) {
@@ -843,14 +849,6 @@ void EmuThread::run()
             if (virtualStylusY > 191) virtualStylusY = 191;
         } else if (isFocused) {
             drawVCur = false;
-
-            // Read the player position
-            uint8_t playerPosition = NDS->ARM9Read8(PlayerPosAddr);
-
-            const int32_t playerAddressIncrement = 0xF30;
-            uint32_t weaponChangeAddr = calculatePlayerAddress(0x020DB45B, playerPosition, playerAddressIncrement );
-            uint32_t weaponAddr = calculatePlayerAddress(0x020DB463, playerPosition, playerAddressIncrement );
-
 
             // morph ball
             if (Input::HotkeyPressed(HK_MetroidMorphBall)) {
