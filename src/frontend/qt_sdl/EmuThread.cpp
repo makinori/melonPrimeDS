@@ -20,7 +20,9 @@
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
-#include <QLabel>
+#include <QVBoxLayout> 
+#include <QLabel>      
+#include <QWidget>     
 #include <optional>
 #include <vector>
 #include <string>
@@ -845,6 +847,8 @@ Korea 1.0 0xE54682F3
             if(isVirtualStylusEnabled){
                 mainWindow->osdAddMessage(0, "Virtual Stylus enabled");
             }else {
+                mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
+
                 // Créer une nouvelle fenêtre pour le label
                 QWidget *labelWindow = new QWidget;
                 QLabel *label = new QLabel(labelWindow);
@@ -852,7 +856,7 @@ Korea 1.0 0xE54682F3
                 label->setText("first line\nsecond line");
                 label->setAlignment(Qt::AlignBottom | Qt::AlignRight);
 
-                // Disposition et taille de la fenêtre
+                // Utiliser QVBoxLayout pour organiser le QLabel
                 QVBoxLayout *layout = new QVBoxLayout(labelWindow);
                 layout->addWidget(label);
                 labelWindow->setLayout(layout);
