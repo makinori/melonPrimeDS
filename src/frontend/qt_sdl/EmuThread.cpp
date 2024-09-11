@@ -732,6 +732,7 @@ void EmuThread::run()
     int memoryDump = 0;
 #endif
 
+    bool isVirtualStylusEnabled = false;
     bool enableAim = true;
 
     float virtualStylusX = 128;
@@ -799,8 +800,7 @@ void EmuThread::run()
             }
         #endif
 
-        bool isVirtualStylusEnabled = false;
-
+  
         if(isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus)){
             isVirtualStylusEnabled = !isVirtualStylusEnabled;
         }
