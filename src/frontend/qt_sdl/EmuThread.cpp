@@ -763,7 +763,6 @@ Korea 1.0 0xE54682F3
             baseWeaponAddr = 0x020DCAA3; // 1p(host)
         break;
 
-
         case 0x218DA42C:
             // USA1.0バージョン
             baseChosenHunterAddr = 0x020CB51C; // BattleConfig:ChosenHunter
@@ -797,7 +796,6 @@ Korea 1.0 0xE54682F3
             baseWeaponAddr = 0x020DCAA3 - 0x15A0; // 1p(host)
         break;
 
-
         case 0x42EBF348:
             // Japan1.1バージョン
             baseChosenHunterAddr = 0x020CD318; // BattleConfig:ChosenHunter
@@ -818,8 +816,6 @@ Korea 1.0 0xE54682F3
             baseIsAltFormAddr = 0x020DC6D8 - 0x87F4; // 1p(host)
             baseWeaponChangeAddr = 0x020DCA9B - 0x87F4; // 1p(host)
             baseWeaponAddr = 0x020DCAA3 - 0x87F4; // 1p(host)
-
-        // 他のアドレスも対応するものに設定
         break;
 
         default:
