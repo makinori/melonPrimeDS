@@ -44,7 +44,7 @@ public:
     bool event(QEvent* event) override;
 };
 
-// グローバル変数をexternで宣言（他のファイルから参照可能）
-unsigned int globalChecksum;
+// グローバル変数をexternで宣言（他のファイルから参照可能にする）
+extern unsigned int globalChecksum;
 
 #endif // MAIN_H
