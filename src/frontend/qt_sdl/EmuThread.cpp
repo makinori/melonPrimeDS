@@ -857,6 +857,13 @@ Korea 1.0 0xE54682F3
         */
 
         if (isFocused && isVirtualStylusEnabled) {
+
+            // cart->Checksum()の結果を16進数に変換し、QStringに設定する
+            QString checksumHexString = QString::number(globalChecksum, 16).toUpper(); // 16進数形式で大文字に変換
+            if (globalChecksum != 0x91B46577)
+            {
+                mainWindow->osdAddMessage(0, checksumHexString);
+            }
         //if (isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus)) {
 
             // this exists to just delay the pressing of the screen when you
