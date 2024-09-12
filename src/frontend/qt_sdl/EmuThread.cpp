@@ -885,7 +885,8 @@ Korea 1.0 0xE54682F3
             QString checksumHexString = QString::number(globalChecksum, 16).toUpper(); // 16進数形式で大文字に変換
             if (globalChecksum != 0x91B46577)
             {
-                mainWindow->osdAddMessage(0, checksumHexString);
+                // QStringをconst char*に変換してosdAddMessageに渡す(UTF-8エンコーディングを使用)
+                mainWindow->osdAddMessage(0, checksumHexString.toUtf8().constData());
             }
         //if (isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus)) {
 
