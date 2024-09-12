@@ -731,8 +731,7 @@ Japan1.0  0xD75F539D
 Japan1.1  0x42EBF348
 Korea 1.0 0xE54682F3
 */
-
-    melonDS::u32 baseisAltFormAddr;
+    melonDS::u32 baseIsAltFormAddr;
     melonDS::u32 baseWeaponChangeAddr;
     melonDS::u32 baseWeaponAddr;
     melonDS::u32 baseChosenHunterAddr;
@@ -742,49 +741,80 @@ Korea 1.0 0xE54682F3
 
     switch (globalChecksum) {
         case 0x91B46577:
-        // USA1.1バージョン
-        baseisAltFormAddr = 0x020DB098; // 1p(host)
-        baseWeaponChangeAddr = 0x020DB45B; // 1p(host)
-        baseWeaponAddr = 0x020DB463; // 1p(host)
-        baseChosenHunterAddr = 0x020CBDA4; // BattleConfig:ChosenHunter
-        inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
-        PlayerPosAddr = 0x020DA538;
-        inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
+            // USA1.1バージョン
+            baseChosenHunterAddr = 0x020CBDA4; // BattleConfig:ChosenHunter
+            inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
+            inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
+            PlayerPosAddr = 0x020DA538;
+            baseIsAltFormAddr = 0x020DB098; // 1p(host)
+            baseWeaponChangeAddr = 0x020DB45B; // 1p(host)
+            baseWeaponAddr = 0x020DB463; // 1p(host)
+            break;
+
+        case 0xD75F539D:
+            // Japan1.0バージョン
+            baseChosenHunterAddr = 0x020CD358; // BattleConfig:ChosenHunter
+            // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
+            // inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
+            PlayerPosAddr = 0x020DBB78;
+            baseIsAltFormAddr = 0x020DC6D8; // 1p(host)
+            baseWeaponChangeAddr = 0x020DCA9B; // 1p(host)
+            baseWeaponAddr = 0x020DCAA3; // 1p(host)
         break;
+
 
         case 0x218DA42C:
             // USA1.0バージョン
-                baseisAltFormAddr = 0x020DA818; // 1p(host)
-        // 他のアドレスも対応するものに設定
+            PlayerPosAddr = 0x020D9CB8;
+            baseIsAltFormAddr = 0x020DC6D8 - 0x1EC0; // 1p(host)
+            baseWeaponChangeAddr = 0x020DCA9B - 0x1EC0; // 1p(host)
+            baseWeaponAddr = 0x020DCAA3 - 0x1EC0; // 1p(host)
         break;
 
         case 0xA4A8FE5A:
             // EU1.0バージョン
-                baseisAltFormAddr = 0x00000000; // 1p(host)
-        // 他のアドレスも対応するものに設定
+                // baseChosenHunterAddr = 0x020CD358; // BattleConfig:ChosenHunter
+                // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
+                // inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
+                PlayerPosAddr = 0x020DA558;
+                baseIsAltFormAddr = 0x020DC6D8 - 0x1620; // 1p(host)
+                baseWeaponChangeAddr = 0x020DCA9B - 0x1620; // 1p(host)
+                baseWeaponAddr = 0x020DCAA3 - 0x1620; // 1p(host)
         break;
 
         case 0x910018A5:
             // EU1.1バージョン
-                baseisAltFormAddr = 0x00000000; // 1p(host)
-        // 他のアドレスも対応するものに設定
+            // baseChosenHunterAddr = 0x020CD358; // BattleConfig:ChosenHunter
+            // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
+            // inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
+            PlayerPosAddr = 0x020DA5D8;
+            baseIsAltFormAddr = 0x020DC6D8 - 0x15A0; // 1p(host)
+            baseWeaponChangeAddr = 0x020DCA9B - 0x15A0; // 1p(host)
+            baseWeaponAddr = 0x020DCAA3 - 0x15A0; // 1p(host)
         break;
 
-        case 0xD75F539D:
-            // Japan1.0バージョン
-                baseisAltFormAddr = 0x00000000; // 1p(host)
-        // 他のアドレスも対応するものに設定
-        break;
 
         case 0x42EBF348:
             // Japan1.1バージョン
-                baseisAltFormAddr = 0x00000000; // 1p(host)
-        // 他のアドレスも対応するものに設定
+            // baseChosenHunterAddr = 0x020CD358; // BattleConfig:ChosenHunter
+            // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
+            // inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
+            PlayerPosAddr = 0x020DBB38;
+            baseIsAltFormAddr = 0x020DC6D8 - 0x64; // 1p(host)
+            baseWeaponChangeAddr = 0x020DCA9B - 0x64; // 1p(host)
+            baseWeaponAddr = 0x020DCAA3 - 0x64; // 1p(host)
         break;
 
         case 0xE54682F3:
             // Korea1.0バージョン
-                baseisAltFormAddr = 0x00000000; // 1p(host)
+            // baseChosenHunterAddr = 0x020CD358; // BattleConfig:ChosenHunter
+            // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
+            // inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
+            PlayerPosAddr = 0x020D33A8;
+            baseIsAltFormAddr = 0x020DC6D8 - 0x87F4; // 1p(host)
+            baseWeaponChangeAddr = 0x020DCA9B - 0x87F4; // 1p(host)
+            baseWeaponAddr = 0x020DCAA3 - 0x87F4; // 1p(host)
+
         // 他のアドレスも対応するものに設定
         break;
 
@@ -876,7 +906,7 @@ Korea 1.0 0xE54682F3
         const int32_t playerAddressIncrement = 0xF30;
         uint32_t weaponChangeAddr = calculatePlayerAddress(baseWeaponChangeAddr, playerPosition, playerAddressIncrement);
         uint32_t weaponAddr = calculatePlayerAddress(baseWeaponAddr, playerPosition, playerAddressIncrement);
-        uint32_t isAltFormAddr = calculatePlayerAddress(baseisAltFormAddr, playerPosition, playerAddressIncrement);
+        uint32_t isAltFormAddr = calculatePlayerAddress(baseIsAltFormAddr, playerPosition, playerAddressIncrement);
         uint32_t chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
 
         bool isInGame = NDS->ARM9Read32(inGameAddr) == 0xFFFFFFFF;
