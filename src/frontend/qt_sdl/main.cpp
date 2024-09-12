@@ -114,8 +114,6 @@ QStringList NdsRomExtensions { ".nds", ".srl", ".dsi", ".ids" };
 QString GbaRomMimeType = "application/x-gba-rom";
 QStringList GbaRomExtensions { ".gba", ".agb" };
 
-unsigned int globalChecksum;
-
 // This list of supported archive formats is based on libarchive(3) version 3.6.2 (2022-12-09).
 QStringList ArchiveMimeTypes
 {
