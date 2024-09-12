@@ -732,30 +732,67 @@ Japan1.1  0x42EBF348
 Korea 1.0 0xE54682F3
 */
 
-#define METROID_US_1_1 1
-#ifdef METROID_US_1_1
-    const bool metroidUSRev1 = true;
-    const melonDS::u32 baseisAltFormAddr = 0x020DB098; // 1p(host)
+    melonDS::u32 baseisAltFormAddr;
+    melonDS::u32 baseWeaponChangeAddr;
+    melonDS::u32 baseWeaponAddr;
+    melonDS::u32 baseChosenHunterAddr;
+    melonDS::u32 inGameAddr;
+    melonDS::u32 PlayerPosAddr;
+    melonDS::u32 inVisorOrMapAddr;
 
-    /*
-    about weapon changing addr
-    000000XY
-    X=0 Not Using Jump-pad
-    X=1 Using Jump-Pad
-    Y=B Changing Weappon
-    Y=8 Not Changing Weapon
-     */
-    const melonDS::u32 baseWeaponChangeAddr = 0x020DB45B; // 1p(host)
-    const melonDS::u32 baseWeaponAddr = 0x020DB463; // 1p(host)
-    const melonDS::u32 baseChosenHunterAddr = 0x020CBDA4; // BattleConfig:ChosenHunter
-    const melonDS::u32 inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
+    switch (globalChecksum) {
+        case 0x91B46577:
+        // USA1.1バージョン
+        baseisAltFormAddr = 0x020DB098; // 1p(host)
+        baseWeaponChangeAddr = 0x020DB45B; // 1p(host)
+        baseWeaponAddr = 0x020DB463; // 1p(host)
+        baseChosenHunterAddr = 0x020CBDA4; // BattleConfig:ChosenHunter
+        inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
+        PlayerPosAddr = 0x020DA538;
+        inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
+        break;
 
-    // const melonDS::u32 baseisAltFormAddr = 0x020C0588; // not only host. this is for all position. 00 normal, 01 alt.
-    const melonDS::u32 PlayerPosAddr = 0x020DA538;
-    const melonDS::u32 inVisorOrMapAddr = 0x020D9A7D; // my best guess
-#else
-    const melonDS::u32 baseisAltFormAddr = 0x020DA818;
-#endif
+        case 0x218DA42C:
+            // USA1.0バージョン
+                baseisAltFormAddr = 0x020DA818; // 1p(host)
+        // 他のアドレスも対応するものに設定
+        break;
+
+        case 0xA4A8FE5A:
+            // EU1.0バージョン
+                baseisAltFormAddr = 0x対応するアドレス; // 1p(host)
+        // 他のアドレスも対応するものに設定
+        break;
+
+        case 0x910018A5:
+            // EU1.1バージョン
+                baseisAltFormAddr = 0x対応するアドレス; // 1p(host)
+        // 他のアドレスも対応するものに設定
+        break;
+
+        case 0xD75F539D:
+            // Japan1.0バージョン
+                baseisAltFormAddr = 0x対応するアドレス; // 1p(host)
+        // 他のアドレスも対応するものに設定
+        break;
+
+        case 0x42EBF348:
+            // Japan1.1バージョン
+                baseisAltFormAddr = 0x対応するアドレス; // 1p(host)
+        // 他のアドレスも対応するものに設定
+        break;
+
+        case 0xE54682F3:
+            // Korea1.0バージョン
+                baseisAltFormAddr = 0x対応するアドレス; // 1p(host)
+        // 他のアドレスも対応するものに設定
+        break;
+
+        default:
+            // 未対応のチェックサムに対する処理
+            // デフォルトの動作やエラーメッセージの追加
+            break;
+    }
 
 // #define ENABLE_MEMORY_DUMP 1
 #ifdef ENABLE_MEMORY_DUMP
@@ -882,6 +919,7 @@ Korea 1.0 0xE54682F3
 
         if (isFocused && isVirtualStylusEnabled) {
 
+         /*
             // cart->Checksum()の結果を16進数に変換し、QStringに設定する
             QString checksumHexString = QString::number(globalChecksum, 16).toUpper(); // 16進数形式で大文字に変換
             mainWindow->osdAddMessage(0, checksumHexString.toUtf8().constData());
@@ -890,7 +928,7 @@ Korea 1.0 0xE54682F3
                 // QStringをconst char*に変換してosdAddMessageに渡す(UTF-8エンコーディングを使用)
                 mainWindow->osdAddMessage(0, checksumHexString.toUtf8().constData());
             }
-        //if (isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus)) {
+            */
 
             // this exists to just delay the pressing of the screen when you
             // release the virtual stylus key
