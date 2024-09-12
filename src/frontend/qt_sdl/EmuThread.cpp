@@ -77,6 +77,7 @@ extern int autoScreenSizing;
 extern int videoRenderer;
 extern bool videoSettingsDirty;
 
+extern unsigned int globalChecksum;
 
 EmuThread::EmuThread(QObject* parent) : QThread(parent)
 {

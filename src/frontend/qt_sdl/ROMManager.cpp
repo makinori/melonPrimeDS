@@ -55,6 +55,7 @@ using std::unique_ptr;
 using std::wstring_convert;
 using namespace melonDS;
 using namespace melonDS::Platform;
+extern unsigned int globalChecksum;
 
 namespace ROMManager
 {

@@ -45,6 +45,6 @@ public:
 };
 
 // グローバル変数をexternで宣言（他のファイルから参照可能）
-extern unsigned int globalChecksum;
+unsigned int globalChecksum;
 
 #endif // MAIN_H
