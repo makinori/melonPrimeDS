@@ -760,31 +760,31 @@ Korea 1.0 0xE54682F3
 
         case 0xA4A8FE5A:
             // EU1.0バージョン
-                baseisAltFormAddr = 0x対応するアドレス; // 1p(host)
+                baseisAltFormAddr = 0x00000000; // 1p(host)
         // 他のアドレスも対応するものに設定
         break;
 
         case 0x910018A5:
             // EU1.1バージョン
-                baseisAltFormAddr = 0x対応するアドレス; // 1p(host)
+                baseisAltFormAddr = 0x00000000; // 1p(host)
         // 他のアドレスも対応するものに設定
         break;
 
         case 0xD75F539D:
             // Japan1.0バージョン
-                baseisAltFormAddr = 0x対応するアドレス; // 1p(host)
+                baseisAltFormAddr = 0x00000000; // 1p(host)
         // 他のアドレスも対応するものに設定
         break;
 
         case 0x42EBF348:
             // Japan1.1バージョン
-                baseisAltFormAddr = 0x対応するアドレス; // 1p(host)
+                baseisAltFormAddr = 0x00000000; // 1p(host)
         // 他のアドレスも対応するものに設定
         break;
 
         case 0xE54682F3:
             // Korea1.0バージョン
-                baseisAltFormAddr = 0x対応するアドレス; // 1p(host)
+                baseisAltFormAddr = 0x00000000; // 1p(host)
         // 他のアドレスも対応するものに設定
         break;
 
