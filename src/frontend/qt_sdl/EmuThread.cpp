@@ -738,6 +738,8 @@ Korea 1.0 0xE54682F3
     melonDS::u32 inGameAddr;
     melonDS::u32 PlayerPosAddr;
     melonDS::u32 inVisorOrMapAddr;
+    melonDS::u32 baseAimXAddr;
+    melonDS::u32 baseAimYAddr;
 
     switch (globalChecksum) {
         case 0x91B46577:
@@ -750,6 +752,9 @@ Korea 1.0 0xE54682F3
             baseIsAltFormAddr = 0x020DB098; // 1p(host)
             baseWeaponChangeAddr = 0x020DB45B; // 1p(host)
             baseWeaponAddr = 0x020DB463; // 1p(host)
+            baseAimXAddr = 0x020DEDA6;
+            baseAimYAddr = 0x020DEDAE;
+
             break;
 
         case 0xD75F539D:
@@ -761,6 +766,9 @@ Korea 1.0 0xE54682F3
             baseIsAltFormAddr = 0x020DC6D8; // 1p(host)
             baseWeaponChangeAddr = 0x020DCA9B; // 1p(host)
             baseWeaponAddr = 0x020DCAA3; // 1p(host)
+            //baseAimXAddr = 0x020DEDA6;
+            //baseAimYAddr = 0x020DEDAE;
+
         break;
 
         case 0x218DA42C:
@@ -772,6 +780,8 @@ Korea 1.0 0xE54682F3
             baseIsAltFormAddr = 0x020DC6D8 - 0x1EC0; // 1p(host)
             baseWeaponChangeAddr = 0x020DCA9B - 0x1EC0; // 1p(host)
             baseWeaponAddr = 0x020DCAA3 - 0x1EC0; // 1p(host)
+            //baseAimXAddr = 0x020DEDA6;
+            //baseAimYAddr = 0x020DEDAE;
         break;
 
         case 0xA4A8FE5A:
@@ -783,6 +793,8 @@ Korea 1.0 0xE54682F3
                 baseIsAltFormAddr = 0x020DC6D8 - 0x1620; // 1p(host)
                 baseWeaponChangeAddr = 0x020DCA9B - 0x1620; // 1p(host)
                 baseWeaponAddr = 0x020DCAA3 - 0x1620; // 1p(host)
+                //baseAimXAddr = 0x020DEDA6;
+                //baseAimYAddr = 0x020DEDAE;
         break;
 
         case 0x910018A5:
@@ -794,6 +806,8 @@ Korea 1.0 0xE54682F3
             baseIsAltFormAddr = 0x020DC6D8 - 0x15A0; // 1p(host)
             baseWeaponChangeAddr = 0x020DCA9B - 0x15A0; // 1p(host)
             baseWeaponAddr = 0x020DCAA3 - 0x15A0; // 1p(host)
+            //baseAimXAddr = 0x020DEDA6;
+            //baseAimYAddr = 0x020DEDAE;
         break;
 
         case 0x42EBF348:
@@ -805,6 +819,8 @@ Korea 1.0 0xE54682F3
             baseIsAltFormAddr = 0x020DC6D8 - 0x64; // 1p(host)
             baseWeaponChangeAddr = 0x020DCA9B - 0x64; // 1p(host)
             baseWeaponAddr = 0x020DCAA3 - 0x64; // 1p(host)
+            //baseAimXAddr = 0x020DEDA6;
+            //baseAimYAddr = 0x020DEDAE;
         break;
 
         case 0xE54682F3:
@@ -816,6 +832,8 @@ Korea 1.0 0xE54682F3
             baseIsAltFormAddr = 0x020DC6D8 - 0x87F4; // 1p(host)
             baseWeaponChangeAddr = 0x020DCA9B - 0x87F4; // 1p(host)
             baseWeaponAddr = 0x020DCAA3 - 0x87F4; // 1p(host)
+            //baseAimXAddr = 0x020DEDA6;
+            //baseAimYAddr = 0x020DEDAE;
         break;
 
         default:
@@ -1124,8 +1142,8 @@ Korea 1.0 0xE54682F3
 
             // aim addresses for version and player number
 
-            aimXAddr = calculatePlayerAddress(0x020DEDA6, playerPosition, 0x48);
-            aimYAddr = calculatePlayerAddress(0x020DEDAE, playerPosition, 0x48);
+            aimXAddr = calculatePlayerAddress(baseAimXAddr, playerPosition, 0x48);
+            aimYAddr = calculatePlayerAddress(baseAimYAddr, playerPosition, 0x48);
 
             // cursor looking
 
