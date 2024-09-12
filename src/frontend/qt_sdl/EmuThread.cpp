@@ -742,7 +742,8 @@ Korea 1.0 0xE54682F3
     switch (globalChecksum) {
         case 0x91B46577:
             // USA1.1バージョン
-            baseChosenHunterAddr = 0x020CBDA4; // BattleConfig:ChosenHunter
+
+            baseChosenHunterAddr = 0x020CBDA4; // BattleConfig:ChosenHunter 0 samus 1 kanden 2 trace 3 sylux 4 noxus 5 spire 6 weavel
             inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
             inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
             PlayerPosAddr = 0x020DA538;
@@ -765,6 +766,9 @@ Korea 1.0 0xE54682F3
 
         case 0x218DA42C:
             // USA1.0バージョン
+            baseChosenHunterAddr = 0x020CB51C; // BattleConfig:ChosenHunter
+            // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
+            // inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
             PlayerPosAddr = 0x020D9CB8;
             baseIsAltFormAddr = 0x020DC6D8 - 0x1EC0; // 1p(host)
             baseWeaponChangeAddr = 0x020DCA9B - 0x1EC0; // 1p(host)
@@ -773,7 +777,7 @@ Korea 1.0 0xE54682F3
 
         case 0xA4A8FE5A:
             // EU1.0バージョン
-                // baseChosenHunterAddr = 0x020CD358; // BattleConfig:ChosenHunter
+                baseChosenHunterAddr = 0x020CBDC4; // BattleConfig:ChosenHunter
                 // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
                 // inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
                 PlayerPosAddr = 0x020DA558;
@@ -784,7 +788,7 @@ Korea 1.0 0xE54682F3
 
         case 0x910018A5:
             // EU1.1バージョン
-            // baseChosenHunterAddr = 0x020CD358; // BattleConfig:ChosenHunter
+            baseChosenHunterAddr = 0x020CBE44; // BattleConfig:ChosenHunter
             // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
             // inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
             PlayerPosAddr = 0x020DA5D8;
@@ -796,7 +800,7 @@ Korea 1.0 0xE54682F3
 
         case 0x42EBF348:
             // Japan1.1バージョン
-            // baseChosenHunterAddr = 0x020CD358; // BattleConfig:ChosenHunter
+            baseChosenHunterAddr = 0x020CD318; // BattleConfig:ChosenHunter
             // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
             // inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
             PlayerPosAddr = 0x020DBB38;
@@ -807,7 +811,7 @@ Korea 1.0 0xE54682F3
 
         case 0xE54682F3:
             // Korea1.0バージョン
-            // baseChosenHunterAddr = 0x020CD358; // BattleConfig:ChosenHunter
+            baseChosenHunterAddr = 0x020C4B88; // BattleConfig:ChosenHunter
             // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
             // inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
             PlayerPosAddr = 0x020D33A8;
