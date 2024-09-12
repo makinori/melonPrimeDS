@@ -20,7 +20,10 @@
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
-
+#include <QImage>
+#include <QPainter>
+#include <QLabel>      
+#include <QWidget>     
 #include <optional>
 #include <vector>
 #include <string>
@@ -846,6 +849,26 @@ Korea 1.0 0xE54682F3
                 mainWindow->osdAddMessage(0, "Virtual Stylus enabled");
             }else {
                 mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
+
+                        // Créer une image vide de 200x100 pixels avec un fond transparent
+                QImage image(200, 100, QImage::Format_ARGB32);
+                image.fill(Qt::transparent);  // Remplir avec de la transparence
+
+                // Créer un QPainter pour dessiner sur l'image
+                QPainter painter(&image);
+                painter.setRenderHint(QPainter::Antialiasing);
+                painter.setPen(QPen(Qt::black));  // Définir la couleur du texte
+
+                // Définir la police et la taille du texte
+                QFont font("Arial", 12);
+                painter.setFont(font);
+
+                // Dessiner le texte
+                painter.drawText(image.rect(), Qt::AlignBottom | Qt::AlignRight, "first line\nsecond line");
+
+                // Terminer le dessin
+                painter.end();
+
             }
         }
 
