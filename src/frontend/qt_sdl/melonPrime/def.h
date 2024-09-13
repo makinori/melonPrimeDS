@@ -16,34 +16,12 @@
     with melonDS. If not, see http://www.gnu.org/licenses/.
 */
 
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef DEF_H
+#define DEF_H
 
-#include "glad/glad.h"
 
-#include <QApplication>
-#include <QWidget>
-#include <QWindow>
-#include <QMainWindow>
-#include <QImage>
-#include <QActionGroup>
 #include <QTimer>
-#include <QScreen>
-#include <QCloseEvent>
 #include <cstdint> // added for romversions
-
-#include "Window.h"
-#include "EmuThread.h"
-#include "FrontendUtil.h"
-
-class MelonApplication : public QApplication
-{
-    Q_OBJECT
-
-public:
-    MelonApplication(int &argc, char** argv);
-    bool event(QEvent* event) override;
-};
 
 // グローバル変数をexternで宣言（他のファイルから参照可能にする）
 extern unsigned int globalChecksum;
@@ -64,6 +42,4 @@ namespace RomVersions {
     constexpr uint32_t KOREA1_0 = 0xE54682F3;
 }
 
-
-
-#endif // MAIN_H
+#endif // DEF_H

@@ -46,6 +46,7 @@
 #include "DSi_I2C.h"
 #include "FreeBIOS.h"
 #include "main.h"
+#include "melonPrime/def.h"
 
 using std::make_unique;
 using std::pair;
@@ -56,11 +57,11 @@ using std::wstring_convert;
 using namespace melonDS;
 using namespace melonDS::Platform;
 
-// グローバル変数をexternで宣言（他のファイルから参照可能にする）
-extern bool isNewRom;
-extern unsigned int globalChecksum;
-extern bool isVirtualStylusEnabled;
-
+// 以下はmelonPrime/def.hで定義。
+// グローバル変数の定義（ここで初期化する）
+unsigned int globalChecksum = 0;
+bool isNewRom = false;
+bool isVirtualStylusEnabled = true;
 
 namespace ROMManager
 {

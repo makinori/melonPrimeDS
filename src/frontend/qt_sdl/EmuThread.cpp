@@ -67,6 +67,8 @@
 // #include "RawInputThread.h"
 #include "overlay_shaders.h"
 
+#include "melonPrime/def.h"
+
 // TODO: uniform variable spelling
 using namespace melonDS;
 
@@ -77,9 +79,7 @@ extern int autoScreenSizing;
 extern int videoRenderer;
 extern bool videoSettingsDirty;
 
-// 以下はmain.hで定義。main.cppで初期化している。
-extern unsigned int globalChecksum;
-extern bool isNewRom;
+
 
 
 EmuThread::EmuThread(QObject* parent) : QThread(parent)
