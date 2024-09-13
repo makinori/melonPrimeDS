@@ -1343,7 +1343,11 @@ bool LoadROM(EmuThread* emuthread, QStringList filepath, bool reset)
 
     // グローバル変数の実体を定義
     globalChecksum = cart->Checksum();
+
+    // newRomFlag ON
     isNewRom = true;
+    // virtualStylusFlag ON
+    isVirtualStylusEnabled = true;
 
     if (globalChecksum != 0x91B46577)
     {

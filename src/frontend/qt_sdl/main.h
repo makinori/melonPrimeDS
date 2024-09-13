@@ -49,5 +49,6 @@ extern unsigned int globalChecksum;
 
 // グローバル変数をexternで宣言（他のファイルから参照可能にする）
 extern bool isNewRom;
+extern bool isVirtualStylusEnabled;
 
 #endif // MAIN_H
