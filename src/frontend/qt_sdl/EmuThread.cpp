@@ -437,8 +437,8 @@ void detectRomAndSetAddresses() {
         // inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
         PlayerPosAddr = 0x020DBB38;
         baseIsAltFormAddr = 0x020DC6D8 - 0x64; // 1p(host)
-        baseWeaponChangeAddr = 0x020DCA9B - 0x64; // 1p(host)
-        baseWeaponAddr = 0x020DCAA3 - 0x64; // 1p(host)
+        baseWeaponChangeAddr = 0x020DCA9B - 0x40; // 1p(host)
+        baseWeaponAddr = 0x020DCAA3 - 0x40; // 1p(host)
         baseAimXAddr = 0x020e03a6;
         baseAimYAddr = 0x020e03ae;
 
@@ -456,7 +456,7 @@ void detectRomAndSetAddresses() {
         baseWeaponChangeAddr = 0x020DCA9B - 0x87F4; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x87F4; // 1p(host)
         baseAimXAddr = 0x020D7C0E;
-        baseAimYAddr = 0x020D7C18;
+        baseAimYAddr = 0x020D7C16;
 
         isRomDetected = true;
 
