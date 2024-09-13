@@ -79,6 +79,7 @@ extern bool videoSettingsDirty;
 
 extern unsigned int globalChecksum;
 
+
 EmuThread::EmuThread(QObject* parent) : QThread(parent)
 {
     EmuStatus = emuStatus_Exit;
@@ -324,6 +325,31 @@ uint32_t calculatePlayerAddress(uint32_t baseAddress, uint8_t playerPosition, in
 
     return static_cast<uint32_t>(result);
 }
+
+/*
+ROM ver   CheckSum
+USA       0x218DA42C
+USA1.1    0x91B46577
+EU1.0     0xA4A8FE5A
+EU1.1     0x910018A5
+Japan1.0  0xD75F539D
+Japan1.1  0x42EBF348
+Korea 1.0 0xE54682F3
+*/
+melonDS::u32 baseIsAltFormAddr;
+melonDS::u32 baseWeaponChangeAddr;
+melonDS::u32 baseWeaponAddr;
+melonDS::u32 baseChosenHunterAddr;
+melonDS::u32 inGameAddr;
+melonDS::u32 PlayerPosAddr;
+melonDS::u32 inVisorOrMapAddr;
+melonDS::u32 baseAimXAddr;
+melonDS::u32 baseAimYAddr;
+melonDS::u32 aimXAddr;
+melonDS::u32 aimYAddr;
+
+bool isRomDetected = false;
+
 
 void detectRomAndSetAddresses() {
     switch (globalChecksum) {
@@ -837,30 +863,7 @@ void EmuThread::run()
     #define FN_INPUT_PRESS(i) Input::InputMask.setBit(i, false);
     #define FN_INPUT_RELEASE(i) Input::InputMask.setBit(i, true);
 
-    melonDS::u32 aimXAddr;
-    melonDS::u32 aimYAddr;
 
-/*
-ROM ver   CheckSum
-USA       0x218DA42C
-USA1.1    0x91B46577
-EU1.0     0xA4A8FE5A
-EU1.1     0x910018A5
-Japan1.0  0xD75F539D
-Japan1.1  0x42EBF348
-Korea 1.0 0xE54682F3
-*/
-    melonDS::u32 baseIsAltFormAddr;
-    melonDS::u32 baseWeaponChangeAddr;
-    melonDS::u32 baseWeaponAddr;
-    melonDS::u32 baseChosenHunterAddr;
-    melonDS::u32 inGameAddr;
-    melonDS::u32 PlayerPosAddr;
-    melonDS::u32 inVisorOrMapAddr;
-    melonDS::u32 baseAimXAddr;
-    melonDS::u32 baseAimYAddr;
-
-    bool isRomDetected = false;
 
 
 
