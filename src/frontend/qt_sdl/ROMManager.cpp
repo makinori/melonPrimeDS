@@ -1355,10 +1355,10 @@ bool LoadROM(EmuThread* emuthread, QStringList filepath, bool reset)
     isVirtualStylusEnabled = true;
 
     // ROMチェック
-    if (globalChecksum != USA1_0 && globalChecksum != USA1_1 &&
-        globalChecksum != EU1_0 && globalChecksum != EU1_1 &&
-        globalChecksum != JAPAN1_0 && globalChecksum != JAPAN1_1 &&
-        globalChecksum != KOREA1_0)
+    if (globalChecksum != RomVersions::USA1_0 && globalChecksum != RomVersions::USA1_1 &&
+        globalChecksum != RomVersions::EU1_0 && globalChecksum != RomVersions::EU1_1 &&
+        globalChecksum != RomVersions::JAPAN1_0 && globalChecksum != RomVersions::JAPAN1_1 &&
+        globalChecksum != RomVersions::KOREA1_0)
     {
         QMessageBox::warning(
             nullptr,
