@@ -1323,10 +1323,10 @@ bool LoadROM(EmuThread* emuthread, QStringList filepath, bool reset)
     };
 
     auto cart = NDSCart::ParseROM(std::move(filedata), filelen, std::move(cartargs));
-    if (!cart)
+    if (!cart){
         // If we couldn't parse the ROM...
         return false;
-
+    }
 
     /*
     // checksumHexStringは既にQStringで保持されていると仮定
@@ -1341,8 +1341,8 @@ bool LoadROM(EmuThread* emuthread, QStringList filepath, bool reset)
 
      */
 
-// グローバル変数の実体を定義
-globalChecksum = cart->Checksum();
+    // グローバル変数の実体を定義
+    globalChecksum = cart->Checksum();
 
     if (globalChecksum != 0x91B46577)
     {
