@@ -80,15 +80,6 @@ extern bool videoSettingsDirty;
 // 以下はmain.hで定義。main.cppで初期化している。
 extern unsigned int globalChecksum;
 extern bool isNewRom;
-/*
-extern uint32_t USA1_0;
-extern uint32_t USA1_1;
-extern uint32_t EU1_0;
-extern uint32_t EU1_1;
-extern uint32_t JAPAN1_0;
-extern uint32_t JAPAN1_1;
-extern uint32_t KOREA1_0;
-*/
 
 
 EmuThread::EmuThread(QObject* parent) : QThread(parent)
