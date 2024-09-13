@@ -307,7 +307,7 @@ bool EmuThread::UpdateConsole(UpdateConsoleNDSArgs&& ndsargs, UpdateConsoleGBAAr
 }
 
 // プレイヤーアドレス取得関数
-uint32_t calculatePlayerAddress(uint32_t baseAddress, uint8_t playerPosition, int32_t increment) {
+__forceinline uint32_t calculatePlayerAddress(uint32_t baseAddress, uint8_t playerPosition, int32_t increment) {
     // If player position is 0, return the base address without modification
     if (playerPosition == 0) {
         return baseAddress;
