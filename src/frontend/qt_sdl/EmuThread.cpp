@@ -991,8 +991,9 @@ void EmuThread::run()
             }
         }
 
-
-        if (!isInGame && !isVirtualStylusEnabled) {
+        // Auto Enable/Disable VirtualStylus Before/After the game
+        // you can still enable VirtualStylus in Game
+        if (!isInGame && !isVirtualStylusEnabled && ingameSoVirtualStylusAutolyDisabled) {
             isVirtualStylusEnabled = true;
             mainWindow->osdAddMessage(0, "Virtual Stylus enabled");
             ingameSoVirtualStylusAutolyDisabled = false;
@@ -1007,16 +1008,6 @@ void EmuThread::run()
 
         if (isFocused && isVirtualStylusEnabled) {
 
-         /*
-            // cart->Checksum()の結果を16進数に変換し、QStringに設定する
-            QString checksumHexString = QString::number(globalChecksum, 16).toUpper(); // 16進数形式で大文字に変換
-            mainWindow->osdAddMessage(0, checksumHexString.toUtf8().constData());
-            if (globalChecksum != 0x91B46577)
-            {
-                // QStringをconst char*に変換してosdAddMessageに渡す(UTF-8エンコーディングを使用)
-                mainWindow->osdAddMessage(0, checksumHexString.toUtf8().constData());
-            }
-            */
 
             // this exists to just delay the pressing of the screen when you
             // release the virtual stylus key
