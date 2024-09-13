@@ -116,7 +116,7 @@ QStringList GbaRomExtensions { ".gba", ".agb" };
 
 // グローバル変数の定義（ここで初期化する）
 unsigned int globalChecksum = 0;
-bool isNewRom = false
+bool isNewRom = false;
 bool isVirtualStylusEnabled = true;
 
 
