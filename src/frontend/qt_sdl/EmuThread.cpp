@@ -79,6 +79,9 @@ extern int autoScreenSizing;
 extern int videoRenderer;
 extern bool videoSettingsDirty;
 
+// melonPrimeVariables
+bool ingameSoVirtualStylusAutolyDisabled = false;
+
 EmuThread::EmuThread(QObject* parent) : QThread(parent)
 {
     EmuStatus = emuStatus_Exit;
@@ -992,9 +995,15 @@ void EmuThread::run()
         }
 
 
-        if(isInGame && isVirtualStylusEnabled){
+        if (!isInGame && !isVirtualStylusEnabled) {
+            isVirtualStylusEnabled = true;
+            mainWindow->osdAddMessage(0, "Virtual Stylus enabled");
+        }
+
+        if(isInGame && isVirtualStylusEnabled && !ingameSoVirtualStylusAutolyDisabled) {
             isVirtualStylusEnabled = false;
             mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
+            ingameSoVirtualStylusAutolyDisabled = true;
         }
 
 

@@ -29,6 +29,7 @@ extern unsigned int globalChecksum;
 // グローバル変数をexternで宣言（他のファイルから参照可能にする）
 extern bool isNewRom;
 extern bool isVirtualStylusEnabled;
+extern bool ingameSoVirtualStylusAutolyDisabled;
 
 // 他のファイルで使用するためにexternを使用して宣言する
 
