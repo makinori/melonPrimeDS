@@ -79,9 +79,6 @@ extern int autoScreenSizing;
 extern int videoRenderer;
 extern bool videoSettingsDirty;
 
-// melonPrimeVariables
-bool ingameSoVirtualStylusAutolyDisabled = false;
-
 EmuThread::EmuThread(QObject* parent) : QThread(parent)
 {
     EmuStatus = emuStatus_Exit;
