@@ -448,7 +448,7 @@ __forceinline void detectRomAndSetAddresses() {
     case RomVersions::KOREA1_0:
         // Korea1.0バージョン
         baseChosenHunterAddr = 0x020C4B88; // BattleConfig:ChosenHunter
-        inGameAddr = 0x020e8300; // inGame:1
+        inGameAddr = 0x020E81B4; // inGame:1
         // inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
         PlayerPosAddr = 0x020D33A8;
         baseIsAltFormAddr = 0x020DC6D8 - 0x87F4; // 1p(host)
