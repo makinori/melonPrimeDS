@@ -955,8 +955,6 @@ void EmuThread::run()
         uint8_t playerPosition = NDS->ARM9Read8(PlayerPosAddr);
 
         const int32_t playerAddressIncrement = 0xF30;
-        uint32_t weaponChangeAddr = calculatePlayerAddress(baseWeaponChangeAddr, playerPosition, playerAddressIncrement);
-        uint32_t weaponAddr = calculatePlayerAddress(baseWeaponAddr, playerPosition, playerAddressIncrement);
         uint32_t isAltFormAddr = calculatePlayerAddress(baseIsAltFormAddr, playerPosition, playerAddressIncrement);
         uint32_t chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
 
@@ -1110,6 +1108,10 @@ void EmuThread::run()
 
             // 武器を切り替えるラムダ関数を定義
             auto SwitchWeapon = [&](int weaponIndex) {
+
+                uint32_t weaponChangeAddr = calculatePlayerAddress(baseWeaponChangeAddr, playerPosition, playerAddressIncrement);
+                uint32_t weaponAddr = calculatePlayerAddress(baseWeaponAddr, playerPosition, playerAddressIncrement);
+
                 // 画面をリリース(武器変更のため)
                 NDS->ReleaseScreen();
 
