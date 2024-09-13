@@ -51,4 +51,13 @@ extern unsigned int globalChecksum;
 extern bool isNewRom;
 extern bool isVirtualStylusEnabled;
 
+// 他のファイルで使用するためにexternを使用して宣言する
+extern const uint32_t USA1_0;
+extern const uint32_t USA1_1;
+extern const uint32_t EU1_0;
+extern const uint32_t EU1_1;
+extern const uint32_t JAPAN1_0;
+extern const uint32_t JAPAN1_1;
+extern const uint32_t KOREA1_0;
+
 #endif // MAIN_H

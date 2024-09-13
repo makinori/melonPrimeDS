@@ -77,8 +77,18 @@ extern int autoScreenSizing;
 extern int videoRenderer;
 extern bool videoSettingsDirty;
 
+// 以下はmain.hで定義。main.cppで初期化している。
 extern unsigned int globalChecksum;
 extern bool isNewRom;
+extern const uint32_t USA1_0;
+extern const uint32_t USA1_1;
+extern const uint32_t EU1_0;
+extern const uint32_t EU1_1;
+extern const uint32_t JAPAN1_0;
+extern const uint32_t JAPAN1_1;
+extern const uint32_t KOREA1_0;
+
+
 
 EmuThread::EmuThread(QObject* parent) : QThread(parent)
 {
@@ -353,7 +363,7 @@ bool isRomDetected = false;
 
 void detectRomAndSetAddresses() {
     switch (globalChecksum) {
-    case 0x91B46577:
+    case USA1_1:
         // USA1.1バージョン
 
         baseChosenHunterAddr = 0x020CBDA4; // BattleConfig:ChosenHunter 0 samus 1 kanden 2 trace 3 sylux 4 noxus 5 spire 6 weavel
@@ -369,7 +379,7 @@ void detectRomAndSetAddresses() {
 
         break;
 
-    case 0xD75F539D:
+    case JAPAN1_0:
         // Japan1.0バージョン
         baseChosenHunterAddr = 0x020CD358; // BattleConfig:ChosenHunter
         // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
@@ -384,7 +394,7 @@ void detectRomAndSetAddresses() {
 
         break;
 
-    case 0x218DA42C:
+    case USA1_0:
         // USA1.0バージョン
         baseChosenHunterAddr = 0x020CB51C; // BattleConfig:ChosenHunter
         // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
@@ -399,7 +409,7 @@ void detectRomAndSetAddresses() {
 
         break;
 
-    case 0xA4A8FE5A:
+    case EU1_0:
         // EU1.0バージョン
         baseChosenHunterAddr = 0x020CBDC4; // BattleConfig:ChosenHunter
         // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
@@ -414,7 +424,7 @@ void detectRomAndSetAddresses() {
 
         break;
 
-    case 0x910018A5:
+    case EU1_1:
         // EU1.1バージョン
         baseChosenHunterAddr = 0x020CBE44; // BattleConfig:ChosenHunter
         // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
@@ -430,7 +440,7 @@ void detectRomAndSetAddresses() {
 
         break;
 
-    case 0x42EBF348:
+    case JAPAN1_1:
         // Japan1.1バージョン
         baseChosenHunterAddr = 0x020CD318; // BattleConfig:ChosenHunter
         // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
@@ -446,7 +456,7 @@ void detectRomAndSetAddresses() {
 
         break;
 
-    case 0xE54682F3:
+    case KOREA1_0:
         // Korea1.0バージョン
         baseChosenHunterAddr = 0x020C4B88; // BattleConfig:ChosenHunter
         // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
@@ -872,7 +882,7 @@ void EmuThread::run()
     int memoryDump = 0;
 #endif
 
-    bool isVirtualStylusEnabled = true;
+
     bool enableAim = true;
 
     float virtualStylusX = 128;

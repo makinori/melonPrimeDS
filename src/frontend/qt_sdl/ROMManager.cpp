@@ -1349,12 +1349,17 @@ bool LoadROM(EmuThread* emuthread, QStringList filepath, bool reset)
     // virtualStylusFlag ON
     isVirtualStylusEnabled = true;
 
-    if (globalChecksum != 0x91B46577)
+    // ROMチェック
+    if (globalChecksum != USA1_0 && globalChecksum != USA1_1 &&
+        globalChecksum != EU1_0 && globalChecksum != EU1_1 &&
+        globalChecksum != JAPAN1_0 && globalChecksum != JAPAN1_1 &&
+        globalChecksum != KOREA1_0)
     {
         QMessageBox::warning(
             nullptr,
             "Unknown ROM",
-            "Please make sure to use\nMetroid Prime Hunters USA version 1.1"
+//            "Please make sure to use\nMetroid Prime Hunters USA version 1.1"
+              "Please make sure to use\nthe untrimmed and unmodified Metroid Prime Hunters ROM which is not encrypted."
         );
     }
 
