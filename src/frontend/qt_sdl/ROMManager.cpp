@@ -55,7 +55,12 @@ using std::unique_ptr;
 using std::wstring_convert;
 using namespace melonDS;
 using namespace melonDS::Platform;
+
+// グローバル変数をexternで宣言（他のファイルから参照可能にする）
+extern bool isNewRom;
 extern unsigned int globalChecksum;
+extern bool isVirtualStylusEnabled;
+
 
 namespace ROMManager
 {
