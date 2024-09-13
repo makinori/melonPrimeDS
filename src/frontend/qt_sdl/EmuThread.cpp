@@ -998,6 +998,7 @@ void EmuThread::run()
         if (!isInGame && !isVirtualStylusEnabled) {
             isVirtualStylusEnabled = true;
             mainWindow->osdAddMessage(0, "Virtual Stylus enabled");
+            ingameSoVirtualStylusAutolyDisabled = false;
         }
 
         if(isInGame && isVirtualStylusEnabled && !ingameSoVirtualStylusAutolyDisabled) {
