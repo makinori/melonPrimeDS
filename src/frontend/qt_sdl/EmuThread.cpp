@@ -79,9 +79,6 @@ extern int autoScreenSizing;
 extern int videoRenderer;
 extern bool videoSettingsDirty;
 
-
-
-
 EmuThread::EmuThread(QObject* parent) : QThread(parent)
 {
     EmuStatus = emuStatus_Exit;
@@ -353,7 +350,7 @@ melonDS::u32 aimYAddr;
 bool isRomDetected = false;
 
 
-void detectRomAndSetAddresses() {
+__forceinline void detectRomAndSetAddresses() {
     switch (globalChecksum) {
     case RomVersions::USA1_1:
         // USA1.1バージョン
@@ -374,7 +371,7 @@ void detectRomAndSetAddresses() {
     case RomVersions::JAPAN1_0:
         // Japan1.0バージョン
         baseChosenHunterAddr = 0x020CD358; // BattleConfig:ChosenHunter
-        // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
+        inGameAddr = 0x020F0BB0; // inGame:1
         // inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
         PlayerPosAddr = 0x020DBB78;
         baseIsAltFormAddr = 0x020DC6D8; // 1p(host)
@@ -963,7 +960,7 @@ void EmuThread::run()
         uint32_t isAltFormAddr = calculatePlayerAddress(baseIsAltFormAddr, playerPosition, playerAddressIncrement);
         uint32_t chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
 
-        bool isInGame = NDS->ARM9Read32(inGameAddr) == 0xFFFFFFFF;
+        bool isInGame = NDS->ARM9Read16(inGameAddr) == 0x0001;
 
         if(isFocused && Input::HotkeyReleased(HK_MetroidVirtualStylus)){
             isVirtualStylusEnabled = !isVirtualStylusEnabled;
@@ -972,7 +969,7 @@ void EmuThread::run()
             }else {
                 mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
 
-                        // Créer une image vide de 200x100 pixels avec un fond transparent
+                // Créer une image vide de 200x100 pixels avec un fond transparent
                 QImage image(200, 100, QImage::Format_ARGB32);
                 image.fill(Qt::transparent);  // Remplir avec de la transparence
 
@@ -994,12 +991,12 @@ void EmuThread::run()
             }
         }
 
-        /*
+
         if(isInGame && isVirtualStylusEnabled){
             isVirtualStylusEnabled = false;
             mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
         }
-        */
+
 
         if (isFocused && isVirtualStylusEnabled) {
 

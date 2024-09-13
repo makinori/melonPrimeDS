@@ -1334,18 +1334,6 @@ bool LoadROM(EmuThread* emuthread, QStringList filepath, bool reset)
         return false;
     }
 
-    /*
-    // checksumHexStringは既にQStringで保持されていると仮定
-    QString message = QString("FYI")
-                    + " Your ROM's checksum = " + checksumHexString;
-
-    QMessageBox::warning(
-        nullptr,
-        "CheckSum",
-        message
-    );
-
-     */
 
     // グローバル変数の実体を定義
     globalChecksum = cart->Checksum();
@@ -1364,8 +1352,8 @@ bool LoadROM(EmuThread* emuthread, QStringList filepath, bool reset)
         QMessageBox::warning(
             nullptr,
             "Unknown ROM",
-//            "Please make sure to use\nMetroid Prime Hunters USA version 1.1"
-              "Please make sure to use\nthe untrimmed and unmodified Metroid Prime Hunters ROM which is not encrypted."
+         // "Please make sure to use\nMetroid Prime Hunters USA version 1.1"
+            "Please make sure to use\nthe untrimmed and unmodified Metroid Prime Hunters ROM which is not encrypted."
         );
     }
 
