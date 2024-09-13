@@ -1343,6 +1343,7 @@ bool LoadROM(EmuThread* emuthread, QStringList filepath, bool reset)
 
     // グローバル変数の実体を定義
     globalChecksum = cart->Checksum();
+    isNewRom = true;
 
     if (globalChecksum != 0x91B46577)
     {

@@ -78,7 +78,7 @@ extern int videoRenderer;
 extern bool videoSettingsDirty;
 
 extern unsigned int globalChecksum;
-
+extern bool isNewRom;
 
 EmuThread::EmuThread(QObject* parent) : QThread(parent)
 {
@@ -944,6 +944,10 @@ void EmuThread::run()
         #endif
 
   
+        if (isNewRom) {
+            isRomDetected = false;
+        }
+
         if (!isRomDetected) {
             detectRomAndSetAddresses();
         }
