@@ -30,6 +30,7 @@
 #include <QTimer>
 #include <QScreen>
 #include <QCloseEvent>
+#include <cstdint> // added for romversions
 
 #include "Window.h"
 #include "EmuThread.h"
@@ -52,12 +53,19 @@ extern bool isNewRom;
 extern bool isVirtualStylusEnabled;
 
 // 他のファイルで使用するためにexternを使用して宣言する
-extern const uint32_t USA1_0;
-extern const uint32_t USA1_1;
-extern const uint32_t EU1_0;
-extern const uint32_t EU1_1;
-extern const uint32_t JAPAN1_0;
-extern const uint32_t JAPAN1_1;
-extern const uint32_t KOREA1_0;
+
+
+
+namespace RomVersions {
+    constexpr uint32_t USA1_0 = 0x218DA42C;
+    constexpr uint32_t USA1_1 = 0x91B46577;
+    constexpr uint32_t EU1_0 = 0xA4A8FE5A;
+    constexpr uint32_t EU1_1 = 0x910018A5;
+    constexpr uint32_t JAPAN1_0 = 0xD75F539D;
+    constexpr uint32_t JAPAN1_1 = 0x42EBF348;
+    constexpr uint32_t KOREA1_0 = 0xE54682F3;
+}
+
+
 
 #endif // MAIN_H

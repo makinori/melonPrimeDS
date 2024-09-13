@@ -119,16 +119,6 @@ unsigned int globalChecksum = 0;
 bool isNewRom = false;
 bool isVirtualStylusEnabled = true;
 
-
-// 各ROMバージョンのチェックサム定義
-uint32_t USA1_0 = 0x218DA42C;
-uint32_t USA1_1 = 0x91B46577;
-uint32_t EU1_0 = 0xA4A8FE5A;
-uint32_t EU1_1 = 0x910018A5;
-uint32_t JAPAN1_0 = 0xD75F539D;
-uint32_t JAPAN1_1 = 0x42EBF348;
-uint32_t KOREA1_0 = 0xE54682F3;
-
 // This list of supported archive formats is based on libarchive(3) version 3.6.2 (2022-12-09).
 QStringList ArchiveMimeTypes
 {

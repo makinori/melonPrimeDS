@@ -364,7 +364,7 @@ bool isRomDetected = false;
 
 void detectRomAndSetAddresses() {
     switch (globalChecksum) {
-    case USA1_1:
+    case RomVersions::USA1_1:
         // USA1.1バージョン
 
         baseChosenHunterAddr = 0x020CBDA4; // BattleConfig:ChosenHunter 0 samus 1 kanden 2 trace 3 sylux 4 noxus 5 spire 6 weavel
@@ -380,7 +380,7 @@ void detectRomAndSetAddresses() {
 
         break;
 
-    case JAPAN1_0:
+    case RomVersions::JAPAN1_0:
         // Japan1.0バージョン
         baseChosenHunterAddr = 0x020CD358; // BattleConfig:ChosenHunter
         // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
@@ -395,7 +395,7 @@ void detectRomAndSetAddresses() {
 
         break;
 
-    case USA1_0:
+    case RomVersions::USA1_0:
         // USA1.0バージョン
         baseChosenHunterAddr = 0x020CB51C; // BattleConfig:ChosenHunter
         // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
@@ -410,7 +410,7 @@ void detectRomAndSetAddresses() {
 
         break;
 
-    case EU1_0:
+    case RomVersions::EU1_0:
         // EU1.0バージョン
         baseChosenHunterAddr = 0x020CBDC4; // BattleConfig:ChosenHunter
         // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
@@ -425,7 +425,7 @@ void detectRomAndSetAddresses() {
 
         break;
 
-    case EU1_1:
+    case RomVersions::EU1_1:
         // EU1.1バージョン
         baseChosenHunterAddr = 0x020CBE44; // BattleConfig:ChosenHunter
         // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
@@ -441,7 +441,7 @@ void detectRomAndSetAddresses() {
 
         break;
 
-    case JAPAN1_1:
+    case RomVersions::JAPAN1_1:
         // Japan1.1バージョン
         baseChosenHunterAddr = 0x020CD318; // BattleConfig:ChosenHunter
         // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
@@ -457,7 +457,7 @@ void detectRomAndSetAddresses() {
 
         break;
 
-    case KOREA1_0:
+    case RomVersions::KOREA1_0:
         // Korea1.0バージョン
         baseChosenHunterAddr = 0x020C4B88; // BattleConfig:ChosenHunter
         // inGameAddr = 0x020C3D9C; // inGame:FFFFFFFF, inMenu:00000004
