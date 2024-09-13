@@ -372,8 +372,8 @@ __forceinline void detectRomAndSetAddresses() {
         // USA1.0バージョン
         baseChosenHunterAddr = 0x020CB51C; // BattleConfig:ChosenHunter
         inGameAddr = 0x020ee180 + 0x8F0; // inGame:1
-        // inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
         PlayerPosAddr = 0x020D9CB8;
+        inVisorOrMapAddr = PlayerPosAddr - 0xabb; // 推定アドレス
         baseIsAltFormAddr = 0x020DC6D8 - 0x1EC0; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x1EC0; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x1EC0; // 1p(host)
@@ -387,8 +387,8 @@ __forceinline void detectRomAndSetAddresses() {
         // Japan1.0バージョン
         baseChosenHunterAddr = 0x020CD358; // BattleConfig:ChosenHunter
         inGameAddr = 0x020F0BB0; // inGame:1
-        // inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
         PlayerPosAddr = 0x020DBB78;
+        inVisorOrMapAddr = PlayerPosAddr - 0xabb; // 推定アドレス
         baseIsAltFormAddr = 0x020DC6D8; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B; // 1p(host)
         baseWeaponAddr = 0x020DCAA3; // 1p(host)
@@ -402,8 +402,8 @@ __forceinline void detectRomAndSetAddresses() {
         // Japan1.1バージョン
         baseChosenHunterAddr = 0x020CD318; // BattleConfig:ChosenHunter
         inGameAddr = 0x020F0280 + 0x8F0; // inGame:1
-        // inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
         PlayerPosAddr = 0x020DBB38;
+        inVisorOrMapAddr = PlayerPosAddr - 0xabb; // 推定アドレス
         baseIsAltFormAddr = 0x020DC6D8 - 0x64; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x40; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x40; // 1p(host)
@@ -418,8 +418,8 @@ __forceinline void detectRomAndSetAddresses() {
         // EU1.0バージョン
         baseChosenHunterAddr = 0x020CBDC4; // BattleConfig:ChosenHunter
         inGameAddr = 0x020eec60 + 0x8F0; // inGame:1
-        // inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
         PlayerPosAddr = 0x020DA558;
+        inVisorOrMapAddr = PlayerPosAddr - 0xabb; // 推定アドレス
         baseIsAltFormAddr = 0x020DC6D8 - 0x1620; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x1620; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x1620; // 1p(host)
@@ -433,8 +433,8 @@ __forceinline void detectRomAndSetAddresses() {
         // EU1.1バージョン
         baseChosenHunterAddr = 0x020CBE44; // BattleConfig:ChosenHunter
         inGameAddr = 0x020eece0 + 0x8F0; // inGame:1
-        // inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
         PlayerPosAddr = 0x020DA5D8;
+        inVisorOrMapAddr = PlayerPosAddr - 0xabb; // 推定アドレス
         baseIsAltFormAddr = 0x020DC6D8 - 0x15A0; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x15A0; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x15A0; // 1p(host)
@@ -449,7 +449,7 @@ __forceinline void detectRomAndSetAddresses() {
         // Korea1.0バージョン
         baseChosenHunterAddr = 0x020C4B88; // BattleConfig:ChosenHunter
         inGameAddr = 0x020E81B4; // inGame:1
-        // inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
+        inVisorOrMapAddr = PlayerPosAddr - 0xabb; // 推定アドレス
         PlayerPosAddr = 0x020D33A8;
         baseIsAltFormAddr = 0x020DC6D8 - 0x87F4; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x87F4; // 1p(host)
