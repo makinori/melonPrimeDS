@@ -341,6 +341,7 @@ melonDS::u32 baseAimYAddr;
 melonDS::u32 aimXAddr;
 melonDS::u32 aimYAddr;
 
+bool isAltForm;
 bool isRomDetected = false;
 
 
@@ -1132,50 +1133,67 @@ void EmuThread::run()
                 //frameAdvance(2);
             }
 
-            // 武器を切り替えるラムダ関数を定義
+            // Define a lambda function to switch weapons
             auto SwitchWeapon = [&](int weaponIndex) {
+                // Read the current jump flag value
+                uint8_t currentFlags = NDS->ARM9Read8(jumpFlagAddr);
+                uint8_t jumpFlag = currentFlags & 0x0F;  // Get the lower 4 bits
+                bool needToRestore = false;
 
-                // 画面をリリース(武器変更のため)
+                // Check if in alternate form (transformed state)
+                isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
+
+                // If not jumping (jumpFlag == 0) and in normal form, temporarily set to jumped state (jumpFlag == 1)
+                if (jumpFlag == 0 && !isAltForm) {
+                    uint8_t newFlags = (currentFlags & 0xF0) | 0x01;  // Set lower 4 bits to 1
+                    NDS->ARM9Write8(jumpFlagAddr, newFlags);
+                    needToRestore = true;
+                }
+
+                // Release the screen (for weapon change)
                 NDS->ReleaseScreen();
 
                 // Lambda to set the weapon-changing state
                 auto setChangingWeapon = [](int value) -> int {
                     // Apply mask to set the lower 4 bits to 1011 (B in hexadecimal)
                     return (value & 0xF0) | 0x0B; // Keep the upper 4 bits, set lower 4 bits to 1011
-                };
+                    };
 
                 // Modify the value using the lambda
                 int valueOfWeaponChange = setChangingWeapon(NDS->ARM9Read8(weaponChangeAddr));
 
-                // 武器変更命令をARM9に書き込む
-                NDS->ARM9Write8(weaponChangeAddr, valueOfWeaponChange); //下位4ビットのみをBに変更。
+                // Write the weapon change command to ARM9
+                NDS->ARM9Write8(weaponChangeAddr, valueOfWeaponChange); // Only change the lower 4 bits to B
 
-                // 武器を変更する。
-                NDS->ARM9Write8(weaponAddr, weaponIndex);  // 対応する武器のアドレスを書き込む
+                // Change the weapon
+                NDS->ARM9Write8(weaponAddr, weaponIndex);  // Write the address of the corresponding weapon
 
-                // フレームを進める(反映のため)
+                // Advance frames (for reflection)
                 frameAdvance(2);
 
-                // 画面をリリース
+                // Release the screen
                 NDS->ReleaseScreen();
 
+                // エイムのためにタッチ(画面中央)
+                NDS->TouchScreen(128, 96);
+
+                // Restore the jump flag to its original value (if necessary)
+                if (needToRestore) {
+                    uint8_t restoredFlags = (currentFlags & 0xF0) | jumpFlag;
+                    NDS->ARM9Write8(jumpFlagAddr, restoredFlags);
+                }
             };
+
 
 
             // ビーム武器に切り替え
             if (Input::HotkeyPressed(HK_MetroidWeaponBeam)) {
                 SwitchWeapon(0);  // ビームのアドレスは0
-                // Touch for the aim, we need this for the issue if you switch weapon in altform, you cant aim
-                // To prevent jumping, touch the Power Beam for Power Beam, and touch the Missile position for Missiles.
-                NDS->TouchScreen(81, 36);
             }
 
             // ミサイルに切り替え
             if (Input::HotkeyPressed(HK_MetroidWeaponMissile)) {
                 SwitchWeapon(2);  // ミサイルのアドレスは2
-                // Touch for the aim, we need this for the issue if you switch weapon in altform, you cant aim
-                // To prevent jumping, touch the Power Beam for Power Beam, and touch the Missile position for Missiles.
-                NDS->TouchScreen(128, 32);
 
             }
 
@@ -1196,9 +1214,6 @@ void EmuThread::run()
             for (int i = 0; i < 6; i++) {
                 if (Input::HotkeyPressed(weaponHotkeys[i])) {
                     SwitchWeapon(weaponIndices[i]);  // 対応する武器に切り替える
-                    // Touch for the aim, we need this for the issue if you switch weapon in altform, you cant aim
-                    // Touch the special weapon to prevent jumping.
-                    NDS->TouchScreen(174, 36);
 
                     // ホットキーが押された場合にループを抜ける(武器切り替えが完了したため)
                     break;
@@ -1253,7 +1268,7 @@ void EmuThread::run()
 
             // morph ball boost, map zoom out, imperialist zoom
             if (Input::HotkeyDown(HK_MetroidMorphBallBoost)) {
-                bool isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
+                isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
                 bool isSamus = NDS->ARM9Read8(chosenHunterAddr) == 0x00;
                 if (isAltForm && isSamus) {
                     // just incase
@@ -1291,7 +1306,7 @@ void EmuThread::run()
         } // END of if(isFocused)
 
         // is this a good way of detecting morph ball status?
-        bool isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
+        isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
  //       bool isSamus = NDS->ARM9Read8(chosenHunterAddr) == 0x00;
 //        if (!isAltForm && isSamus && enableAim) {
         if (!isAltForm && enableAim) {
