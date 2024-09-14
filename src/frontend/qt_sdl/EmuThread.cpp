@@ -1167,7 +1167,7 @@ void EmuThread::run()
                 SwitchWeapon(0);  // ビームのアドレスは0
                 // Touch for the aim, we need this for the issue if you switch weapon in altform, you cant aim
                 // To prevent jumping, touch the Power Beam for Power Beam, and touch the Missile position for Missiles.
-                NDS->TouchScreen(85 + 40 * 0, 32);
+                NDS->TouchScreen(81, 36);
             }
 
             // ミサイルに切り替え
@@ -1175,7 +1175,7 @@ void EmuThread::run()
                 SwitchWeapon(2);  // ミサイルのアドレスは2
                 // Touch for the aim, we need this for the issue if you switch weapon in altform, you cant aim
                 // To prevent jumping, touch the Power Beam for Power Beam, and touch the Missile position for Missiles.
-                NDS->TouchScreen(85 + 40 * 1, 32);
+                NDS->TouchScreen(128, 32);
 
             }
 
@@ -1198,7 +1198,7 @@ void EmuThread::run()
                     SwitchWeapon(weaponIndices[i]);  // 対応する武器に切り替える
                     // Touch for the aim, we need this for the issue if you switch weapon in altform, you cant aim
                     // Touch the special weapon to prevent jumping.
-                    NDS->TouchScreen(85 + 40 * 2, 32);
+                    NDS->TouchScreen(174, 36);
 
                     // ホットキーが押された場合にループを抜ける(武器切り替えが完了したため)
                     break;
