@@ -79,6 +79,10 @@ extern int autoScreenSizing;
 extern int videoRenderer;
 extern bool videoSettingsDirty;
 
+
+float mouseX;
+float mouseY;
+
 EmuThread::EmuThread(QObject* parent) : QThread(parent)
 {
     EmuStatus = emuStatus_Exit;
@@ -307,7 +311,7 @@ bool EmuThread::UpdateConsole(UpdateConsoleNDSArgs&& ndsargs, UpdateConsoleGBAAr
 }
 
 // プレイヤーアドレス取得関数
-__forceinline uint32_t calculatePlayerAddress(uint32_t baseAddress, uint8_t playerPosition, int32_t increment) {
+uint32_t calculatePlayerAddress(uint32_t baseAddress, uint8_t playerPosition, int32_t increment) {
     // If player position is 0, return the base address without modification
     if (playerPosition == 0) {
         return baseAddress;
@@ -325,16 +329,6 @@ __forceinline uint32_t calculatePlayerAddress(uint32_t baseAddress, uint8_t play
     return static_cast<uint32_t>(result);
 }
 
-/*
-ROM ver   CheckSum
-USA       0x218DA42C
-USA1.1    0x91B46577
-EU1.0     0xA4A8FE5A
-EU1.1     0x910018A5
-Japan1.0  0xD75F539D
-Japan1.1  0x42EBF348
-Korea 1.0 0xE54682F3
-*/
 melonDS::u32 baseIsAltFormAddr;
 melonDS::u32 baseWeaponChangeAddr;
 melonDS::u32 baseWeaponAddr;
@@ -350,7 +344,7 @@ melonDS::u32 aimYAddr;
 bool isRomDetected = false;
 
 
-__forceinline void detectRomAndSetAddresses() {
+void detectRomAndSetAddresses() {
     switch (globalChecksum) {
     case RomVersions::USA1_1:
         // USA1.1バージョン
@@ -912,6 +906,9 @@ void EmuThread::run()
         // auto mouseRel = rawInputThread->fetchMouseDelta();
         QPoint mouseRel;
 
+        // 感度係数を定数として定義
+        const float SENSITIVITY_FACTOR = Config::MetroidAimSensitivity * 0.01f;
+
         auto isFocused = mainWindow->panel->getFocused();
 
         if (isFocused) {
@@ -951,16 +948,10 @@ void EmuThread::run()
             detectRomAndSetAddresses();
         }
 
-        // Read the player position
-        uint8_t playerPosition = NDS->ARM9Read8(PlayerPosAddr);
-
-        const int32_t playerAddressIncrement = 0xF30;
-        uint32_t isAltFormAddr = calculatePlayerAddress(baseIsAltFormAddr, playerPosition, playerAddressIncrement);
-        uint32_t chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
 
         bool isInGame = NDS->ARM9Read16(inGameAddr) == 0x0001;
 
-        if(isFocused && Input::HotkeyReleased(HK_MetroidVirtualStylus)){
+        if(isFocused && Input::HotkeyReleased(HK_MetroidVirtualStylus) && !isInGame){
             isVirtualStylusEnabled = !isVirtualStylusEnabled;
             if(isVirtualStylusEnabled){
                 mainWindow->osdAddMessage(0, "Virtual Stylus enabled");
@@ -997,12 +988,42 @@ void EmuThread::run()
             ingameSoVirtualStylusAutolyDisabled = false;
         }
 
+        bool calcAddr = false;
+
         if(isInGame && isVirtualStylusEnabled && !ingameSoVirtualStylusAutolyDisabled) {
             isVirtualStylusEnabled = false;
             mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
             ingameSoVirtualStylusAutolyDisabled = true;
+            calcAddr = true;
         }
 
+        // VirtualStylus is Enabled when not in game
+        isVirtualStylusEnabled = !isInGame;
+
+        // Read the player position
+        uint8_t playerPosition;
+
+        const int32_t playerAddressIncrement = 0xF30;
+        uint32_t isAltFormAddr;
+        uint32_t chosenHunterAddr;
+        uint32_t weaponChangeAddr;
+        uint32_t weaponAddr;
+
+        if (calcAddr) {
+            // Read the player position
+            playerPosition = NDS->ARM9Read8(PlayerPosAddr);
+            isAltFormAddr = calculatePlayerAddress(baseIsAltFormAddr, playerPosition, playerAddressIncrement);
+            chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
+            weaponChangeAddr = calculatePlayerAddress(baseWeaponChangeAddr, playerPosition, playerAddressIncrement);
+            weaponAddr = calculatePlayerAddress(baseWeaponAddr, playerPosition, playerAddressIncrement);
+
+            // aim addresses for version and player number
+            aimXAddr = calculatePlayerAddress(baseAimXAddr, playerPosition, 0x48);
+            aimYAddr = calculatePlayerAddress(baseAimYAddr, playerPosition, 0x48);
+
+            mainWindow->osdAddMessage(0, "Completed address calculation.");
+
+        }
 
         if (isFocused && isVirtualStylusEnabled) {
 
@@ -1021,15 +1042,20 @@ void EmuThread::run()
 
             // mouse
 
-            if (abs(mouseRel.x()) > 0) {
+
+            mouseX = mouseRel.x();
+
+            if (abs(mouseX) > 0) {
                 virtualStylusX += (
-                    mouseRel.x() * Config::MetroidVirtualStylusSensitivity * 0.01
+                    mouseX * SENSITIVITY_FACTOR
                 );
             }
 
-            if (abs(mouseRel.y()) > 0) {
+            mouseY = mouseRel.y();
+
+            if (abs(mouseY) > 0) {
                 virtualStylusY += (
-                    mouseRel.y() * dsAspectRatio * Config::MetroidVirtualStylusSensitivity * 0.01
+                    mouseY * dsAspectRatio * SENSITIVITY_FACTOR
                 );
             }
 
@@ -1109,9 +1135,6 @@ void EmuThread::run()
             // 武器を切り替えるラムダ関数を定義
             auto SwitchWeapon = [&](int weaponIndex) {
 
-                uint32_t weaponChangeAddr = calculatePlayerAddress(baseWeaponChangeAddr, playerPosition, playerAddressIncrement);
-                uint32_t weaponAddr = calculatePlayerAddress(baseWeaponAddr, playerPosition, playerAddressIncrement);
-
                 // 画面をリリース(武器変更のため)
                 NDS->ReleaseScreen();
 
@@ -1135,29 +1158,36 @@ void EmuThread::run()
 
                 // 画面をリリース
                 NDS->ReleaseScreen();
-                // エイムのためにタッチ(画面中央)
-                NDS->TouchScreen(128, 96);
+
             };
 
 
             // ビーム武器に切り替え
             if (Input::HotkeyPressed(HK_MetroidWeaponBeam)) {
                 SwitchWeapon(0);  // ビームのアドレスは0
+                // Touch for the aim, we need this for the issue if you switch weapon in altform, you cant aim
+                // To prevent jumping, touch the Power Beam for Power Beam, and touch the Missile position for Missiles.
+                NDS->TouchScreen(81, 36);
             }
 
             // ミサイルに切り替え
             if (Input::HotkeyPressed(HK_MetroidWeaponMissile)) {
                 SwitchWeapon(2);  // ミサイルのアドレスは2
+                // Touch for the aim, we need this for the issue if you switch weapon in altform, you cant aim
+                // To prevent jumping, touch the Power Beam for Power Beam, and touch the Missile position for Missiles.
+                NDS->TouchScreen(128, 32);
+
             }
 
             // サブ武器ホットキーの配列(ホットキーの定義と武器のインデックスを対応させる)
             Hotkey weaponHotkeys[] = {
-                HK_MetroidWeapon1,  // ShockCoil
-                HK_MetroidWeapon2,  // Magmaul
-                HK_MetroidWeapon3,  // Judicator
-                HK_MetroidWeapon4,  // Imperialist
-                HK_MetroidWeapon5,  // Battlehammer
-                HK_MetroidWeapon6   // VoltDriver
+                HK_MetroidWeapon1,  // ShockCoil    7
+                HK_MetroidWeapon2,  // Magmaul      6
+                HK_MetroidWeapon3,  // Judicator    5
+                HK_MetroidWeapon4,  // Imperialist  4
+                HK_MetroidWeapon5,  // Battlehammer 3
+                HK_MetroidWeapon6   // VoltDriver   1
+                                    // Omega Cannon 8 we don't need to set this here, because we need {last weapon used / Omega canon}
             };
 
             int weaponIndices[] = {7, 6, 5, 4, 3, 1};  // 各ホットキーに対応する武器のアドレス
@@ -1166,22 +1196,29 @@ void EmuThread::run()
             for (int i = 0; i < 6; i++) {
                 if (Input::HotkeyPressed(weaponHotkeys[i])) {
                     SwitchWeapon(weaponIndices[i]);  // 対応する武器に切り替える
+                    // Touch for the aim, we need this for the issue if you switch weapon in altform, you cant aim
+                    // Touch the special weapon to prevent jumping.
+                    NDS->TouchScreen(174, 36);
+
+                    // ホットキーが押された場合にループを抜ける(武器切り替えが完了したため)
+                    break;
                 }
+            }
+
+            // Omega Canon or Last used weapon
+            if (Input::HotkeyPressed(HK_MetroidWeaponSpecial)) {
+                NDS->ReleaseScreen();
+                frameAdvance(2);
+                NDS->TouchScreen(173, 32);
+                frameAdvance(2);
             }
 
             // move
 
             processMoveInput();
 
-            // aim addresses for version and player number
-
-            aimXAddr = calculatePlayerAddress(baseAimXAddr, playerPosition, 0x48);
-            aimYAddr = calculatePlayerAddress(baseAimYAddr, playerPosition, 0x48);
 
             // cursor looking
-
-            // 感度係数を定数として定義
-            const float SENSITIVITY_FACTOR = Config::MetroidAimSensitivity * 0.01f;
 
             // X軸の処理
             float mouseX = mouseRel.x();
@@ -1251,7 +1288,7 @@ void EmuThread::run()
                 FN_INPUT_RELEASE(INPUT_START);
             }
 
-        }
+        } // END of if(isFocused)
 
         // is this a good way of detecting morph ball status?
         bool isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
