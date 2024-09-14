@@ -1199,10 +1199,13 @@ void EmuThread::run()
                     // Touch for the aim, we need this for the issue if you switch weapon in altform, you cant aim
                     // Touch the special weapon to prevent jumping.
                     NDS->TouchScreen(85 + 40 * 2, 32);
+
+                    // ホットキーが押された場合にループを抜ける(武器切り替えが完了したため)
+                    break;
                 }
             }
 
-            // Omega Canon + Last used weapon
+            // Omega Canon or Last used weapon
             if (Input::HotkeyPressed(HK_MetroidWeapon7)) {
                 NDS->ReleaseScreen();
                 frameAdvance(2);
