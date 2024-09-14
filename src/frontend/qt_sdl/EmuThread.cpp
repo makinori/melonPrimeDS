@@ -1167,7 +1167,7 @@ void EmuThread::run()
                 }else if (weaponIndex == 2) {
                     // Missile
                     NDS->TouchScreen(85 + 40 * 1, 32);
-                }else if (weaponIndex == 0) {
+                }else {
                     // Special Weapons
                     NDS->TouchScreen(85 + 40 * 2, 32);
                 }
