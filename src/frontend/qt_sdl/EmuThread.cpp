@@ -936,15 +936,20 @@ void EmuThread::run()
         }
         */
 
+        // Handle the case when the window is focused
         if (isFocused) {
+            // Get the center coordinates of the window
             auto windowCenter = mainWindow->geometry().center();
 
+            // If the window was also focused in the previous frame
             if (focusedLastFrame) {
+                // Calculate the relative mouse position (current cursor position - window center)
                 mouseRel = QCursor::pos() - windowCenter;
             }
+
+            // Move the cursor to the center of the window
             QCursor::setPos(windowCenter);
         }
-
 
         focusedLastFrame = isFocused;
 
