@@ -944,7 +944,7 @@ void EmuThread::run()
 
         bool isInGame = NDS->ARM9Read16(inGameAddr) == 0x0001;
 
-        if(isFocused && Input::HotkeyReleased(HK_MetroidVirtualStylus)){
+        if(isFocused && Input::HotkeyReleased(HK_MetroidVirtualStylus) && !isInGame){
             isVirtualStylusEnabled = !isVirtualStylusEnabled;
             if(isVirtualStylusEnabled){
                 mainWindow->osdAddMessage(0, "Virtual Stylus enabled");
