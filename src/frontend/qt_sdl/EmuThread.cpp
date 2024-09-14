@@ -358,7 +358,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DB098; // 1p(host)
         baseWeaponChangeAddr = 0x020DB45B; // 1p(host)
         baseWeaponAddr = 0x020DB463; // 1p(host)
-        baseJumpFlagAddr = baseWeaponAddr + 0x6;
+        baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020DEDA6;
         baseAimYAddr = 0x020DEDAE;
         isRomDetected = true;
@@ -374,7 +374,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DC6D8 - 0x1EC0; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x1EC0; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x1EC0; // 1p(host)
-        baseJumpFlagAddr = baseWeaponAddr + 0x6;
+        baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020de526;
         baseAimYAddr = 0x020de52E;
         isRomDetected = true;
@@ -390,7 +390,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DC6D8; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B; // 1p(host)
         baseWeaponAddr = 0x020DCAA3; // 1p(host)
-        baseJumpFlagAddr = baseWeaponAddr + 0x6;
+        baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020E03E6;
         baseAimYAddr = 0x020E03EE;
         isRomDetected = true;
@@ -406,7 +406,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DC6D8 - 0x64; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x40; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x40; // 1p(host)
-        baseJumpFlagAddr = baseWeaponAddr + 0x6;
+        baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020e03a6;
         baseAimYAddr = 0x020e03ae;
 
@@ -423,7 +423,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DC6D8 - 0x1620; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x1620; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x1620; // 1p(host)
-        baseJumpFlagAddr = baseWeaponAddr + 0x6;
+        baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020dedc6;
         baseAimYAddr = 0x020dedcE;
         isRomDetected = true;
@@ -439,7 +439,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DC6D8 - 0x15A0; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x15A0; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x15A0; // 1p(host)
-        baseJumpFlagAddr = baseWeaponAddr + 0x6;
+        baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020dee46;
         baseAimYAddr = 0x020dee4e;
 
@@ -456,7 +456,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DC6D8 - 0x87F4; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x87F4; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x87F4; // 1p(host)
-        baseJumpFlagAddr = baseWeaponAddr + 0x6;
+        baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020D7C0E;
         baseAimYAddr = 0x020D7C16;
 
