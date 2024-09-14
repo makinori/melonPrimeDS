@@ -1146,6 +1146,7 @@ void EmuThread::run()
             // Define a lambda function to switch weapons
             auto SwitchWeapon = [&](int weaponIndex) {
 
+                // Check for Already equipped
                 uint8_t currentWeapon = NDS->ARM9Read8(weaponAddr);
                 if (currentWeapon == weaponIndex) {
                     mainWindow->osdAddMessage(0, "Weapon switch unnecessary: Already equipped");
@@ -1155,7 +1156,7 @@ void EmuThread::run()
                 // Read the current jump flag value
                 uint8_t currentFlags = NDS->ARM9Read8(jumpFlagAddr);
                 uint8_t jumpFlag = currentFlags & 0x0F;  // Get the lower 4 bits
-                mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[jumpFlag])).c_str()); // TODO Delete this later
+                mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(jumpFlagAddr) & 0x0F])).c_str()); // TODO Delete this later
                 bool needToRestore = false;
 
                 // Check if in alternate form (transformed state)
@@ -1166,7 +1167,7 @@ void EmuThread::run()
                     uint8_t newFlags = (currentFlags & 0xF0) | 0x01;  // Set lower 4 bits to 1
                     NDS->ARM9Write8(jumpFlagAddr, newFlags);
                     needToRestore = true;
-                    mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[jumpFlag])).c_str()); // TODO Delete this later
+                    mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(jumpFlagAddr) & 0x0F])).c_str()); // TODO Delete this later
                     mainWindow->osdAddMessage(0, "Done setting jumpFlag."); // TODO Delete this later
                 }
 
@@ -1201,7 +1202,7 @@ void EmuThread::run()
                 if (needToRestore) {
                     uint8_t restoredFlags = (currentFlags & 0xF0) | jumpFlag;
                     NDS->ARM9Write8(jumpFlagAddr, restoredFlags);
-                    mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[jumpFlag])).c_str()); // TODO Delete this later
+                    mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(jumpFlagAddr) & 0x0F])).c_str()); // TODO Delete this later
                     mainWindow->osdAddMessage(0, "Restored jumpFlag."); // TODO Delete this later
 
                 }
