@@ -1190,10 +1190,10 @@ void EmuThread::run()
                                     // Omega Cannon 8 we don't need to set this here, because we need {last weapon used / Omega canon}
             };
 
-            int weaponIndices[] = {8, 7, 6, 5, 4, 3, 1};  // 各ホットキーに対応する武器のアドレス
+            int weaponIndices[] = {7, 6, 5, 4, 3, 1};  // 各ホットキーに対応する武器のアドレス
 
             // サブ武器の処理(ループで処理する)
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < 6; i++) {
                 if (Input::HotkeyPressed(weaponHotkeys[i])) {
                     SwitchWeapon(weaponIndices[i]);  // 対応する武器に切り替える
                     // Touch for the aim, we need this for the issue if you switch weapon in altform, you cant aim
