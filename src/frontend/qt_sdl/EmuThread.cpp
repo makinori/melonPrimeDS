@@ -333,6 +333,7 @@ melonDS::u32 baseIsAltFormAddr;
 melonDS::u32 baseWeaponChangeAddr;
 melonDS::u32 baseWeaponAddr;
 melonDS::u32 baseChosenHunterAddr;
+melonDS::u32 baseJumpFlagAddr;
 melonDS::u32 inGameAddr;
 melonDS::u32 PlayerPosAddr;
 melonDS::u32 inVisorOrMapAddr;
@@ -357,6 +358,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DB098; // 1p(host)
         baseWeaponChangeAddr = 0x020DB45B; // 1p(host)
         baseWeaponAddr = 0x020DB463; // 1p(host)
+        baseJumpFlagAddr = baseWeaponAddr + 0x6;
         baseAimXAddr = 0x020DEDA6;
         baseAimYAddr = 0x020DEDAE;
         isRomDetected = true;
@@ -372,6 +374,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DC6D8 - 0x1EC0; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x1EC0; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x1EC0; // 1p(host)
+        baseJumpFlagAddr = baseWeaponAddr + 0x6;
         baseAimXAddr = 0x020de526;
         baseAimYAddr = 0x020de52E;
         isRomDetected = true;
@@ -387,6 +390,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DC6D8; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B; // 1p(host)
         baseWeaponAddr = 0x020DCAA3; // 1p(host)
+        baseJumpFlagAddr = baseWeaponAddr + 0x6;
         baseAimXAddr = 0x020E03E6;
         baseAimYAddr = 0x020E03EE;
         isRomDetected = true;
@@ -402,6 +406,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DC6D8 - 0x64; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x40; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x40; // 1p(host)
+        baseJumpFlagAddr = baseWeaponAddr + 0x6;
         baseAimXAddr = 0x020e03a6;
         baseAimYAddr = 0x020e03ae;
 
@@ -418,6 +423,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DC6D8 - 0x1620; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x1620; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x1620; // 1p(host)
+        baseJumpFlagAddr = baseWeaponAddr + 0x6;
         baseAimXAddr = 0x020dedc6;
         baseAimYAddr = 0x020dedcE;
         isRomDetected = true;
@@ -433,6 +439,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DC6D8 - 0x15A0; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x15A0; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x15A0; // 1p(host)
+        baseJumpFlagAddr = baseWeaponAddr + 0x6;
         baseAimXAddr = 0x020dee46;
         baseAimYAddr = 0x020dee4e;
 
@@ -449,6 +456,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DC6D8 - 0x87F4; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x87F4; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x87F4; // 1p(host)
+        baseJumpFlagAddr = baseWeaponAddr + 0x6;
         baseAimXAddr = 0x020D7C0E;
         baseAimYAddr = 0x020D7C16;
 
@@ -1009,6 +1017,7 @@ void EmuThread::run()
         uint32_t chosenHunterAddr;
         uint32_t weaponChangeAddr;
         uint32_t weaponAddr;
+        uint32_t jumpFlagAddr;
 
         if (calcAddr) {
             // Read the player position
@@ -1017,6 +1026,7 @@ void EmuThread::run()
             chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
             weaponChangeAddr = calculatePlayerAddress(baseWeaponChangeAddr, playerPosition, playerAddressIncrement);
             weaponAddr = calculatePlayerAddress(baseWeaponAddr, playerPosition, playerAddressIncrement);
+            jumpFlagAddr = calculatePlayerAddress(baseJumpFlagAddr, playerPosition, playerAddressIncrement);
 
             // aim addresses for version and player number
             aimXAddr = calculatePlayerAddress(baseAimXAddr, playerPosition, 0x48);
