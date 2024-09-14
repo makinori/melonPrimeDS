@@ -1201,6 +1201,9 @@ void EmuThread::run()
                 // Need Touch after ReleaseScreen for aiming.
                 NDS->TouchScreen(128, 96);
 
+                // Advance frames (for reflection of Touch)
+                frameAdvance(2);
+
                 // Restore the jump flag to its original value (if necessary)
                 if (needToRestore) {
                     uint8_t restoredFlags = (currentFlags & 0xF0) | jumpFlag;
