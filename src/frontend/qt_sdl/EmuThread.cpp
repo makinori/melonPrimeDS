@@ -1158,8 +1158,20 @@ void EmuThread::run()
 
                 // 画面をリリース
                 NDS->ReleaseScreen();
-                // エイムのためにタッチ(画面中央)
-                NDS->TouchScreen(128, 96);
+
+                // エイムのためにタッチ
+                // ジャンプを防ぐため、パワービームの場合はパワビをタッチ　ミサイルの場合はミサイルの位置をタッチ
+                if (weaponIndex == 0) {
+                    // PowerBeam
+                    NDS->TouchScreen(85 + 40 * 0, 32);
+                }else if (weaponIndex == 2) {
+                    // Missile
+                    NDS->TouchScreen(85 + 40 * 1, 32);
+                }else if (weaponIndex == 0) {
+                    // Special Weapons
+                    NDS->TouchScreen(85 + 40 * 2, 32);
+                }
+
             };
 
 
