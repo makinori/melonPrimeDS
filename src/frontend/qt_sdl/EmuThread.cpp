@@ -1187,12 +1187,13 @@ void EmuThread::run()
 
             // サブ武器ホットキーの配列(ホットキーの定義と武器のインデックスを対応させる)
             Hotkey weaponHotkeys[] = {
-                HK_MetroidWeapon1,  // ShockCoil
-                HK_MetroidWeapon2,  // Magmaul
-                HK_MetroidWeapon3,  // Judicator
-                HK_MetroidWeapon4,  // Imperialist
-                HK_MetroidWeapon5,  // Battlehammer
-                HK_MetroidWeapon6   // VoltDriver
+                HK_MetroidWeapon1,  // ShockCoil    7
+                HK_MetroidWeapon2,  // Magmaul      6
+                HK_MetroidWeapon3,  // Judicator    5
+                HK_MetroidWeapon4,  // Imperialist  4
+                HK_MetroidWeapon5,  // Battlehammer 3
+                HK_MetroidWeapon6   // VoltDriver   1
+                                    // Omega Cannon 8 we don't need to set this here, because we need {last weapon used / Omega canon}
             };
 
             int weaponIndices[] = {8, 7, 6, 5, 4, 3, 1};  // 各ホットキーに対応する武器のアドレス
