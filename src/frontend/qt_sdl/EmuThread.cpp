@@ -310,7 +310,7 @@ bool EmuThread::UpdateConsole(UpdateConsoleNDSArgs&& ndsargs, UpdateConsoleGBAAr
     return true;
 }
 
-// プレイヤーアドレス取得関数
+// CalculatePlayerAddress Function
 uint32_t calculatePlayerAddress(uint32_t baseAddress, uint8_t playerPosition, int32_t increment) {
     // If player position is 0, return the base address without modification
     if (playerPosition == 0) {
@@ -333,6 +333,7 @@ melonDS::u32 baseIsAltFormAddr;
 melonDS::u32 baseWeaponChangeAddr;
 melonDS::u32 baseWeaponAddr;
 melonDS::u32 baseChosenHunterAddr;
+melonDS::u32 baseJumpFlagAddr;
 melonDS::u32 inGameAddr;
 melonDS::u32 PlayerPosAddr;
 melonDS::u32 inVisorOrMapAddr;
@@ -341,13 +342,14 @@ melonDS::u32 baseAimYAddr;
 melonDS::u32 aimXAddr;
 melonDS::u32 aimYAddr;
 
+bool isAltForm;
 bool isRomDetected = false;
 
 
 void detectRomAndSetAddresses() {
     switch (globalChecksum) {
     case RomVersions::USA1_1:
-        // USA1.1バージョン
+        // USA1.1
 
         baseChosenHunterAddr = 0x020CBDA4; // BattleConfig:ChosenHunter 0 samus 1 kanden 2 trace 3 sylux 4 noxus 5 spire 6 weavel
         inGameAddr = 0x020eec40 + 0x8F0; // inGame:1
@@ -356,6 +358,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DB098; // 1p(host)
         baseWeaponChangeAddr = 0x020DB45B; // 1p(host)
         baseWeaponAddr = 0x020DB463; // 1p(host)
+        baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020DEDA6;
         baseAimYAddr = 0x020DEDAE;
         isRomDetected = true;
@@ -363,7 +366,7 @@ void detectRomAndSetAddresses() {
         break;
 
     case RomVersions::USA1_0:
-        // USA1.0バージョン
+        // USA1.0
         baseChosenHunterAddr = 0x020CB51C; // BattleConfig:ChosenHunter
         inGameAddr = 0x020ee180 + 0x8F0; // inGame:1
         PlayerPosAddr = 0x020D9CB8;
@@ -371,6 +374,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DC6D8 - 0x1EC0; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x1EC0; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x1EC0; // 1p(host)
+        baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020de526;
         baseAimYAddr = 0x020de52E;
         isRomDetected = true;
@@ -378,7 +382,7 @@ void detectRomAndSetAddresses() {
         break;
 
     case RomVersions::JAPAN1_0:
-        // Japan1.0バージョン
+        // Japan1.0
         baseChosenHunterAddr = 0x020CD358; // BattleConfig:ChosenHunter
         inGameAddr = 0x020F0BB0; // inGame:1
         PlayerPosAddr = 0x020DBB78;
@@ -386,6 +390,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DC6D8; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B; // 1p(host)
         baseWeaponAddr = 0x020DCAA3; // 1p(host)
+        baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020E03E6;
         baseAimYAddr = 0x020E03EE;
         isRomDetected = true;
@@ -393,7 +398,7 @@ void detectRomAndSetAddresses() {
         break;
 
     case RomVersions::JAPAN1_1:
-        // Japan1.1バージョン
+        // Japan1.1
         baseChosenHunterAddr = 0x020CD318; // BattleConfig:ChosenHunter
         inGameAddr = 0x020F0280 + 0x8F0; // inGame:1
         PlayerPosAddr = 0x020DBB38;
@@ -401,6 +406,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DC6D8 - 0x64; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x40; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x40; // 1p(host)
+        baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020e03a6;
         baseAimYAddr = 0x020e03ae;
 
@@ -409,7 +415,7 @@ void detectRomAndSetAddresses() {
         break;
 
     case RomVersions::EU1_0:
-        // EU1.0バージョン
+        // EU1.0
         baseChosenHunterAddr = 0x020CBDC4; // BattleConfig:ChosenHunter
         inGameAddr = 0x020eec60 + 0x8F0; // inGame:1
         PlayerPosAddr = 0x020DA558;
@@ -417,6 +423,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DC6D8 - 0x1620; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x1620; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x1620; // 1p(host)
+        baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020dedc6;
         baseAimYAddr = 0x020dedcE;
         isRomDetected = true;
@@ -424,7 +431,7 @@ void detectRomAndSetAddresses() {
         break;
 
     case RomVersions::EU1_1:
-        // EU1.1バージョン
+        // EU1.1
         baseChosenHunterAddr = 0x020CBE44; // BattleConfig:ChosenHunter
         inGameAddr = 0x020eece0 + 0x8F0; // inGame:1
         PlayerPosAddr = 0x020DA5D8;
@@ -432,6 +439,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DC6D8 - 0x15A0; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x15A0; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x15A0; // 1p(host)
+        baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020dee46;
         baseAimYAddr = 0x020dee4e;
 
@@ -440,7 +448,7 @@ void detectRomAndSetAddresses() {
         break;
 
     case RomVersions::KOREA1_0:
-        // Korea1.0バージョン
+        // Korea1.0
         baseChosenHunterAddr = 0x020C4B88; // BattleConfig:ChosenHunter
         inGameAddr = 0x020E81B4; // inGame:1
         inVisorOrMapAddr = PlayerPosAddr - 0xabb; // 推定アドレス
@@ -448,6 +456,7 @@ void detectRomAndSetAddresses() {
         baseIsAltFormAddr = 0x020DC6D8 - 0x87F4; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x87F4; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x87F4; // 1p(host)
+        baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020D7C0E;
         baseAimYAddr = 0x020D7C16;
 
@@ -911,6 +920,7 @@ void EmuThread::run()
 
         auto isFocused = mainWindow->panel->getFocused();
 
+        /*
         if (isFocused) {
             auto windowCenterX = mainWindow->pos().x() + mainWindow->size().width() / 2;
             auto windowCenterY = mainWindow->pos().y() + mainWindow->size().height() / 2;
@@ -923,6 +933,22 @@ void EmuThread::run()
                 mouseRel = QCursor::pos() - QPoint(windowCenterX, windowCenterY);
             }
             QCursor::setPos(windowCenterX, windowCenterY);
+        }
+        */
+
+        // Handle the case when the window is focused
+        if (isFocused) {
+            // Get the center coordinates of the window
+            auto windowCenter = mainWindow->geometry().center();
+
+            // If the window was also focused in the previous frame
+            if (focusedLastFrame) {
+                // Calculate the relative mouse position (current cursor position - window center)
+                mouseRel = QCursor::pos() - windowCenter;
+            }
+
+            // Move the cursor to the center of the window
+            QCursor::setPos(windowCenter);
         }
 
         focusedLastFrame = isFocused;
@@ -951,6 +977,7 @@ void EmuThread::run()
 
         bool isInGame = NDS->ARM9Read16(inGameAddr) == 0x0001;
 
+        /*
         if(isFocused && Input::HotkeyReleased(HK_MetroidVirtualStylus) && !isInGame){
             isVirtualStylusEnabled = !isVirtualStylusEnabled;
             if(isVirtualStylusEnabled){
@@ -979,6 +1006,7 @@ void EmuThread::run()
 
             }
         }
+        */
 
         // Auto Enable/Disable VirtualStylus Before/After the game
         // you can still enable VirtualStylus in Game
@@ -1008,6 +1036,7 @@ void EmuThread::run()
         uint32_t chosenHunterAddr;
         uint32_t weaponChangeAddr;
         uint32_t weaponAddr;
+        uint32_t jumpFlagAddr;
 
         if (calcAddr) {
             // Read the player position
@@ -1016,6 +1045,7 @@ void EmuThread::run()
             chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
             weaponChangeAddr = calculatePlayerAddress(baseWeaponChangeAddr, playerPosition, playerAddressIncrement);
             weaponAddr = calculatePlayerAddress(baseWeaponAddr, playerPosition, playerAddressIncrement);
+            jumpFlagAddr = calculatePlayerAddress(baseJumpFlagAddr, playerPosition, playerAddressIncrement);
 
             // aim addresses for version and player number
             aimXAddr = calculatePlayerAddress(baseAimXAddr, playerPosition, 0x48);
@@ -1132,54 +1162,86 @@ void EmuThread::run()
                 //frameAdvance(2);
             }
 
-            // 武器を切り替えるラムダ関数を定義
+            // Define a lambda function to switch weapons
             auto SwitchWeapon = [&](int weaponIndex) {
 
-                // 画面をリリース(武器変更のため)
+                // Check for Already equipped
+                uint8_t currentWeapon = NDS->ARM9Read8(weaponAddr);
+                if (currentWeapon == weaponIndex) {
+                    // mainWindow->osdAddMessage(0, "Weapon switch unnecessary: Already equipped");
+                    return; // Early return if the weapon is already equipped
+                }
+
+                // Read the current jump flag value
+                uint8_t currentFlags = NDS->ARM9Read8(jumpFlagAddr);
+                uint8_t jumpFlag = currentFlags & 0x0F;  // Get the lower 4 bits
+                //mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(jumpFlagAddr) & 0x0F])).c_str()); // TODO Delete this later
+                bool needToRestore = false;
+
+                // Check if in alternate form (transformed state)
+                isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
+
+                // If not jumping (jumpFlag == 0) and in normal form, temporarily set to jumped state (jumpFlag == 1)
+                if (jumpFlag == 0 && !isAltForm) {
+                    uint8_t newFlags = (currentFlags & 0xF0) | 0x01;  // Set lower 4 bits to 1
+                    NDS->ARM9Write8(jumpFlagAddr, newFlags);
+                    needToRestore = true;
+                    //mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(jumpFlagAddr) & 0x0F])).c_str()); // TODO Delete this later
+                    //mainWindow->osdAddMessage(0, "Done setting jumpFlag."); // TODO Delete this later
+                }
+
+                // Release the screen (for weapon change)
                 NDS->ReleaseScreen();
 
                 // Lambda to set the weapon-changing state
                 auto setChangingWeapon = [](int value) -> int {
                     // Apply mask to set the lower 4 bits to 1011 (B in hexadecimal)
                     return (value & 0xF0) | 0x0B; // Keep the upper 4 bits, set lower 4 bits to 1011
-                };
+                    };
 
                 // Modify the value using the lambda
                 int valueOfWeaponChange = setChangingWeapon(NDS->ARM9Read8(weaponChangeAddr));
 
-                // 武器変更命令をARM9に書き込む
-                NDS->ARM9Write8(weaponChangeAddr, valueOfWeaponChange); //下位4ビットのみをBに変更。
+                // Write the weapon change command to ARM9
+                NDS->ARM9Write8(weaponChangeAddr, valueOfWeaponChange); // Only change the lower 4 bits to B
 
-                // 武器を変更する。
-                NDS->ARM9Write8(weaponAddr, weaponIndex);  // 対応する武器のアドレスを書き込む
+                // Change the weapon
+                NDS->ARM9Write8(weaponAddr, weaponIndex);  // Write the address of the corresponding weapon
 
-                // フレームを進める(反映のため)
+                // Advance frames (for reflection of ReleaseScreen, WeaponChange)
                 frameAdvance(2);
 
-                // 画面をリリース
-                NDS->ReleaseScreen();
+                // Need Touch after ReleaseScreen for aiming.
+                NDS->TouchScreen(128, 96);
+
+                // Advance frames (for reflection of Touch. This is necessary for no jump)
+                frameAdvance(2);
+
+                // Restore the jump flag to its original value (if necessary)
+                if (needToRestore) {
+                    uint8_t restoredFlags = (currentFlags & 0xF0) | jumpFlag;
+                    NDS->ARM9Write8(jumpFlagAddr, restoredFlags);
+                    //mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(jumpFlagAddr) & 0x0F])).c_str()); // TODO Delete this later
+                    //mainWindow->osdAddMessage(0, "Restored jumpFlag."); // TODO Delete this later
+
+                }
 
             };
 
 
-            // ビーム武器に切り替え
+
+            // Switch to Power Beam
             if (Input::HotkeyPressed(HK_MetroidWeaponBeam)) {
-                SwitchWeapon(0);  // ビームのアドレスは0
-                // Touch for the aim, we need this for the issue if you switch weapon in altform, you cant aim
-                // To prevent jumping, touch the Power Beam for Power Beam, and touch the Missile position for Missiles.
-                NDS->TouchScreen(81, 36);
+                SwitchWeapon(0);
             }
 
-            // ミサイルに切り替え
+            // Switch to Missile
             if (Input::HotkeyPressed(HK_MetroidWeaponMissile)) {
-                SwitchWeapon(2);  // ミサイルのアドレスは2
-                // Touch for the aim, we need this for the issue if you switch weapon in altform, you cant aim
-                // To prevent jumping, touch the Power Beam for Power Beam, and touch the Missile position for Missiles.
-                NDS->TouchScreen(128, 32);
+                SwitchWeapon(2);
 
             }
 
-            // サブ武器ホットキーの配列(ホットキーの定義と武器のインデックスを対応させる)
+            // Array of sub-weapon hotkeys (Associating hotkey definitions with weapon indices)
             Hotkey weaponHotkeys[] = {
                 HK_MetroidWeapon1,  // ShockCoil    7
                 HK_MetroidWeapon2,  // Magmaul      6
@@ -1196,9 +1258,6 @@ void EmuThread::run()
             for (int i = 0; i < 6; i++) {
                 if (Input::HotkeyPressed(weaponHotkeys[i])) {
                     SwitchWeapon(weaponIndices[i]);  // 対応する武器に切り替える
-                    // Touch for the aim, we need this for the issue if you switch weapon in altform, you cant aim
-                    // Touch the special weapon to prevent jumping.
-                    NDS->TouchScreen(174, 36);
 
                     // ホットキーが押された場合にループを抜ける(武器切り替えが完了したため)
                     break;
@@ -1220,7 +1279,7 @@ void EmuThread::run()
 
             // cursor looking
 
-            // X軸の処理
+            // Processing for the X-axis
             float mouseX = mouseRel.x();
             if (abs(mouseX) != 0) {
                 NDS->ARM9Write32(
@@ -1230,7 +1289,7 @@ void EmuThread::run()
                 enableAim = true;
             }
 
-            // Y軸の処理
+            // Processing for the Y-axis
             float mouseY = mouseRel.y();
             if (abs(mouseY) != 0) {
                 NDS->ARM9Write32(
@@ -1253,7 +1312,7 @@ void EmuThread::run()
 
             // morph ball boost, map zoom out, imperialist zoom
             if (Input::HotkeyDown(HK_MetroidMorphBallBoost)) {
-                bool isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
+                isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
                 bool isSamus = NDS->ARM9Read8(chosenHunterAddr) == 0x00;
                 if (isAltForm && isSamus) {
                     // just incase
@@ -1291,7 +1350,7 @@ void EmuThread::run()
         } // END of if(isFocused)
 
         // is this a good way of detecting morph ball status?
-        bool isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
+        isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
  //       bool isSamus = NDS->ARM9Read8(chosenHunterAddr) == 0x00;
 //        if (!isAltForm && isSamus && enableAim) {
         if (!isAltForm && enableAim) {
