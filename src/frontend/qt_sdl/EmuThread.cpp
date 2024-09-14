@@ -79,6 +79,10 @@ extern int autoScreenSizing;
 extern int videoRenderer;
 extern bool videoSettingsDirty;
 
+
+float mouseX;
+float mouseY;
+
 EmuThread::EmuThread(QObject* parent) : QThread(parent)
 {
     EmuStatus = emuStatus_Exit;
@@ -902,6 +906,9 @@ void EmuThread::run()
         // auto mouseRel = rawInputThread->fetchMouseDelta();
         QPoint mouseRel;
 
+        // 感度係数を定数として定義
+        const float SENSITIVITY_FACTOR = Config::MetroidAimSensitivity * 0.01f;
+
         auto isFocused = mainWindow->panel->getFocused();
 
         if (isFocused) {
@@ -990,9 +997,8 @@ void EmuThread::run()
             calcAddr = true;
         }
 
-        if (!isInGame) {
-            isVirtualStylusEnabled = true;
-        }
+        // VirtualStylus is Enabled when not in game
+        isVirtualStylusEnabled = !isInGame;
 
         // Read the player position
         uint8_t playerPosition;
@@ -1036,15 +1042,20 @@ void EmuThread::run()
 
             // mouse
 
-            if (abs(mouseRel.x()) > 0) {
+
+            mouseX = mouseRel.x();
+
+            if (abs(mouseX) > 0) {
                 virtualStylusX += (
-                    mouseRel.x() * Config::MetroidVirtualStylusSensitivity * 0.01
+                    mouseX * SENSITIVITY_FACTOR
                 );
             }
 
-            if (abs(mouseRel.y()) > 0) {
+            mouseY = mouseRel.y();
+
+            if (abs(mouseY) > 0) {
                 virtualStylusY += (
-                    mouseRel.y() * dsAspectRatio * Config::MetroidVirtualStylusSensitivity * 0.01
+                    mouseY * dsAspectRatio * SENSITIVITY_FACTOR
                 );
             }
 
@@ -1197,8 +1208,7 @@ void EmuThread::run()
 
             // cursor looking
 
-            // 感度係数を定数として定義
-            const float SENSITIVITY_FACTOR = Config::MetroidAimSensitivity * 0.01f;
+
 
             // X軸の処理
             float mouseX = mouseRel.x();
@@ -1268,7 +1278,7 @@ void EmuThread::run()
                 FN_INPUT_RELEASE(INPUT_START);
             }
 
-        }
+        } // END of if(isFocused)
 
         // is this a good way of detecting morph ball status?
         bool isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
