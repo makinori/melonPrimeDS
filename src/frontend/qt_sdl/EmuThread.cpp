@@ -1195,6 +1195,10 @@ void EmuThread::run()
                     mainWindow->osdAddMessage(0, "Restored jumpFlag."); // TODO Delete this later
 
                 }
+
+                // Advance frames (for reflection)
+                frameAdvance(2);
+
             };
 
 
