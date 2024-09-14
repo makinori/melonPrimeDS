@@ -1171,9 +1171,6 @@ void EmuThread::run()
                     //mainWindow->osdAddMessage(0, "Done setting jumpFlag."); // TODO Delete this later
                 }
 
-                // Advance frames (for reflection of NoJumpValue)
-                // frameAdvance(2);
-
                 // Release the screen (for weapon change)
                 NDS->ReleaseScreen();
 
@@ -1192,7 +1189,7 @@ void EmuThread::run()
                 // Change the weapon
                 NDS->ARM9Write8(weaponAddr, weaponIndex);  // Write the address of the corresponding weapon
 
-                // Advance frames (for reflection of WeaponChange)
+                // Advance frames (for reflection of ReleaseScreen, WeaponChange)
                 frameAdvance(2);
 
                 // Release the screen
