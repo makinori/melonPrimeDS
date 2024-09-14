@@ -325,16 +325,6 @@ __forceinline uint32_t calculatePlayerAddress(uint32_t baseAddress, uint8_t play
     return static_cast<uint32_t>(result);
 }
 
-/*
-ROM ver   CheckSum
-USA       0x218DA42C
-USA1.1    0x91B46577
-EU1.0     0xA4A8FE5A
-EU1.1     0x910018A5
-Japan1.0  0xD75F539D
-Japan1.1  0x42EBF348
-Korea 1.0 0xE54682F3
-*/
 melonDS::u32 baseIsAltFormAddr;
 melonDS::u32 baseWeaponChangeAddr;
 melonDS::u32 baseWeaponAddr;
@@ -951,12 +941,6 @@ void EmuThread::run()
             detectRomAndSetAddresses();
         }
 
-        // Read the player position
-        uint8_t playerPosition = NDS->ARM9Read8(PlayerPosAddr);
-
-        const int32_t playerAddressIncrement = 0xF30;
-        uint32_t isAltFormAddr = calculatePlayerAddress(baseIsAltFormAddr, playerPosition, playerAddressIncrement);
-        uint32_t chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
 
         bool isInGame = NDS->ARM9Read16(inGameAddr) == 0x0001;
 
@@ -997,12 +981,41 @@ void EmuThread::run()
             ingameSoVirtualStylusAutolyDisabled = false;
         }
 
+        bool calcAddr = false;
+
         if(isInGame && isVirtualStylusEnabled && !ingameSoVirtualStylusAutolyDisabled) {
             isVirtualStylusEnabled = false;
             mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
             ingameSoVirtualStylusAutolyDisabled = true;
+            calcAddr = true;
         }
 
+        if (!isInGame) {
+            isVirtualStylusEnabled = true;
+        }
+
+        // Read the player position
+        uint8_t playerPosition;
+
+        const int32_t playerAddressIncrement = 0xF30;
+        uint32_t isAltFormAddr;
+        uint32_t chosenHunterAddr;
+        uint32_t weaponChangeAddr;
+        uint32_t weaponAddr;
+
+        if (calcAddr) {
+            // Read the player position
+            playerPosition = NDS->ARM9Read8(PlayerPosAddr);
+            isAltFormAddr = calculatePlayerAddress(baseIsAltFormAddr, playerPosition, playerAddressIncrement);
+            chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
+            weaponChangeAddr = calculatePlayerAddress(baseWeaponChangeAddr, playerPosition, playerAddressIncrement);
+            weaponAddr = calculatePlayerAddress(baseWeaponAddr, playerPosition, playerAddressIncrement);
+
+            // aim addresses for version and player number
+            aimXAddr = calculatePlayerAddress(baseAimXAddr, playerPosition, 0x48);
+            aimYAddr = calculatePlayerAddress(baseAimYAddr, playerPosition, 0x48);
+
+        }
 
         if (isFocused && isVirtualStylusEnabled) {
 
@@ -1109,9 +1122,6 @@ void EmuThread::run()
             // 武器を切り替えるラムダ関数を定義
             auto SwitchWeapon = [&](int weaponIndex) {
 
-                uint32_t weaponChangeAddr = calculatePlayerAddress(baseWeaponChangeAddr, playerPosition, playerAddressIncrement);
-                uint32_t weaponAddr = calculatePlayerAddress(baseWeaponAddr, playerPosition, playerAddressIncrement);
-
                 // 画面をリリース(武器変更のため)
                 NDS->ReleaseScreen();
 
@@ -1173,10 +1183,6 @@ void EmuThread::run()
 
             processMoveInput();
 
-            // aim addresses for version and player number
-
-            aimXAddr = calculatePlayerAddress(baseAimXAddr, playerPosition, 0x48);
-            aimYAddr = calculatePlayerAddress(baseAimYAddr, playerPosition, 0x48);
 
             // cursor looking
 
