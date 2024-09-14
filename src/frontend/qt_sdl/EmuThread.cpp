@@ -1159,30 +1159,24 @@ void EmuThread::run()
                 // 画面をリリース
                 NDS->ReleaseScreen();
 
-                // エイムのためにタッチ
-                // ジャンプを防ぐため、パワービームの場合はパワビをタッチ　ミサイルの場合はミサイルの位置をタッチ
-                if (weaponIndex == 0) {
-                    // PowerBeam
-                    NDS->TouchScreen(85 + 40 * 0, 32);
-                }else if (weaponIndex == 2) {
-                    // Missile
-                    NDS->TouchScreen(85 + 40 * 1, 32);
-                }else {
-                    // Special Weapons
-                    NDS->TouchScreen(85 + 40 * 2, 32);
-                }
-
             };
 
 
             // ビーム武器に切り替え
             if (Input::HotkeyPressed(HK_MetroidWeaponBeam)) {
                 SwitchWeapon(0);  // ビームのアドレスは0
+                // Touch for the aim, we need this for the issue if you switch weapon in altform, you cant aim
+                // To prevent jumping, touch the Power Beam for Power Beam, and touch the Missile position for Missiles.
+                NDS->TouchScreen(85 + 40 * 0, 32);
             }
 
             // ミサイルに切り替え
             if (Input::HotkeyPressed(HK_MetroidWeaponMissile)) {
                 SwitchWeapon(2);  // ミサイルのアドレスは2
+                // Touch for the aim, we need this for the issue if you switch weapon in altform, you cant aim
+                // To prevent jumping, touch the Power Beam for Power Beam, and touch the Missile position for Missiles.
+                NDS->TouchScreen(85 + 40 * 1, 32);
+
             }
 
             // サブ武器ホットキーの配列(ホットキーの定義と武器のインデックスを対応させる)
@@ -1202,6 +1196,9 @@ void EmuThread::run()
             for (int i = 0; i < 7; i++) {
                 if (Input::HotkeyPressed(weaponHotkeys[i])) {
                     SwitchWeapon(weaponIndices[i]);  // 対応する武器に切り替える
+                    // Touch for the aim, we need this for the issue if you switch weapon in altform, you cant aim
+                    // Touch the special weapon to prevent jumping.
+                    NDS->TouchScreen(85 + 40 * 2, 32);
                 }
             }
 
@@ -1213,15 +1210,12 @@ void EmuThread::run()
                 frameAdvance(2);
             }
 
-            
             // move
 
             processMoveInput();
 
 
             // cursor looking
-
-
 
             // X軸の処理
             float mouseX = mouseRel.x();
