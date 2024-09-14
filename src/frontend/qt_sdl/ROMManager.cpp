@@ -46,6 +46,7 @@
 #include "DSi_I2C.h"
 #include "FreeBIOS.h"
 #include "main.h"
+#include "melonPrime/def.h"
 
 using std::make_unique;
 using std::pair;
@@ -55,6 +56,13 @@ using std::unique_ptr;
 using std::wstring_convert;
 using namespace melonDS;
 using namespace melonDS::Platform;
+
+// 以下はmelonPrime/def.hで定義。
+// グローバル変数の定義（ここで初期化する）
+unsigned int globalChecksum = 0;
+bool isNewRom = false;
+bool isVirtualStylusEnabled = true;
+bool ingameSoVirtualStylusAutolyDisabled = false;
 
 namespace ROMManager
 {
@@ -1322,16 +1330,33 @@ bool LoadROM(EmuThread* emuthread, QStringList filepath, bool reset)
     };
 
     auto cart = NDSCart::ParseROM(std::move(filedata), filelen, std::move(cartargs));
-    if (!cart)
+    if (!cart){
         // If we couldn't parse the ROM...
         return false;
+    }
 
-    if (cart->Checksum() != 0x91B46577)
+
+    // グローバル変数の実体を定義
+    globalChecksum = cart->Checksum();
+
+    // newRomFlag ON
+    isNewRom = true;
+    // virtualStylusFlag ON
+    isVirtualStylusEnabled = true;
+    ingameSoVirtualStylusAutolyDisabled = false;
+
+
+    // ROMチェック
+    if (globalChecksum != RomVersions::USA1_0 && globalChecksum != RomVersions::USA1_1 &&
+        globalChecksum != RomVersions::EU1_0 && globalChecksum != RomVersions::EU1_1 &&
+        globalChecksum != RomVersions::JAPAN1_0 && globalChecksum != RomVersions::JAPAN1_1 &&
+        globalChecksum != RomVersions::KOREA1_0)
     {
         QMessageBox::warning(
             nullptr,
             "Unknown ROM",
-            "Please make sure to use\nMetroid Prime Hunters USA version 1.1"
+         // "Please make sure to use\nMetroid Prime Hunters USA version 1.1"
+            "Please make sure to use\nthe untrimmed and unmodified Metroid Prime Hunters ROM which is not encrypted."
         );
     }
 

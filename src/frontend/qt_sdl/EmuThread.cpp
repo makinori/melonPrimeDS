@@ -20,7 +20,10 @@
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
-
+#include <QImage>
+#include <QPainter>
+#include <QLabel>      
+#include <QWidget>     
 #include <optional>
 #include <vector>
 #include <string>
@@ -64,6 +67,8 @@
 // #include "RawInputThread.h"
 #include "overlay_shaders.h"
 
+#include "melonPrime/def.h"
+
 // TODO: uniform variable spelling
 using namespace melonDS;
 
@@ -73,7 +78,6 @@ extern MainWindow* mainWindow;
 extern int autoScreenSizing;
 extern int videoRenderer;
 extern bool videoSettingsDirty;
-
 
 EmuThread::EmuThread(QObject* parent) : QThread(parent)
 {
@@ -301,6 +305,169 @@ bool EmuThread::UpdateConsole(UpdateConsoleNDSArgs&& ndsargs, UpdateConsoleGBAAr
 
     return true;
 }
+
+// プレイヤーアドレス取得関数
+__forceinline uint32_t calculatePlayerAddress(uint32_t baseAddress, uint8_t playerPosition, int32_t increment) {
+    // If player position is 0, return the base address without modification
+    if (playerPosition == 0) {
+        return baseAddress;
+    }
+
+    // Calculate using 64-bit integers to prevent overflow
+    // Use playerPosition as is (no subtraction)
+    int64_t result = static_cast<int64_t>(baseAddress) + (static_cast<int64_t>(playerPosition) * increment);
+
+    // Ensure the result is within the 32-bit range
+    if (result < 0 || result > UINT32_MAX) {
+        return baseAddress;  // Return the original address if out of range
+    }
+
+    return static_cast<uint32_t>(result);
+}
+
+/*
+ROM ver   CheckSum
+USA       0x218DA42C
+USA1.1    0x91B46577
+EU1.0     0xA4A8FE5A
+EU1.1     0x910018A5
+Japan1.0  0xD75F539D
+Japan1.1  0x42EBF348
+Korea 1.0 0xE54682F3
+*/
+melonDS::u32 baseIsAltFormAddr;
+melonDS::u32 baseWeaponChangeAddr;
+melonDS::u32 baseWeaponAddr;
+melonDS::u32 baseChosenHunterAddr;
+melonDS::u32 inGameAddr;
+melonDS::u32 PlayerPosAddr;
+melonDS::u32 inVisorOrMapAddr;
+melonDS::u32 baseAimXAddr;
+melonDS::u32 baseAimYAddr;
+melonDS::u32 aimXAddr;
+melonDS::u32 aimYAddr;
+
+bool isRomDetected = false;
+
+
+__forceinline void detectRomAndSetAddresses() {
+    switch (globalChecksum) {
+    case RomVersions::USA1_1:
+        // USA1.1バージョン
+
+        baseChosenHunterAddr = 0x020CBDA4; // BattleConfig:ChosenHunter 0 samus 1 kanden 2 trace 3 sylux 4 noxus 5 spire 6 weavel
+        inGameAddr = 0x020eec40 + 0x8F0; // inGame:1
+        inVisorOrMapAddr = 0x020D9A7D; // 推定アドレス
+        PlayerPosAddr = 0x020DA538;
+        baseIsAltFormAddr = 0x020DB098; // 1p(host)
+        baseWeaponChangeAddr = 0x020DB45B; // 1p(host)
+        baseWeaponAddr = 0x020DB463; // 1p(host)
+        baseAimXAddr = 0x020DEDA6;
+        baseAimYAddr = 0x020DEDAE;
+        isRomDetected = true;
+
+        break;
+
+    case RomVersions::USA1_0:
+        // USA1.0バージョン
+        baseChosenHunterAddr = 0x020CB51C; // BattleConfig:ChosenHunter
+        inGameAddr = 0x020ee180 + 0x8F0; // inGame:1
+        PlayerPosAddr = 0x020D9CB8;
+        inVisorOrMapAddr = PlayerPosAddr - 0xabb; // 推定アドレス
+        baseIsAltFormAddr = 0x020DC6D8 - 0x1EC0; // 1p(host)
+        baseWeaponChangeAddr = 0x020DCA9B - 0x1EC0; // 1p(host)
+        baseWeaponAddr = 0x020DCAA3 - 0x1EC0; // 1p(host)
+        baseAimXAddr = 0x020de526;
+        baseAimYAddr = 0x020de52E;
+        isRomDetected = true;
+
+        break;
+
+    case RomVersions::JAPAN1_0:
+        // Japan1.0バージョン
+        baseChosenHunterAddr = 0x020CD358; // BattleConfig:ChosenHunter
+        inGameAddr = 0x020F0BB0; // inGame:1
+        PlayerPosAddr = 0x020DBB78;
+        inVisorOrMapAddr = PlayerPosAddr - 0xabb; // 推定アドレス
+        baseIsAltFormAddr = 0x020DC6D8; // 1p(host)
+        baseWeaponChangeAddr = 0x020DCA9B; // 1p(host)
+        baseWeaponAddr = 0x020DCAA3; // 1p(host)
+        baseAimXAddr = 0x020E03E6;
+        baseAimYAddr = 0x020E03EE;
+        isRomDetected = true;
+
+        break;
+
+    case RomVersions::JAPAN1_1:
+        // Japan1.1バージョン
+        baseChosenHunterAddr = 0x020CD318; // BattleConfig:ChosenHunter
+        inGameAddr = 0x020F0280 + 0x8F0; // inGame:1
+        PlayerPosAddr = 0x020DBB38;
+        inVisorOrMapAddr = PlayerPosAddr - 0xabb; // 推定アドレス
+        baseIsAltFormAddr = 0x020DC6D8 - 0x64; // 1p(host)
+        baseWeaponChangeAddr = 0x020DCA9B - 0x40; // 1p(host)
+        baseWeaponAddr = 0x020DCAA3 - 0x40; // 1p(host)
+        baseAimXAddr = 0x020e03a6;
+        baseAimYAddr = 0x020e03ae;
+
+        isRomDetected = true;
+
+        break;
+
+    case RomVersions::EU1_0:
+        // EU1.0バージョン
+        baseChosenHunterAddr = 0x020CBDC4; // BattleConfig:ChosenHunter
+        inGameAddr = 0x020eec60 + 0x8F0; // inGame:1
+        PlayerPosAddr = 0x020DA558;
+        inVisorOrMapAddr = PlayerPosAddr - 0xabb; // 推定アドレス
+        baseIsAltFormAddr = 0x020DC6D8 - 0x1620; // 1p(host)
+        baseWeaponChangeAddr = 0x020DCA9B - 0x1620; // 1p(host)
+        baseWeaponAddr = 0x020DCAA3 - 0x1620; // 1p(host)
+        baseAimXAddr = 0x020dedc6;
+        baseAimYAddr = 0x020dedcE;
+        isRomDetected = true;
+
+        break;
+
+    case RomVersions::EU1_1:
+        // EU1.1バージョン
+        baseChosenHunterAddr = 0x020CBE44; // BattleConfig:ChosenHunter
+        inGameAddr = 0x020eece0 + 0x8F0; // inGame:1
+        PlayerPosAddr = 0x020DA5D8;
+        inVisorOrMapAddr = PlayerPosAddr - 0xabb; // 推定アドレス
+        baseIsAltFormAddr = 0x020DC6D8 - 0x15A0; // 1p(host)
+        baseWeaponChangeAddr = 0x020DCA9B - 0x15A0; // 1p(host)
+        baseWeaponAddr = 0x020DCAA3 - 0x15A0; // 1p(host)
+        baseAimXAddr = 0x020dee46;
+        baseAimYAddr = 0x020dee4e;
+
+        isRomDetected = true;
+
+        break;
+
+    case RomVersions::KOREA1_0:
+        // Korea1.0バージョン
+        baseChosenHunterAddr = 0x020C4B88; // BattleConfig:ChosenHunter
+        inGameAddr = 0x020E81B4; // inGame:1
+        inVisorOrMapAddr = PlayerPosAddr - 0xabb; // 推定アドレス
+        PlayerPosAddr = 0x020D33A8;
+        baseIsAltFormAddr = 0x020DC6D8 - 0x87F4; // 1p(host)
+        baseWeaponChangeAddr = 0x020DCA9B - 0x87F4; // 1p(host)
+        baseWeaponAddr = 0x020DCAA3 - 0x87F4; // 1p(host)
+        baseAimXAddr = 0x020D7C0E;
+        baseAimYAddr = 0x020D7C16;
+
+        isRomDetected = true;
+
+        break;
+
+    default:
+        // 未対応のチェックサムに対する処理
+        // デフォルトの動作やエラーメッセージの追加
+        break;
+    }
+}
+
 
 void EmuThread::run()
 {
@@ -695,23 +862,15 @@ void EmuThread::run()
     #define FN_INPUT_PRESS(i) Input::InputMask.setBit(i, false);
     #define FN_INPUT_RELEASE(i) Input::InputMask.setBit(i, true);
 
-    melonDS::u32 aimXAddr;
-    melonDS::u32 aimYAddr;
 
-#define METROID_US_1_1 1
-#ifdef METROID_US_1_1
-    const bool metroidUSRev1 = true;
-    const melonDS::u32 inBallAddr = 0x020DB098;
-    const melonDS::u32 PlayerPosAddr = 0x020DA538;
-    const melonDS::u32 inVisorOrMapAddr = 0x020D9A7D; // my best guess
-#else
-    const melonDS::u32 inBallAddr = 0x020DA818;
-#endif
+
+
 
 // #define ENABLE_MEMORY_DUMP 1
 #ifdef ENABLE_MEMORY_DUMP
     int memoryDump = 0;
 #endif
+
 
     bool enableAim = true;
 
@@ -720,42 +879,36 @@ void EmuThread::run()
 
     bool focusedLastFrame = false;
 
-    const float dsAspectRatio = 256.0 / 192.0; 
+    const float dsAspectRatio = 256.0 / 192.0;
     const float aimAspectRatio = 6.0 / 4.0; // i have no idea
 
     // RawInputThread* rawInputThread = new RawInputThread(parent());
     // rawInputThread->start();
 
-    auto processMoveInput
-    {
-    []() {
-        if (Input::HotkeyDown(HK_MetroidMoveForward)) {
-            FN_INPUT_PRESS(INPUT_UP);
-        } else {
-            FN_INPUT_RELEASE(INPUT_UP);
-        }
+    auto processMoveInput = []() {
+        const struct {
+            int hotkey;
+            int input;
+        } moves[] = {
+            {HK_MetroidMoveForward, INPUT_UP},
+            {HK_MetroidMoveBack, INPUT_DOWN},
+            {HK_MetroidMoveLeft, INPUT_LEFT},
+            {HK_MetroidMoveRight, INPUT_RIGHT}
+        };
 
-        if (Input::HotkeyDown(HK_MetroidMoveBack)) {
-            FN_INPUT_PRESS(INPUT_DOWN);
-        } else {
-            FN_INPUT_RELEASE(INPUT_DOWN);
+        for (const auto& move : moves) {
+            if (Input::HotkeyDown(move.hotkey)) {
+                FN_INPUT_PRESS(move.input);
+            } else {
+                FN_INPUT_RELEASE(move.input);
+            }
         }
-
-        if (Input::HotkeyDown(HK_MetroidMoveLeft)) {
-            FN_INPUT_PRESS(INPUT_LEFT);
-        } else {
-            FN_INPUT_RELEASE(INPUT_LEFT);
-        }
-
-        if (Input::HotkeyDown(HK_MetroidMoveRight)) {
-            FN_INPUT_PRESS(INPUT_RIGHT);
-        } else {
-            FN_INPUT_RELEASE(INPUT_RIGHT);
-        }
-    }
     };
 
     while (EmuRunning != emuStatus_Exit) {
+
+
+
         // auto mouseRel = rawInputThread->fetchMouseDelta();
         QPoint mouseRel;
 
@@ -789,8 +942,72 @@ void EmuThread::run()
             }
         #endif
 
-        if (isFocused && Input::HotkeyDown(HK_MetroidVirtualStylus)) {
-            // this exists to just delay the pressing of the screen when you 
+  
+        if (isNewRom) {
+            isRomDetected = false;
+        }
+
+        if (!isRomDetected) {
+            detectRomAndSetAddresses();
+        }
+
+        // Read the player position
+        uint8_t playerPosition = NDS->ARM9Read8(PlayerPosAddr);
+
+        const int32_t playerAddressIncrement = 0xF30;
+        uint32_t isAltFormAddr = calculatePlayerAddress(baseIsAltFormAddr, playerPosition, playerAddressIncrement);
+        uint32_t chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
+
+        bool isInGame = NDS->ARM9Read16(inGameAddr) == 0x0001;
+
+        if(isFocused && Input::HotkeyReleased(HK_MetroidVirtualStylus)){
+            isVirtualStylusEnabled = !isVirtualStylusEnabled;
+            if(isVirtualStylusEnabled){
+                mainWindow->osdAddMessage(0, "Virtual Stylus enabled");
+            }else {
+                mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
+
+                // Créer une image vide de 200x100 pixels avec un fond transparent
+                QImage image(200, 100, QImage::Format_ARGB32);
+                image.fill(Qt::transparent);  // Remplir avec de la transparence
+
+                // Créer un QPainter pour dessiner sur l'image
+                QPainter painter(&image);
+                painter.setRenderHint(QPainter::Antialiasing);
+                painter.setPen(QPen(Qt::black));  // Définir la couleur du texte
+
+                // Définir la police et la taille du texte
+                QFont font("Arial", 12);
+                painter.setFont(font);
+
+                // Dessiner le texte
+                painter.drawText(image.rect(), Qt::AlignBottom | Qt::AlignRight, "first line\nsecond line");
+
+                // Terminer le dessin
+                painter.end();
+
+            }
+        }
+
+        // Auto Enable/Disable VirtualStylus Before/After the game
+        // you can still enable VirtualStylus in Game
+        if (!isInGame && !isVirtualStylusEnabled && ingameSoVirtualStylusAutolyDisabled) {
+            isVirtualStylusEnabled = true;
+            mainWindow->osdAddMessage(0, "Virtual Stylus enabled");
+            ingameSoVirtualStylusAutolyDisabled = false;
+        }
+
+        if(isInGame && isVirtualStylusEnabled && !ingameSoVirtualStylusAutolyDisabled) {
+            isVirtualStylusEnabled = false;
+            mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
+            ingameSoVirtualStylusAutolyDisabled = true;
+        }
+
+
+        if (isFocused && isVirtualStylusEnabled) {
+
+
+            // this exists to just delay the pressing of the screen when you
             // release the virtual stylus key
             enableAim = false;
 
@@ -825,7 +1042,10 @@ void EmuThread::run()
 
             // morph ball
             if (Input::HotkeyPressed(HK_MetroidMorphBall)) {
-                enableAim = false; // in case inBall isnt immediately true
+                bool isSamus = NDS->ARM9Read8(chosenHunterAddr) == 0x00;
+                if(isSamus){
+                    enableAim = false; // in case isAltForm isnt immediately true
+                }
                 NDS->ReleaseScreen();
                 frameAdvance(2);
                 NDS->TouchScreen(231, 167);
@@ -853,11 +1073,11 @@ void EmuThread::run()
                         // still allow movement whilst we're enabling scan visor
                         processMoveInput();
                         NDS->SetKeyMask(Input::GetInputMask());
-                        
+
                         frameAdvanceOnce();
                     }
                 }
-                
+
                 NDS->ReleaseScreen();
                 frameAdvance(2);
             }
@@ -886,50 +1106,66 @@ void EmuThread::run()
                 //frameAdvance(2);
             }
 
-            // switch to beam
-            if (Input::HotkeyPressed(HK_MetroidWeaponBeam)) {
-                NDS->ReleaseScreen();
-                frameAdvance(2);
-                NDS->TouchScreen(85 + 40 * 0, 32);
-                frameAdvance(2);
-                NDS->ReleaseScreen();
-                frameAdvance(2);
-            }
+            // 武器を切り替えるラムダ関数を定義
+            auto SwitchWeapon = [&](int weaponIndex) {
 
-            // switch to missiles
-            if (Input::HotkeyPressed(HK_MetroidWeaponMissile)) {
-                NDS->ReleaseScreen();
-                frameAdvance(2);
-                NDS->TouchScreen(85 + 40 * 1, 32);
-                frameAdvance(2);
-                NDS->ReleaseScreen();
-                frameAdvance(2);
-            }
+                uint32_t weaponChangeAddr = calculatePlayerAddress(baseWeaponChangeAddr, playerPosition, playerAddressIncrement);
+                uint32_t weaponAddr = calculatePlayerAddress(baseWeaponAddr, playerPosition, playerAddressIncrement);
 
-            // switch subweapon
+                // 画面をリリース(武器変更のため)
+                NDS->ReleaseScreen();
 
-            Hotkey weaponHotkeys[] = {
-                HK_MetroidWeapon1,
-                HK_MetroidWeapon2,
-                HK_MetroidWeapon3,
-                HK_MetroidWeapon4,
-                HK_MetroidWeapon5,
-                HK_MetroidWeapon6,
+                // Lambda to set the weapon-changing state
+                auto setChangingWeapon = [](int value) -> int {
+                    // Apply mask to set the lower 4 bits to 1011 (B in hexadecimal)
+                    return (value & 0xF0) | 0x0B; // Keep the upper 4 bits, set lower 4 bits to 1011
+                };
+
+                // Modify the value using the lambda
+                int valueOfWeaponChange = setChangingWeapon(NDS->ARM9Read8(weaponChangeAddr));
+
+                // 武器変更命令をARM9に書き込む
+                NDS->ARM9Write8(weaponChangeAddr, valueOfWeaponChange); //下位4ビットのみをBに変更。
+
+                // 武器を変更する。
+                NDS->ARM9Write8(weaponAddr, weaponIndex);  // 対応する武器のアドレスを書き込む
+
+                // フレームを進める(反映のため)
+                frameAdvance(2);
+
+                // 画面をリリース
+                NDS->ReleaseScreen();
+                // エイムのためにタッチ(画面中央)
+                NDS->TouchScreen(128, 96);
             };
 
+
+            // ビーム武器に切り替え
+            if (Input::HotkeyPressed(HK_MetroidWeaponBeam)) {
+                SwitchWeapon(0);  // ビームのアドレスは0
+            }
+
+            // ミサイルに切り替え
+            if (Input::HotkeyPressed(HK_MetroidWeaponMissile)) {
+                SwitchWeapon(2);  // ミサイルのアドレスは2
+            }
+
+            // サブ武器ホットキーの配列(ホットキーの定義と武器のインデックスを対応させる)
+            Hotkey weaponHotkeys[] = {
+                HK_MetroidWeapon1,  // ShockCoil
+                HK_MetroidWeapon2,  // Magmaul
+                HK_MetroidWeapon3,  // Judicator
+                HK_MetroidWeapon4,  // Imperialist
+                HK_MetroidWeapon5,  // Battlehammer
+                HK_MetroidWeapon6   // VoltDriver
+            };
+
+            int weaponIndices[] = {7, 6, 5, 4, 3, 1};  // 各ホットキーに対応する武器のアドレス
+
+            // サブ武器の処理(ループで処理する)
             for (int i = 0; i < 6; i++) {
                 if (Input::HotkeyPressed(weaponHotkeys[i])) {
-                    melonDS::u16 subX = 93 + 25 * i;
-                    melonDS::u16 subY = 48 + 25 * i;
-
-                    NDS->ReleaseScreen();
-                    frameAdvance(2);
-                    NDS->TouchScreen(232, 34);
-                    frameAdvance(2);
-                    NDS->TouchScreen(subX, subY);
-                    frameAdvance(2);
-                    NDS->ReleaseScreen();
-                    frameAdvance(2);
+                    SwitchWeapon(weaponIndices[i]);  // 対応する武器に切り替える
                 }
             }
 
@@ -939,44 +1175,30 @@ void EmuThread::run()
 
             // aim addresses for version and player number
 
-            if (NDS->ARM9Read8(PlayerPosAddr) == 0x00) {
-                        aimXAddr = 0x020DEDA6;
-                        aimYAddr = 0x020DEDAE;
-                        //break;
-            }
-
-            if (NDS->ARM9Read8(PlayerPosAddr) == 0x01) {
-                        aimXAddr = 0x020DEDEE;
-                        aimYAddr = 0x020DEDF6;
-                        //break;
-            }
-
-            if (NDS->ARM9Read8(PlayerPosAddr) == 0x02) {
-                        aimXAddr = 0x020DEE36;
-                        aimYAddr = 0x020DEE3E;
-                        //break;
-            }
-
-            if (NDS->ARM9Read8(PlayerPosAddr) == 0x03) {
-                        aimXAddr = 0x020DEE7E;
-                        aimYAddr = 0x020DEE86;
-                        //break;
-            }
+            aimXAddr = calculatePlayerAddress(baseAimXAddr, playerPosition, 0x48);
+            aimYAddr = calculatePlayerAddress(baseAimYAddr, playerPosition, 0x48);
 
             // cursor looking
-            
-            if (abs(mouseRel.x()) > 0) {
+
+            // 感度係数を定数として定義
+            const float SENSITIVITY_FACTOR = Config::MetroidAimSensitivity * 0.01f;
+
+            // X軸の処理
+            float mouseX = mouseRel.x();
+            if (abs(mouseX) != 0) {
                 NDS->ARM9Write32(
-                    aimXAddr, 
-                    (int32_t)(mouseRel.x() * Config::MetroidAimSensitivity * 0.01f)
+                    aimXAddr,
+                    static_cast<int32_t>(mouseX * SENSITIVITY_FACTOR)
                 );
                 enableAim = true;
             }
 
-            if (abs(mouseRel.y()) > 0) {
+            // Y軸の処理
+            float mouseY = mouseRel.y();
+            if (abs(mouseY) != 0) {
                 NDS->ARM9Write32(
-                    aimYAddr, 
-                    (int32_t)(mouseRel.y() * aimAspectRatio * Config::MetroidAimSensitivity * 0.01f)
+                    aimYAddr,
+                    static_cast<int32_t>(mouseY * aimAspectRatio * SENSITIVITY_FACTOR)
                 );
                 enableAim = true;
             }
@@ -994,8 +1216,9 @@ void EmuThread::run()
 
             // morph ball boost, map zoom out, imperialist zoom
             if (Input::HotkeyDown(HK_MetroidMorphBallBoost)) {
-                bool inBall = NDS->ARM9Read8(inBallAddr) == 0x02;
-                if (inBall) {
+                bool isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
+                bool isSamus = NDS->ARM9Read8(chosenHunterAddr) == 0x00;
+                if (isAltForm && isSamus) {
                     // just incase
                     enableAim = false;
                     NDS->ReleaseScreen();
@@ -1027,23 +1250,25 @@ void EmuThread::run()
             } else {
                 FN_INPUT_RELEASE(INPUT_START);
             }
-        
+
         }
 
         // is this a good way of detecting morph ball status?
-        bool inBall = NDS->ARM9Read8(inBallAddr) == 0x02;
-        if (!inBall && enableAim) {
+        bool isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
+ //       bool isSamus = NDS->ARM9Read8(chosenHunterAddr) == 0x00;
+//        if (!isAltForm && isSamus && enableAim) {
+        if (!isAltForm && enableAim) {
             // mainWindow->osdAddMessage(0,"touching screen for aim");
             NDS->TouchScreen(128, 96); // required for aiming
         }
-        
+
         NDS->SetKeyMask(Input::GetInputMask());
 
         if (screenGL) {
             screenGL->virtualCursorShow = drawVCur;
             screenGL->virtualCursorX = virtualStylusX;
             screenGL->virtualCursorY = virtualStylusY;
-        } else if (drawVCur) { 
+        } else if (drawVCur) {
             const int cursorSize = virtualCursorSize;
             const int cursorOffset = virtualCursorSize / 2;
 

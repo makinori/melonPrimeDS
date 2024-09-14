@@ -30,6 +30,7 @@
 #include <QTimer>
 #include <QScreen>
 #include <QCloseEvent>
+#include <cstdint> // added for romversions
 
 #include "Window.h"
 #include "EmuThread.h"
