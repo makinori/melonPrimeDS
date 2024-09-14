@@ -62,13 +62,13 @@ Hotkey
     
     HK_MetroidWeaponBeam,
     HK_MetroidWeaponMissile,
+    HK_MetroidWeaponSpecial,
     HK_MetroidWeapon1,
     HK_MetroidWeapon2,
     HK_MetroidWeapon3,
     HK_MetroidWeapon4,
     HK_MetroidWeapon5,
     HK_MetroidWeapon6,
-    HK_MetroidWeapon7,
 
     HK_MetroidVirtualStylus,
     HK_MetroidMenu,

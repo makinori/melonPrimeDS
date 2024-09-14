@@ -53,14 +53,14 @@ static constexpr std::initializer_list<int> hk_addons =
 
     HK_MetroidWeaponBeam,
     HK_MetroidWeaponMissile,
+    HK_MetroidWeaponSpecial,
     HK_MetroidWeapon1,
     HK_MetroidWeapon2,
     HK_MetroidWeapon3,
     HK_MetroidWeapon4,
     HK_MetroidWeapon5,
     HK_MetroidWeapon6,
-    HK_MetroidWeapon7,
-    
+
     HK_MetroidVirtualStylus,
     HK_MetroidMenu,
 };
@@ -91,13 +91,13 @@ static constexpr std::initializer_list<const char*> hk_addons_labels =
 
     "[Metroid] (Mouse 5, Side Top) Weapon Beam",
     "[Metroid] (Mouse 4, Side Bottom) Weapon Missile",
+    "[Metroid] (R) SpecialWeapon (Last Weapon used, Omega Canon)",
     "[Metroid] (1) Weapon 1",
     "[Metroid] (2) Weapon 2",
     "[Metroid] (3) Weapon 3",
     "[Metroid] (4) Weapon 4",
     "[Metroid] (5) Weapon 5",
     "[Metroid] (6) Weapon 6",
-    "[Metroid] (7) Last Weapon used/Omega Canon",
 
     "[Metroid] (Tab) Virtual Stylus [Toggle]",
     "[Metroid] (V) Menu/Map",
