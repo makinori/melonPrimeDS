@@ -960,6 +960,7 @@ void EmuThread::run()
 
         bool isInGame = NDS->ARM9Read16(inGameAddr) == 0x0001;
 
+        /*
         if(isFocused && Input::HotkeyReleased(HK_MetroidVirtualStylus) && !isInGame){
             isVirtualStylusEnabled = !isVirtualStylusEnabled;
             if(isVirtualStylusEnabled){
@@ -988,6 +989,7 @@ void EmuThread::run()
 
             }
         }
+        */
 
         // Auto Enable/Disable VirtualStylus Before/After the game
         // you can still enable VirtualStylus in Game
