@@ -1206,7 +1206,7 @@ void EmuThread::run()
             }
 
             // Omega Canon or Last used weapon
-            if (Input::HotkeyPressed(HK_MetroidWeapon7)) {
+            if (Input::HotkeyPressed(HK_MetroidWeaponSpecial)) {
                 NDS->ReleaseScreen();
                 frameAdvance(2);
                 NDS->TouchScreen(173, 32);
