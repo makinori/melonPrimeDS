@@ -310,7 +310,7 @@ bool EmuThread::UpdateConsole(UpdateConsoleNDSArgs&& ndsargs, UpdateConsoleGBAAr
     return true;
 }
 
-// プレイヤーアドレス取得関数
+// CalculatePlayerAddress Function
 uint32_t calculatePlayerAddress(uint32_t baseAddress, uint8_t playerPosition, int32_t increment) {
     // If player position is 0, return the base address without modification
     if (playerPosition == 0) {
@@ -349,7 +349,7 @@ bool isRomDetected = false;
 void detectRomAndSetAddresses() {
     switch (globalChecksum) {
     case RomVersions::USA1_1:
-        // USA1.1バージョン
+        // USA1.1
 
         baseChosenHunterAddr = 0x020CBDA4; // BattleConfig:ChosenHunter 0 samus 1 kanden 2 trace 3 sylux 4 noxus 5 spire 6 weavel
         inGameAddr = 0x020eec40 + 0x8F0; // inGame:1
@@ -366,7 +366,7 @@ void detectRomAndSetAddresses() {
         break;
 
     case RomVersions::USA1_0:
-        // USA1.0バージョン
+        // USA1.0
         baseChosenHunterAddr = 0x020CB51C; // BattleConfig:ChosenHunter
         inGameAddr = 0x020ee180 + 0x8F0; // inGame:1
         PlayerPosAddr = 0x020D9CB8;
@@ -382,7 +382,7 @@ void detectRomAndSetAddresses() {
         break;
 
     case RomVersions::JAPAN1_0:
-        // Japan1.0バージョン
+        // Japan1.0
         baseChosenHunterAddr = 0x020CD358; // BattleConfig:ChosenHunter
         inGameAddr = 0x020F0BB0; // inGame:1
         PlayerPosAddr = 0x020DBB78;
@@ -398,7 +398,7 @@ void detectRomAndSetAddresses() {
         break;
 
     case RomVersions::JAPAN1_1:
-        // Japan1.1バージョン
+        // Japan1.1
         baseChosenHunterAddr = 0x020CD318; // BattleConfig:ChosenHunter
         inGameAddr = 0x020F0280 + 0x8F0; // inGame:1
         PlayerPosAddr = 0x020DBB38;
@@ -415,7 +415,7 @@ void detectRomAndSetAddresses() {
         break;
 
     case RomVersions::EU1_0:
-        // EU1.0バージョン
+        // EU1.0
         baseChosenHunterAddr = 0x020CBDC4; // BattleConfig:ChosenHunter
         inGameAddr = 0x020eec60 + 0x8F0; // inGame:1
         PlayerPosAddr = 0x020DA558;
@@ -431,7 +431,7 @@ void detectRomAndSetAddresses() {
         break;
 
     case RomVersions::EU1_1:
-        // EU1.1バージョン
+        // EU1.1
         baseChosenHunterAddr = 0x020CBE44; // BattleConfig:ChosenHunter
         inGameAddr = 0x020eece0 + 0x8F0; // inGame:1
         PlayerPosAddr = 0x020DA5D8;
@@ -448,7 +448,7 @@ void detectRomAndSetAddresses() {
         break;
 
     case RomVersions::KOREA1_0:
-        // Korea1.0バージョン
+        // Korea1.0
         baseChosenHunterAddr = 0x020C4B88; // BattleConfig:ChosenHunter
         inGameAddr = 0x020E81B4; // inGame:1
         inVisorOrMapAddr = PlayerPosAddr - 0xabb; // 推定アドレス
@@ -920,6 +920,7 @@ void EmuThread::run()
 
         auto isFocused = mainWindow->panel->getFocused();
 
+        /*
         if (isFocused) {
             auto windowCenterX = mainWindow->pos().x() + mainWindow->size().width() / 2;
             auto windowCenterY = mainWindow->pos().y() + mainWindow->size().height() / 2;
@@ -933,6 +934,17 @@ void EmuThread::run()
             }
             QCursor::setPos(windowCenterX, windowCenterY);
         }
+        */
+
+        if (isFocused) {
+            auto windowCenter = mainWindow->geometry().center();
+
+            if (focusedLastFrame) {
+                mouseRel = QCursor::pos() - windowCenter;
+            }
+            QCursor::setPos(windowCenter);
+        }
+
 
         focusedLastFrame = isFocused;
 
@@ -1194,9 +1206,6 @@ void EmuThread::run()
                 // Advance frames (for reflection of ReleaseScreen, WeaponChange)
                 frameAdvance(2);
 
-                // Release the screen
-                // NDS->ReleaseScreen();
-
                 // Need Touch after ReleaseScreen for aiming.
                 NDS->TouchScreen(128, 96);
 
@@ -1216,18 +1225,18 @@ void EmuThread::run()
 
 
 
-            // ビーム武器に切り替え
+            // Switch to Power Beam
             if (Input::HotkeyPressed(HK_MetroidWeaponBeam)) {
-                SwitchWeapon(0);  // ビームのアドレスは0
+                SwitchWeapon(0);
             }
 
-            // ミサイルに切り替え
+            // Switch to Missile
             if (Input::HotkeyPressed(HK_MetroidWeaponMissile)) {
-                SwitchWeapon(2);  // ミサイルのアドレスは2
+                SwitchWeapon(2);
 
             }
 
-            // サブ武器ホットキーの配列(ホットキーの定義と武器のインデックスを対応させる)
+            // Array of sub-weapon hotkeys (Associating hotkey definitions with weapon indices)
             Hotkey weaponHotkeys[] = {
                 HK_MetroidWeapon1,  // ShockCoil    7
                 HK_MetroidWeapon2,  // Magmaul      6
@@ -1265,7 +1274,7 @@ void EmuThread::run()
 
             // cursor looking
 
-            // X軸の処理
+            // Processing for the X-axis
             float mouseX = mouseRel.x();
             if (abs(mouseX) != 0) {
                 NDS->ARM9Write32(
@@ -1275,7 +1284,7 @@ void EmuThread::run()
                 enableAim = true;
             }
 
-            // Y軸の処理
+            // Processing for the Y-axis
             float mouseY = mouseRel.y();
             if (abs(mouseY) != 0) {
                 NDS->ARM9Write32(
