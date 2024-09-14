@@ -1015,6 +1015,8 @@ void EmuThread::run()
             aimXAddr = calculatePlayerAddress(baseAimXAddr, playerPosition, 0x48);
             aimYAddr = calculatePlayerAddress(baseAimYAddr, playerPosition, 0x48);
 
+            mainWindow->osdAddMessage(0, "Completed address calculation.");
+
         }
 
         if (isFocused && isVirtualStylusEnabled) {
