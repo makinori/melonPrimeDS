@@ -68,6 +68,7 @@ Hotkey
     HK_MetroidWeapon4,
     HK_MetroidWeapon5,
     HK_MetroidWeapon6,
+    HK_MetroidWeapon7,
 
     HK_MetroidVirtualStylus,
     HK_MetroidMenu,

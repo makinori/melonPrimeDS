@@ -256,6 +256,7 @@ ConfigEntry ConfigFile[] =
     {"HKKey_MetroidWeapon4",           0, &HKKeyMapping[HK_MetroidWeapon4],           Qt::Key_4, true},
     {"HKKey_MetroidWeapon5",           0, &HKKeyMapping[HK_MetroidWeapon5],           Qt::Key_5, true},
     {"HKKey_MetroidWeapon6",           0, &HKKeyMapping[HK_MetroidWeapon6],           Qt::Key_6, true},
+    {"HKKey_MetroidWeapon7",           0, &HKKeyMapping[HK_MetroidWeapon7],           Qt::Key_7, true},
     
     {"HKKey_MetroidVirtualStylus",     0, &HKKeyMapping[HK_MetroidVirtualStylus],     Qt::Key_Tab, true},
     {"HKKey_MetroidMenu",              0, &HKKeyMapping[HK_MetroidMenu],              Qt::Key_V, true},

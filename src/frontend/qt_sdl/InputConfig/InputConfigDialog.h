@@ -59,6 +59,7 @@ static constexpr std::initializer_list<int> hk_addons =
     HK_MetroidWeapon4,
     HK_MetroidWeapon5,
     HK_MetroidWeapon6,
+    HK_MetroidWeapon7,
     
     HK_MetroidVirtualStylus,
     HK_MetroidMenu,
@@ -96,6 +97,7 @@ static constexpr std::initializer_list<const char*> hk_addons_labels =
     "[Metroid] (4) Weapon 4",
     "[Metroid] (5) Weapon 5",
     "[Metroid] (6) Weapon 6",
+    "[Metroid] (7) Last Weapon used/Omega Canon",
 
     "[Metroid] (Tab) Virtual Stylus [Toggle]",
     "[Metroid] (V) Menu/Map",

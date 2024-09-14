@@ -1172,15 +1172,24 @@ void EmuThread::run()
                 HK_MetroidWeapon6   // VoltDriver
             };
 
-            int weaponIndices[] = {7, 6, 5, 4, 3, 1};  // 各ホットキーに対応する武器のアドレス
+            int weaponIndices[] = {8, 7, 6, 5, 4, 3, 1};  // 各ホットキーに対応する武器のアドレス
 
             // サブ武器の処理(ループで処理する)
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < 7; i++) {
                 if (Input::HotkeyPressed(weaponHotkeys[i])) {
                     SwitchWeapon(weaponIndices[i]);  // 対応する武器に切り替える
                 }
             }
 
+            // Omega Canon + Last used weapon
+            if (Input::HotkeyPressed(HK_MetroidWeapon7)) {
+                NDS->ReleaseScreen();
+                frameAdvance(2);
+                NDS->TouchScreen(173, 32);
+                frameAdvance(2);
+            }
+
+            
             // move
 
             processMoveInput();
