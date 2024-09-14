@@ -1158,6 +1158,7 @@ void EmuThread::run()
                     uint8_t newFlags = (currentFlags & 0xF0) | 0x01;  // Set lower 4 bits to 1
                     NDS->ARM9Write8(jumpFlagAddr, newFlags);
                     needToRestore = true;
+                    mainWindow->osdAddMessage(0, "Done setting jumpFlag."); // TODO Delete this later
                 }
 
                 // Release the screen (for weapon change)
@@ -1182,7 +1183,7 @@ void EmuThread::run()
                 frameAdvance(2);
 
                 // Release the screen
-                NDS->ReleaseScreen();
+                // NDS->ReleaseScreen();
 
                 // エイムのためにタッチ(画面中央)
                 NDS->TouchScreen(128, 96);
@@ -1191,6 +1192,8 @@ void EmuThread::run()
                 if (needToRestore) {
                     uint8_t restoredFlags = (currentFlags & 0xF0) | jumpFlag;
                     NDS->ARM9Write8(jumpFlagAddr, restoredFlags);
+                    mainWindow->osdAddMessage(0, "Restored jumpFlag."); // TODO Delete this later
+
                 }
             };
 
