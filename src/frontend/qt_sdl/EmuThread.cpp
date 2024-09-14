@@ -1149,7 +1149,7 @@ void EmuThread::run()
                 // Check for Already equipped
                 uint8_t currentWeapon = NDS->ARM9Read8(weaponAddr);
                 if (currentWeapon == weaponIndex) {
-                    mainWindow->osdAddMessage(0, "Weapon switch unnecessary: Already equipped");
+                    // mainWindow->osdAddMessage(0, "Weapon switch unnecessary: Already equipped");
                     return; // Early return if the weapon is already equipped
                 }
 
@@ -1171,6 +1171,9 @@ void EmuThread::run()
                     mainWindow->osdAddMessage(0, "Done setting jumpFlag."); // TODO Delete this later
                 }
 
+                // Advance frames (for reflection of NoJumpValue)
+                frameAdvance(2);
+
                 // Release the screen (for weapon change)
                 NDS->ReleaseScreen();
 
@@ -1189,7 +1192,7 @@ void EmuThread::run()
                 // Change the weapon
                 NDS->ARM9Write8(weaponAddr, weaponIndex);  // Write the address of the corresponding weapon
 
-                // Advance frames (for reflection)
+                // Advance frames (for reflection of WeaponChange)
                 frameAdvance(2);
 
                 // Release the screen
@@ -1206,9 +1209,6 @@ void EmuThread::run()
                     mainWindow->osdAddMessage(0, "Restored jumpFlag."); // TODO Delete this later
 
                 }
-
-                // Advance frames (for reflection)
-                frameAdvance(2);
 
             };
 
