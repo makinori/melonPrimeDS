@@ -1172,7 +1172,7 @@ void EmuThread::run()
                 }
 
                 // Advance frames (for reflection of NoJumpValue)
-                frameAdvance(2);
+                // frameAdvance(2);
 
                 // Release the screen (for weapon change)
                 NDS->ReleaseScreen();
@@ -1201,7 +1201,7 @@ void EmuThread::run()
                 // Need Touch after ReleaseScreen for aiming.
                 NDS->TouchScreen(128, 96);
 
-                // Advance frames (for reflection of Touch)
+                // Advance frames (for reflection of Touch. This is necessary for no jump)
                 frameAdvance(2);
 
                 // Restore the jump flag to its original value (if necessary)
