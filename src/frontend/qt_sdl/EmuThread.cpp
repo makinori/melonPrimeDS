@@ -1164,7 +1164,7 @@ void EmuThread::run()
                 frameAdvance(2);
             }
 
-            if (Input::HotkeyPressed(HK_MetroidUIRYes)) {
+            if (Input::HotkeyPressed(HK_MetroidUIYes)) {
                 NDS->ReleaseScreen();
                 frameAdvance(2);
                 NDS->TouchScreen(96, 142);
