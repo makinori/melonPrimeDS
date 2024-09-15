@@ -262,7 +262,12 @@ ConfigEntry ConfigFile[] =
     
     // {"HKKey_MetroidVirtualStylus",     0, &HKKeyMapping[HK_MetroidVirtualStylus],     Qt::Key_Tab, true},
     {"HKKey_MetroidMenu",              0, &HKKeyMapping[HK_MetroidMenu],              Qt::Key_Tab, true},
-    
+    {"HKKey_MetroidIngameSensiUp",     0, &HKKeyMapping[HK_MetroidIngameSensiUp],     Qt::Key_PageUp, true},
+    {"HKKey_MetroidIngameSensiDown",   0, &HKKeyMapping[HK_MetroidIngameSensiDown],   Qt::Key_PageDown, true},
+
+
+
+
     // not metroid
 
     {"HKJoy_FrameStep",           0, &HKJoyMapping[HK_FrameStep],           -1, true},

@@ -74,6 +74,8 @@ Hotkey
 
     //HK_MetroidVirtualStylus,
     HK_MetroidMenu,
+    HK_MetroidIngameSensiUp,
+    HK_MetroidIngameSensiDown,
     
     HK_MAX
 };

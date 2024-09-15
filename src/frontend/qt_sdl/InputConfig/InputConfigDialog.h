@@ -65,6 +65,8 @@ static constexpr std::initializer_list<int> hk_addons =
 
     // HK_MetroidVirtualStylus,
     HK_MetroidMenu,
+    HK_MetroidIngameSensiUp,
+    HK_MetroidIngameSensiDown,
 };
 
 static constexpr std::initializer_list<const char*> hk_addons_labels =

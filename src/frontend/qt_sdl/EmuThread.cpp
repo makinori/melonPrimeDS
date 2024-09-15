@@ -1049,328 +1049,361 @@ void EmuThread::run()
 
             // mainWindow->osdAddMessage(0, "Completed address calculation.");
 
-        }
-
-        if (isFocused && isVirtualStylusEnabled) {
-            // VirtualStylus
+		}
+		if (isFocused) {
 
 
-            // this exists to just delay the pressing of the screen when you
-            // release the virtual stylus key
-            enableAim = false;
+			if (isVirtualStylusEnabled) {
+				// VirtualStylus
 
-            drawVCur = true;
 
-            if (Input::HotkeyDown(HK_MetroidShootScan) || Input::HotkeyDown(HK_MetroidScanShoot)) {
-                NDS->TouchScreen(virtualStylusX, virtualStylusY);
-            } else {
-                NDS->ReleaseScreen();
+				// this exists to just delay the pressing of the screen when you
+				// release the virtual stylus key
+				enableAim = false;
+
+				drawVCur = true;
+
+				if (Input::HotkeyDown(HK_MetroidShootScan) || Input::HotkeyDown(HK_MetroidScanShoot)) {
+					NDS->TouchScreen(virtualStylusX, virtualStylusY);
+				}
+				else {
+					NDS->ReleaseScreen();
+				}
+
+				// mouse (VirtualStylus)
+
+				mouseX = mouseRel.x();
+
+				if (abs(mouseX) > 0) {
+					virtualStylusX += (
+						mouseX * SENSITIVITY_FACTOR_VIRTUAL_STYLUS
+						);
+				}
+
+				mouseY = mouseRel.y();
+
+				if (abs(mouseY) > 0) {
+					virtualStylusY += (
+						mouseY * dsAspectRatio * SENSITIVITY_FACTOR_VIRTUAL_STYLUS
+						);
+				}
+
+				if (virtualStylusX < 0) virtualStylusX = 0;
+				if (virtualStylusX > 255) virtualStylusX = 255;
+				if (virtualStylusY < 0) virtualStylusY = 0;
+				if (virtualStylusY > 191) virtualStylusY = 191;
+
+			}
+			else {
+				// inGame
+
+
+				drawVCur = false;
+
+
+				// mainWindow->osdAddMessage(0, ("isMapOrUserActionPaused:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(isMapOrUserActionPausedAddr) & 0x0F])).c_str());
+
+				// morph ball
+				if (Input::HotkeyPressed(HK_MetroidMorphBall)) {
+					bool isSamus = NDS->ARM9Read8(chosenHunterAddr) == 0x00;
+					if (isSamus) {
+						enableAim = false; // in case isAltForm isnt immediately true
+					}
+					NDS->ReleaseScreen();
+					frameAdvance(2);
+					NDS->TouchScreen(231, 167);
+					// boost ball doesnt work unless i release screen late enough
+					for (int i = 0; i < 4; i++) {
+						frameAdvance(2);
+						NDS->ReleaseScreen();
+					}
+				}
+
+				// scan visor
+				if (Input::HotkeyPressed(HK_MetroidScanVisor)) {
+					NDS->ReleaseScreen();
+					frameAdvance(2);
+
+					bool inVisor = NDS->ARM9Read8(inVisorOrMapAddr) == 0x1;
+					// mainWindow->osdAddMessage(0, "in visor %d", inVisor);
+
+					NDS->TouchScreen(128, 173);
+
+					if (inVisor) {
+						frameAdvance(2);
+					}
+					else {
+						for (int i = 0; i < 30; i++) {
+							// still allow movement whilst we're enabling scan visor
+							processMoveInput();
+							NDS->SetKeyMask(Input::GetInputMask());
+
+							frameAdvanceOnce();
+						}
+					}
+
+					NDS->ReleaseScreen();
+					frameAdvance(2);
+				}
+
+				// ok (in scans and messages)
+				if (Input::HotkeyPressed(HK_MetroidUIOk)) {
+					NDS->ReleaseScreen();
+					frameAdvance(2);
+					NDS->TouchScreen(128, 142);
+					frameAdvance(2);
+				}
+
+				// left arrow (in scans and messages)
+				if (Input::HotkeyPressed(HK_MetroidUILeft)) {
+					NDS->ReleaseScreen();
+					frameAdvance(2);
+					NDS->TouchScreen(71, 141);
+					frameAdvance(2);
+				}
+
+				// right arrow (in scans and messages)
+				if (Input::HotkeyPressed(HK_MetroidUIRight)) {
+					NDS->ReleaseScreen();
+					frameAdvance(2);
+					NDS->TouchScreen(185, 141); // optimization ?
+					frameAdvance(2);
+				}
+
+				if (Input::HotkeyPressed(HK_MetroidUIYes)) {
+					NDS->ReleaseScreen();
+					frameAdvance(2);
+					NDS->TouchScreen(96, 142);
+					frameAdvance(2);
+				}
+
+				if (Input::HotkeyPressed(HK_MetroidUINo)) {
+					NDS->ReleaseScreen();
+					frameAdvance(2);
+					NDS->TouchScreen(160, 142);
+					frameAdvance(2);
+				}
+
+				// Define a lambda function to switch weapons
+				auto SwitchWeapon = [&](int weaponIndex) {
+
+					// Check for Already equipped
+					uint8_t currentWeapon = NDS->ARM9Read8(weaponAddr);
+					if (currentWeapon == weaponIndex) {
+						// mainWindow->osdAddMessage(0, "Weapon switch unnecessary: Already equipped");
+						return; // Early return if the weapon is already equipped
+					}
+
+					// Check isMapOrUserActionPaused, for the issue "If you switch weapons while the map is open, the aiming mechanism may become stuck."
+					bool isMapOrUserActionPaused = NDS->ARM9Read8(isMapOrUserActionPausedAddr) == 0x1;
+					if (isMapOrUserActionPaused) {
+						return;
+					}
+
+					// Read the current jump flag value
+					uint8_t currentFlags = NDS->ARM9Read8(jumpFlagAddr);
+					uint8_t jumpFlag = currentFlags & 0x0F;  // Get the lower 4 bits
+					//mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(jumpFlagAddr) & 0x0F])).c_str());
+					bool needToRestore = false;
+
+					// Check if in alternate form (transformed state)
+					isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
+
+					// If not jumping (jumpFlag == 0) and in normal form, temporarily set to jumped state (jumpFlag == 1)
+					if (jumpFlag == 0 && !isAltForm) {
+						uint8_t newFlags = (currentFlags & 0xF0) | 0x01;  // Set lower 4 bits to 1
+						NDS->ARM9Write8(jumpFlagAddr, newFlags);
+						needToRestore = true;
+						//mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(jumpFlagAddr) & 0x0F])).c_str());
+						//mainWindow->osdAddMessage(0, "Done setting jumpFlag.");
+					}
+
+					// Release the screen (for weapon change)
+					NDS->ReleaseScreen();
+
+					// Lambda to set the weapon-changing state
+					auto setChangingWeapon = [](int value) -> int {
+						// Apply mask to set the lower 4 bits to 1011 (B in hexadecimal)
+						return (value & 0xF0) | 0x0B; // Keep the upper 4 bits, set lower 4 bits to 1011
+						};
+
+					// Modify the value using the lambda
+					int valueOfWeaponChange = setChangingWeapon(NDS->ARM9Read8(weaponChangeAddr));
+
+					// Write the weapon change command to ARM9
+					NDS->ARM9Write8(weaponChangeAddr, valueOfWeaponChange); // Only change the lower 4 bits to B
+
+					// Change the weapon
+					NDS->ARM9Write8(weaponAddr, weaponIndex);  // Write the address of the corresponding weapon
+
+					// Advance frames (for reflection of ReleaseScreen, WeaponChange)
+					frameAdvance(2);
+
+					// Need Touch after ReleaseScreen for aiming.
+					NDS->TouchScreen(128, 96);
+
+					// Advance frames (for reflection of Touch. This is necessary for no jump)
+					frameAdvance(2);
+
+					// Restore the jump flag to its original value (if necessary)
+					if (needToRestore) {
+						uint8_t restoredFlags = (currentFlags & 0xF0) | jumpFlag;
+						NDS->ARM9Write8(jumpFlagAddr, restoredFlags);
+						//mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(jumpFlagAddr) & 0x0F])).c_str());
+						//mainWindow->osdAddMessage(0, "Restored jumpFlag.");
+
+					}
+
+					};
+
+
+
+				// Switch to Power Beam
+				if (Input::HotkeyPressed(HK_MetroidWeaponBeam)) {
+					SwitchWeapon(0);
+				}
+
+				// Switch to Missile
+				if (Input::HotkeyPressed(HK_MetroidWeaponMissile)) {
+					SwitchWeapon(2);
+
+				}
+
+				// Array of sub-weapon hotkeys (Associating hotkey definitions with weapon indices)
+				Hotkey weaponHotkeys[] = {
+					HK_MetroidWeapon1,  // ShockCoil    7
+					HK_MetroidWeapon2,  // Magmaul      6
+					HK_MetroidWeapon3,  // Judicator    5
+					HK_MetroidWeapon4,  // Imperialist  4
+					HK_MetroidWeapon5,  // Battlehammer 3
+					HK_MetroidWeapon6   // VoltDriver   1
+										// Omega Cannon 8 we don't need to set this here, because we need {last used weapon / Omega cannon}
+				};
+
+				int weaponIndices[] = { 7, 6, 5, 4, 3, 1 };  // 各ホットキーに対応する武器のアドレス
+
+				// サブ武器の処理(ループで処理する)
+				for (int i = 0; i < 6; i++) {
+					if (Input::HotkeyPressed(weaponHotkeys[i])) {
+						SwitchWeapon(weaponIndices[i]);  // 対応する武器に切り替える
+
+						// ホットキーが押された場合にループを抜ける(武器切り替えが完了したため)
+						break;
+					}
+				}
+
+				// Omega Canon or Last used weapon
+				if (Input::HotkeyPressed(HK_MetroidWeaponSpecial)) {
+					NDS->ReleaseScreen();
+					frameAdvance(2);
+					NDS->TouchScreen(173, 32);
+					frameAdvance(2);
+				}
+
+				// move
+
+				processMoveInput();
+
+
+				// cursor looking
+
+				// Processing for the X-axis
+				float mouseX = mouseRel.x();
+				if (abs(mouseX) != 0) {
+					NDS->ARM9Write32(
+						aimXAddr,
+						static_cast<int32_t>(mouseX * SENSITIVITY_FACTOR)
+					);
+					enableAim = true;
+				}
+
+				// Processing for the Y-axis
+				float mouseY = mouseRel.y();
+				if (abs(mouseY) != 0) {
+					NDS->ARM9Write32(
+						aimYAddr,
+						static_cast<int32_t>(mouseY * aimAspectRatio * SENSITIVITY_FACTOR)
+					);
+					enableAim = true;
+				}
+
+				// BACKUP morph ball
+				// if (Input::HotkeyDown(HK_MetroidMorphBallBoost)) {
+				//     // just incase
+				//     enableAim = true;
+				//     NDS->ReleaseScreen();
+				//     // then press input
+				//     FN_INPUT_PRESS(INPUT_R);
+				// } else {
+				//     FN_INPUT_RELEASE(INPUT_R);
+				// }
+
+				// morph ball boost, map zoom out, imperialist zoom
+				if (Input::HotkeyDown(HK_MetroidMorphBallBoost)) {
+					isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
+					bool isSamus = NDS->ARM9Read8(chosenHunterAddr) == 0x00;
+					if (isAltForm && isSamus) {
+						// just incase
+						enableAim = false;
+						NDS->ReleaseScreen();
+					}
+
+					FN_INPUT_PRESS(INPUT_R);
+				}
+				else {
+					FN_INPUT_RELEASE(INPUT_R);
+				}
+
+
+				// shoot
+				if (Input::HotkeyDown(HK_MetroidShootScan) || Input::HotkeyDown(HK_MetroidScanShoot)) {
+					FN_INPUT_PRESS(INPUT_L);
+				}
+				else {
+					FN_INPUT_RELEASE(INPUT_L);
+				}
+
+				// jump
+				if (Input::HotkeyDown(HK_MetroidJump)) {
+					FN_INPUT_PRESS(INPUT_B);
+				}
+				else {
+					FN_INPUT_RELEASE(INPUT_B);
+				}
+
+				// start
+				if (Input::HotkeyDown(HK_MetroidMenu)) {
+					FN_INPUT_PRESS(INPUT_START);
+				}
+				else {
+					FN_INPUT_RELEASE(INPUT_START);
+				}
+
+			}
+
+            // Sensitivity UP
+            if (Input::HotkeyReleased(HK_MetroidIngameSensiUp)) {
+                Config::MetroidAimSensitivity = MetroidAimSensitivity += 1;
+
+                // Save the changes to the configuration file (to persist settings for future sessions)
+                Config::Save();
+
+                mainWindow->osdAddMessage(0, ("AimSensi Updated:" + Config::MetroidAimSensitivity).c_str());
             }
 
-            // mouse (VirtualStylus)
+            // Sensitivity Down
+            if (Input::HotkeyReleased(HK_MetroidIngameSensiDown)) {
+                Config::MetroidAimSensitivity = MetroidAimSensitivity -= 1;
 
-            mouseX = mouseRel.x();
+                // Save the changes to the configuration file (to persist settings for future sessions)
+                Config::Save();
 
-            if (abs(mouseX) > 0) {
-                virtualStylusX += (
-                    mouseX * SENSITIVITY_FACTOR_VIRTUAL_STYLUS
-                );
-            }
-
-            mouseY = mouseRel.y();
-
-            if (abs(mouseY) > 0) {
-                virtualStylusY += (
-                    mouseY * dsAspectRatio * SENSITIVITY_FACTOR_VIRTUAL_STYLUS
-                );
-            }
-
-            if (virtualStylusX < 0) virtualStylusX = 0;
-            if (virtualStylusX > 255) virtualStylusX = 255;
-            if (virtualStylusY < 0) virtualStylusY = 0;
-            if (virtualStylusY > 191) virtualStylusY = 191;
-
-        } else if (isFocused) {
-            // inGame
-
-
-            drawVCur = false;
-
-            
-            // mainWindow->osdAddMessage(0, ("isMapOrUserActionPaused:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(isMapOrUserActionPausedAddr) & 0x0F])).c_str());
-
-            // morph ball
-            if (Input::HotkeyPressed(HK_MetroidMorphBall)) {
-                bool isSamus = NDS->ARM9Read8(chosenHunterAddr) == 0x00;
-                if(isSamus){
-                    enableAim = false; // in case isAltForm isnt immediately true
-                }
-                NDS->ReleaseScreen();
-                frameAdvance(2);
-                NDS->TouchScreen(231, 167);
-                // boost ball doesnt work unless i release screen late enough
-                for (int i = 0; i < 4; i++) {
-                    frameAdvance(2);
-                    NDS->ReleaseScreen();
-                }
-            }
-
-            // scan visor
-            if (Input::HotkeyPressed(HK_MetroidScanVisor)) {
-                NDS->ReleaseScreen();
-                frameAdvance(2);
-
-                bool inVisor = NDS->ARM9Read8(inVisorOrMapAddr) == 0x1;
-                // mainWindow->osdAddMessage(0, "in visor %d", inVisor);
-
-                NDS->TouchScreen(128, 173);
-
-                if (inVisor) {
-                    frameAdvance(2);
-                } else {
-                    for (int i = 0; i < 30; i++) {
-                        // still allow movement whilst we're enabling scan visor
-                        processMoveInput();
-                        NDS->SetKeyMask(Input::GetInputMask());
-
-                        frameAdvanceOnce();
-                    }
-                }
-
-                NDS->ReleaseScreen();
-                frameAdvance(2);
-            }
-
-            // ok (in scans and messages)
-            if (Input::HotkeyPressed(HK_MetroidUIOk)) {
-                NDS->ReleaseScreen();
-                frameAdvance(2);
-                NDS->TouchScreen(128, 142);
-                frameAdvance(2);
-            }
-
-            // left arrow (in scans and messages)
-            if (Input::HotkeyPressed(HK_MetroidUILeft)) {
-                NDS->ReleaseScreen();
-                frameAdvance(2);
-                NDS->TouchScreen(71, 141);
-                frameAdvance(2);
-            }
-
-            // right arrow (in scans and messages)
-            if (Input::HotkeyPressed(HK_MetroidUIRight)) {
-                NDS->ReleaseScreen();
-                frameAdvance(2);
-                NDS->TouchScreen(185, 141); // optimization ?
-                frameAdvance(2);
-            }
-
-            if (Input::HotkeyPressed(HK_MetroidUIYes)) {
-                NDS->ReleaseScreen();
-                frameAdvance(2);
-                NDS->TouchScreen(96, 142);
-                frameAdvance(2);
-            }
-
-            if (Input::HotkeyPressed(HK_MetroidUINo)) {
-                NDS->ReleaseScreen();
-                frameAdvance(2);
-                NDS->TouchScreen(160, 142);
-                frameAdvance(2);
-            }
-
-            // Define a lambda function to switch weapons
-            auto SwitchWeapon = [&](int weaponIndex) {
-
-                // Check for Already equipped
-                uint8_t currentWeapon = NDS->ARM9Read8(weaponAddr);
-                if (currentWeapon == weaponIndex) {
-                    // mainWindow->osdAddMessage(0, "Weapon switch unnecessary: Already equipped");
-                    return; // Early return if the weapon is already equipped
-                }
-
-                // Check isMapOrUserActionPaused, for the issue "If you switch weapons while the map is open, the aiming mechanism may become stuck."
-                bool isMapOrUserActionPaused = NDS->ARM9Read8(isMapOrUserActionPausedAddr) == 0x1;
-                if (isMapOrUserActionPaused) {
-                    return;
-                }
-
-                // Read the current jump flag value
-                uint8_t currentFlags = NDS->ARM9Read8(jumpFlagAddr);
-                uint8_t jumpFlag = currentFlags & 0x0F;  // Get the lower 4 bits
-                //mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(jumpFlagAddr) & 0x0F])).c_str());
-                bool needToRestore = false;
-
-                // Check if in alternate form (transformed state)
-                isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
-
-                // If not jumping (jumpFlag == 0) and in normal form, temporarily set to jumped state (jumpFlag == 1)
-                if (jumpFlag == 0 && !isAltForm) {
-                    uint8_t newFlags = (currentFlags & 0xF0) | 0x01;  // Set lower 4 bits to 1
-                    NDS->ARM9Write8(jumpFlagAddr, newFlags);
-                    needToRestore = true;
-                    //mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(jumpFlagAddr) & 0x0F])).c_str());
-                    //mainWindow->osdAddMessage(0, "Done setting jumpFlag.");
-                }
-
-                // Release the screen (for weapon change)
-                NDS->ReleaseScreen();
-
-                // Lambda to set the weapon-changing state
-                auto setChangingWeapon = [](int value) -> int {
-                    // Apply mask to set the lower 4 bits to 1011 (B in hexadecimal)
-                    return (value & 0xF0) | 0x0B; // Keep the upper 4 bits, set lower 4 bits to 1011
-                    };
-
-                // Modify the value using the lambda
-                int valueOfWeaponChange = setChangingWeapon(NDS->ARM9Read8(weaponChangeAddr));
-
-                // Write the weapon change command to ARM9
-                NDS->ARM9Write8(weaponChangeAddr, valueOfWeaponChange); // Only change the lower 4 bits to B
-
-                // Change the weapon
-                NDS->ARM9Write8(weaponAddr, weaponIndex);  // Write the address of the corresponding weapon
-
-                // Advance frames (for reflection of ReleaseScreen, WeaponChange)
-                frameAdvance(2);
-
-                // Need Touch after ReleaseScreen for aiming.
-                NDS->TouchScreen(128, 96);
-
-                // Advance frames (for reflection of Touch. This is necessary for no jump)
-                frameAdvance(2);
-
-                // Restore the jump flag to its original value (if necessary)
-                if (needToRestore) {
-                    uint8_t restoredFlags = (currentFlags & 0xF0) | jumpFlag;
-                    NDS->ARM9Write8(jumpFlagAddr, restoredFlags);
-                    //mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(jumpFlagAddr) & 0x0F])).c_str());
-                    //mainWindow->osdAddMessage(0, "Restored jumpFlag.");
-
-                }
-
-            };
-
-
-
-            // Switch to Power Beam
-            if (Input::HotkeyPressed(HK_MetroidWeaponBeam)) {
-                SwitchWeapon(0);
-            }
-
-            // Switch to Missile
-            if (Input::HotkeyPressed(HK_MetroidWeaponMissile)) {
-                SwitchWeapon(2);
-
-            }
-
-            // Array of sub-weapon hotkeys (Associating hotkey definitions with weapon indices)
-            Hotkey weaponHotkeys[] = {
-                HK_MetroidWeapon1,  // ShockCoil    7
-                HK_MetroidWeapon2,  // Magmaul      6
-                HK_MetroidWeapon3,  // Judicator    5
-                HK_MetroidWeapon4,  // Imperialist  4
-                HK_MetroidWeapon5,  // Battlehammer 3
-                HK_MetroidWeapon6   // VoltDriver   1
-                                    // Omega Cannon 8 we don't need to set this here, because we need {last used weapon / Omega cannon}
-            };
-
-            int weaponIndices[] = {7, 6, 5, 4, 3, 1};  // 各ホットキーに対応する武器のアドレス
-
-            // サブ武器の処理(ループで処理する)
-            for (int i = 0; i < 6; i++) {
-                if (Input::HotkeyPressed(weaponHotkeys[i])) {
-                    SwitchWeapon(weaponIndices[i]);  // 対応する武器に切り替える
-
-                    // ホットキーが押された場合にループを抜ける(武器切り替えが完了したため)
-                    break;
-                }
-            }
-
-            // Omega Canon or Last used weapon
-            if (Input::HotkeyPressed(HK_MetroidWeaponSpecial)) {
-                NDS->ReleaseScreen();
-                frameAdvance(2);
-                NDS->TouchScreen(173, 32);
-                frameAdvance(2);
-            }
-
-            // move
-
-            processMoveInput();
-
-
-            // cursor looking
-
-            // Processing for the X-axis
-            float mouseX = mouseRel.x();
-            if (abs(mouseX) != 0) {
-                NDS->ARM9Write32(
-                    aimXAddr,
-                    static_cast<int32_t>(mouseX * SENSITIVITY_FACTOR)
-                );
-                enableAim = true;
-            }
-
-            // Processing for the Y-axis
-            float mouseY = mouseRel.y();
-            if (abs(mouseY) != 0) {
-                NDS->ARM9Write32(
-                    aimYAddr,
-                    static_cast<int32_t>(mouseY * aimAspectRatio * SENSITIVITY_FACTOR)
-                );
-                enableAim = true;
-            }
-
-            // BACKUP morph ball
-            // if (Input::HotkeyDown(HK_MetroidMorphBallBoost)) {
-            //     // just incase
-            //     enableAim = true;
-            //     NDS->ReleaseScreen();
-            //     // then press input
-            //     FN_INPUT_PRESS(INPUT_R);
-            // } else {
-            //     FN_INPUT_RELEASE(INPUT_R);
-            // }
-
-            // morph ball boost, map zoom out, imperialist zoom
-            if (Input::HotkeyDown(HK_MetroidMorphBallBoost)) {
-                isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
-                bool isSamus = NDS->ARM9Read8(chosenHunterAddr) == 0x00;
-                if (isAltForm && isSamus) {
-                    // just incase
-                    enableAim = false;
-                    NDS->ReleaseScreen();
-                }
-
-                FN_INPUT_PRESS(INPUT_R);
-            } else {
-                FN_INPUT_RELEASE(INPUT_R);
+                mainWindow->osdAddMessage(0, ("AimSensi Updated:" + Config::MetroidAimSensitivity).c_str());
             }
 
 
-            // shoot
-            if (Input::HotkeyDown(HK_MetroidShootScan) || Input::HotkeyDown(HK_MetroidScanShoot)) {
-                FN_INPUT_PRESS(INPUT_L);
-            } else {
-                FN_INPUT_RELEASE(INPUT_L);
-            }
 
-            // jump
-            if (Input::HotkeyDown(HK_MetroidJump)) {
-                FN_INPUT_PRESS(INPUT_B);
-            } else {
-                FN_INPUT_RELEASE(INPUT_B);
-            }
-
-            // start
-            if (Input::HotkeyDown(HK_MetroidMenu)) {
-                FN_INPUT_PRESS(INPUT_START);
-            } else {
-                FN_INPUT_RELEASE(INPUT_START);
-            }
-
-        } // END of if(isFocused)
+		}// END of if(isFocused)
 
         // is this a good way of detecting morph ball status?
         isAltForm = NDS->ARM9Read8(isAltFormAddr) == 0x02;
