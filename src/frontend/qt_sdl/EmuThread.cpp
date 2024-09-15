@@ -486,7 +486,7 @@ uint32_t weaponAddr;
 uint32_t jumpFlagAddr;
 
 static void calculateAddresses(
-    NDS& NDS,
+    melonDS::NDS& NDS,
     uint32_t PlayerPosAddr,
     uint32_t baseIsAltFormAddr,
     uint32_t baseChosenHunterAddr,
