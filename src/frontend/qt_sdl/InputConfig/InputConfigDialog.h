@@ -47,6 +47,8 @@ static constexpr std::initializer_list<int> hk_addons =
     HK_MetroidUILeft,
     HK_MetroidUIRight,
     HK_MetroidUIOk,
+    HK_MetroidUIYes,
+    HK_MetroidUINo,
 
     HK_MetroidShootScan,
     HK_MetroidScanShoot,
@@ -61,7 +63,7 @@ static constexpr std::initializer_list<int> hk_addons =
     HK_MetroidWeapon5,
     HK_MetroidWeapon6,
 
-    HK_MetroidVirtualStylus,
+    // HK_MetroidVirtualStylus,
     HK_MetroidMenu,
 };
 
@@ -78,20 +80,22 @@ static constexpr std::initializer_list<const char*> hk_addons_labels =
     "[Metroid] (Space) Jump",
 
     "[Metroid] (L. Ctrl) Morph Ball",
-    "[Metroid] (L. Shift) Morph Ball Boost, Map Zoom Out, Imperialist Zoom",
+    "[Metroid] (Mouse Right) Morph Ball Boost, Map Zoom Out, Imperialist Zoom",
 
     "[Metroid] (C) Scan Visor",
 
-    "[Metroid] (Q) UI Left",
-    "[Metroid] (E) UI Right",
+    "[Metroid] (Z) UI Left",
+    "[Metroid] (X) UI Right",
     "[Metroid] (F) UI Ok",
+    "[Metroid] (G) UI Yes (Enter Starship)",
+    "[Metroid] (H) UI No  (Enter Starship)",
 
     "[Metroid] (Mouse Left) Shoot/Scan, Map Zoom In)",
-    "[Metroid] (Mouse Right) Scan/Shoot, Map Zoom In)",
+    "[Metroid] (V)          Scan/Shoot, Map Zoom In)",
 
-    "[Metroid] (Mouse 5, Side Top) Weapon Beam",
+    "[Metroid] (Mouse 5, Side Top)    Weapon Beam",
     "[Metroid] (Mouse 4, Side Bottom) Weapon Missile",
-    "[Metroid] (R) SpecialWeapon (Last Weapon used, Omega Canon)",
+    "[Metroid] (R) SpecialWeapon (Last used Weapon, Omega cannon)",
     "[Metroid] (1) Weapon 1",
     "[Metroid] (2) Weapon 2",
     "[Metroid] (3) Weapon 3",
@@ -99,8 +103,8 @@ static constexpr std::initializer_list<const char*> hk_addons_labels =
     "[Metroid] (5) Weapon 5",
     "[Metroid] (6) Weapon 6",
 
-    "[Metroid] (Tab) Virtual Stylus [Toggle]",
-    "[Metroid] (V) Menu/Map",
+    // "[Metroid] (Tab) Virtual Stylus [Toggle]",
+    "[Metroid] (Tab) Menu/Map",
 };
 
 static_assert(hk_addons.size() == hk_addons_labels.size());

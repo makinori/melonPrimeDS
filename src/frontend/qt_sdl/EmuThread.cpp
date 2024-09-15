@@ -1164,6 +1164,20 @@ void EmuThread::run()
                 frameAdvance(2);
             }
 
+            if (Input::HotkeyPressed(HK_MetroidUIRYes)) {
+                NDS->ReleaseScreen();
+                frameAdvance(2);
+                NDS->TouchScreen(96, 142);
+                frameAdvance(2);
+            }
+
+            if (Input::HotkeyPressed(HK_MetroidUINo)) {
+                NDS->ReleaseScreen();
+                frameAdvance(2);
+                NDS->TouchScreen(140, 142);
+                frameAdvance(2);
+            }
+
             // Define a lambda function to switch weapons
             auto SwitchWeapon = [&](int weaponIndex) {
 
@@ -1257,7 +1271,7 @@ void EmuThread::run()
                 HK_MetroidWeapon4,  // Imperialist  4
                 HK_MetroidWeapon5,  // Battlehammer 3
                 HK_MetroidWeapon6   // VoltDriver   1
-                                    // Omega Cannon 8 we don't need to set this here, because we need {last weapon used / Omega canon}
+                                    // Omega Cannon 8 we don't need to set this here, because we need {last used weapon / Omega cannon}
             };
 
             int weaponIndices[] = {7, 6, 5, 4, 3, 1};  // 各ホットキーに対応する武器のアドレス
