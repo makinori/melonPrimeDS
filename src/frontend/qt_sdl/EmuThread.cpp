@@ -476,52 +476,6 @@ void detectRomAndSetAddresses() {
     }
 }
 
-uint8_t playerPosition;
-
-const int32_t playerAddressIncrement = 0xF30;
-uint32_t isAltFormAddr;
-uint32_t chosenHunterAddr;
-uint32_t weaponChangeAddr;
-uint32_t weaponAddr;
-uint32_t jumpFlagAddr;
-
-static void calculateAddresses(
-    melonDS::NDS& NDS,
-    uint32_t PlayerPosAddr,
-    uint32_t baseIsAltFormAddr,
-    uint32_t baseChosenHunterAddr,
-    uint32_t baseWeaponChangeAddr,
-    uint32_t baseWeaponAddr,
-    uint32_t baseJumpFlagAddr,
-    uint32_t baseAimXAddr,
-    uint32_t baseAimYAddr,
-    uint8_t playerAddressIncrement,
-    MainWindow* mainWindow,
-    uint8_t& playerPosition,
-    uint32_t& isAltFormAddr,
-    uint32_t& chosenHunterAddr,
-    uint32_t& weaponChangeAddr,
-    uint32_t& weaponAddr,
-    uint32_t& jumpFlagAddr,
-    uint32_t& aimXAddr,
-    uint32_t& aimYAddr
-) {
-    // Read the player position
-    playerPosition = NDS.ARM9Read8(PlayerPosAddr);
-
-    // Calculate addresses
-    isAltFormAddr = calculatePlayerAddress(baseIsAltFormAddr, playerPosition, playerAddressIncrement);
-    chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
-    weaponChangeAddr = calculatePlayerAddress(baseWeaponChangeAddr, playerPosition, playerAddressIncrement);
-    weaponAddr = calculatePlayerAddress(baseWeaponAddr, playerPosition, playerAddressIncrement);
-    jumpFlagAddr = calculatePlayerAddress(baseJumpFlagAddr, playerPosition, playerAddressIncrement);
-
-    // Calculate aim addresses for version and player number
-    aimXAddr = calculatePlayerAddress(baseAimXAddr, playerPosition, 0x48);
-    aimYAddr = calculatePlayerAddress(baseAimYAddr, playerPosition, 0x48);
-
-    mainWindow->osdAddMessage(0, "Completed address calculation.");
-}
 
 void EmuThread::run()
 {
@@ -1065,23 +1019,44 @@ void EmuThread::run()
             ingameSoVirtualStylusAutolyDisabled = false;
         }
 
+        bool calcAddr = false;
+
         if(isInGame && isVirtualStylusEnabled && !ingameSoVirtualStylusAutolyDisabled) {
             isVirtualStylusEnabled = false;
             mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
             ingameSoVirtualStylusAutolyDisabled = true;
-
-            calculateAddresses(
-                *NDS, PlayerPosAddr, baseIsAltFormAddr, baseChosenHunterAddr,
-                baseWeaponChangeAddr, baseWeaponAddr, baseJumpFlagAddr,
-                baseAimXAddr, baseAimYAddr, playerAddressIncrement, mainWindow,
-                playerPosition, isAltFormAddr, chosenHunterAddr, weaponChangeAddr,
-                weaponAddr, jumpFlagAddr, aimXAddr, aimYAddr
-            );
+            calcAddr = true;
         }
 
         // VirtualStylus is Enabled when not in game
         isVirtualStylusEnabled = !isInGame;
 
+        // Read the player position
+        uint8_t playerPosition;
+
+        const int32_t playerAddressIncrement = 0xF30;
+        uint32_t isAltFormAddr;
+        uint32_t chosenHunterAddr;
+        uint32_t weaponChangeAddr;
+        uint32_t weaponAddr;
+        uint32_t jumpFlagAddr;
+
+        if (calcAddr) {
+            // Read the player position
+            playerPosition = NDS->ARM9Read8(PlayerPosAddr);
+            isAltFormAddr = calculatePlayerAddress(baseIsAltFormAddr, playerPosition, playerAddressIncrement);
+            chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
+            weaponChangeAddr = calculatePlayerAddress(baseWeaponChangeAddr, playerPosition, playerAddressIncrement);
+            weaponAddr = calculatePlayerAddress(baseWeaponAddr, playerPosition, playerAddressIncrement);
+            jumpFlagAddr = calculatePlayerAddress(baseJumpFlagAddr, playerPosition, playerAddressIncrement);
+
+            // aim addresses for version and player number
+            aimXAddr = calculatePlayerAddress(baseAimXAddr, playerPosition, 0x48);
+            aimYAddr = calculatePlayerAddress(baseAimYAddr, playerPosition, 0x48);
+
+            mainWindow->osdAddMessage(0, "Completed address calculation.");
+
+        }
 
         if (isFocused && isVirtualStylusEnabled) {
 
