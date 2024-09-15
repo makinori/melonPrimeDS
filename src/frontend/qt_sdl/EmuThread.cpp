@@ -1199,6 +1199,8 @@ void EmuThread::run()
 
                 // Define the hotkey-action pairs
                 const std::pair<int, std::function<void()>> hotkeyActions[] = {
+                    // Omega Canon or Last used weapon
+                    {HK_MetroidWeaponSpecial, [&]() { executeButtonAction(173, 32); }},
                     // ok (in scans and messages)
                     {HK_MetroidUIOk, [&]() { executeButtonAction(128, 142); }},
                     // left arrow (in scans and messages)
@@ -1206,9 +1208,7 @@ void EmuThread::run()
                     // right arrow (in scans and messages)
                     {HK_MetroidUIRight, [&]() { executeButtonAction(185, 141); }},
                     {HK_MetroidUIYes, [&]() { executeButtonAction(96, 142); }},
-                    {HK_MetroidUINo, [&]() { executeButtonAction(160, 142); }},
-                    // Omega Canon or Last used weapon
-                    {HK_MetroidWeaponSpecial, [&]() { executeButtonAction(173, 32); }}
+                    {HK_MetroidUINo, [&]() { executeButtonAction(160, 142); }}
                 };
 
                 // Check and execute hotkey actions
