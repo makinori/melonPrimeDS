@@ -1071,7 +1071,7 @@ void EmuThread::run()
             ingameSoVirtualStylusAutolyDisabled = true;
 
             calculateAddresses(
-                NDS, PlayerPosAddr, baseIsAltFormAddr, baseChosenHunterAddr,
+                *NDS, PlayerPosAddr, baseIsAltFormAddr, baseChosenHunterAddr,
                 baseWeaponChangeAddr, baseWeaponAddr, baseJumpFlagAddr,
                 baseAimXAddr, baseAimYAddr, playerAddressIncrement, mainWindow,
                 playerPosition, isAltFormAddr, chosenHunterAddr, weaponChangeAddr,
