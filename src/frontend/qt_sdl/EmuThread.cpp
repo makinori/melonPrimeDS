@@ -928,22 +928,6 @@ void EmuThread::run()
 
         auto isFocused = mainWindow->panel->getFocused();
 
-        /*
-        if (isFocused) {
-            auto windowCenterX = mainWindow->pos().x() + mainWindow->size().width() / 2;
-            auto windowCenterY = mainWindow->pos().y() + mainWindow->size().height() / 2;
-            // if (!focusedLastFrame) {
-            //     // fetch will flush but discard values
-            //     mouseRel.first = 0;
-            //     mouseRel.second = 0;
-            // }
-            if (focusedLastFrame) {
-                mouseRel = QCursor::pos() - QPoint(windowCenterX, windowCenterY);
-            }
-            QCursor::setPos(windowCenterX, windowCenterY);
-        }
-        */
-
         // Handle the case when the window is focused
         if (isFocused) {
             // Get the center coordinates of the window
@@ -1015,7 +999,7 @@ void EmuThread::run()
         // you can still enable VirtualStylus in Game
         if (!isInGame && !isVirtualStylusEnabled && ingameSoVirtualStylusAutolyDisabled) {
             isVirtualStylusEnabled = true;
-            mainWindow->osdAddMessage(0, "Virtual Stylus enabled");
+            // mainWindow->osdAddMessage(0, "Virtual Stylus enabled");
             ingameSoVirtualStylusAutolyDisabled = false;
         }
 
@@ -1023,7 +1007,7 @@ void EmuThread::run()
 
         if(isInGame && isVirtualStylusEnabled && !ingameSoVirtualStylusAutolyDisabled) {
             isVirtualStylusEnabled = false;
-            mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
+            // mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
             ingameSoVirtualStylusAutolyDisabled = true;
             calcAddr = true;
         }
@@ -1054,7 +1038,7 @@ void EmuThread::run()
             aimXAddr = calculatePlayerAddress(baseAimXAddr, playerPosition, 0x48);
             aimYAddr = calculatePlayerAddress(baseAimYAddr, playerPosition, 0x48);
 
-            mainWindow->osdAddMessage(0, "Completed address calculation.");
+            // mainWindow->osdAddMessage(0, "Completed address calculation.");
 
         }
 
@@ -1073,8 +1057,7 @@ void EmuThread::run()
                 NDS->ReleaseScreen();
             }
 
-            // mouse
-
+            // mouse (VirtualStylus)
 
             mouseX = mouseRel.x();
 
@@ -1096,7 +1079,11 @@ void EmuThread::run()
             if (virtualStylusX > 255) virtualStylusX = 255;
             if (virtualStylusY < 0) virtualStylusY = 0;
             if (virtualStylusY > 191) virtualStylusY = 191;
+
         } else if (isFocused) {
+            // inGame
+
+
             drawVCur = false;
 
             // morph ball
@@ -1160,9 +1147,9 @@ void EmuThread::run()
             // right arrow (in scans and messages)
             if (Input::HotkeyPressed(HK_MetroidUIRight)) {
                 NDS->ReleaseScreen();
-                //frameAdvance(2);
+                frameAdvance(2);
                 NDS->TouchScreen(185, 141); // optimization ?
-                //frameAdvance(2);
+                frameAdvance(2);
             }
 
             // Define a lambda function to switch weapons
@@ -1178,7 +1165,7 @@ void EmuThread::run()
                 // Read the current jump flag value
                 uint8_t currentFlags = NDS->ARM9Read8(jumpFlagAddr);
                 uint8_t jumpFlag = currentFlags & 0x0F;  // Get the lower 4 bits
-                //mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(jumpFlagAddr) & 0x0F])).c_str()); // TODO Delete this later
+                //mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(jumpFlagAddr) & 0x0F])).c_str());
                 bool needToRestore = false;
 
                 // Check if in alternate form (transformed state)
@@ -1189,8 +1176,8 @@ void EmuThread::run()
                     uint8_t newFlags = (currentFlags & 0xF0) | 0x01;  // Set lower 4 bits to 1
                     NDS->ARM9Write8(jumpFlagAddr, newFlags);
                     needToRestore = true;
-                    //mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(jumpFlagAddr) & 0x0F])).c_str()); // TODO Delete this later
-                    //mainWindow->osdAddMessage(0, "Done setting jumpFlag."); // TODO Delete this later
+                    //mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(jumpFlagAddr) & 0x0F])).c_str());
+                    //mainWindow->osdAddMessage(0, "Done setting jumpFlag.");
                 }
 
                 // Release the screen (for weapon change)
@@ -1224,8 +1211,8 @@ void EmuThread::run()
                 if (needToRestore) {
                     uint8_t restoredFlags = (currentFlags & 0xF0) | jumpFlag;
                     NDS->ARM9Write8(jumpFlagAddr, restoredFlags);
-                    //mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(jumpFlagAddr) & 0x0F])).c_str()); // TODO Delete this later
-                    //mainWindow->osdAddMessage(0, "Restored jumpFlag."); // TODO Delete this later
+                    //mainWindow->osdAddMessage(0, ("JumpFlag:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(jumpFlagAddr) & 0x0F])).c_str());
+                    //mainWindow->osdAddMessage(0, "Restored jumpFlag.");
 
                 }
 
