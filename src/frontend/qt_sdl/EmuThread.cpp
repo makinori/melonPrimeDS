@@ -463,7 +463,7 @@ void detectRomAndSetAddresses() {
         baseChosenHunterAddr = 0x020C4B88; // BattleConfig:ChosenHunter
         inGameAddr = 0x020E81B4; // inGame:1
         inVisorOrMapAddr = PlayerPosAddr - 0xabb; // 推定アドレス
-        PlayerPosAddr = 0x020D33A8;
+        PlayerPosAddr = 0x020D33A9; // it's weird but "3A9" is correct.
         baseIsAltFormAddr = 0x020DC6D8 - 0x87F4; // 1p(host)
         baseWeaponChangeAddr = 0x020DCA9B - 0x87F4; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x87F4; // 1p(host)
@@ -1061,7 +1061,7 @@ void EmuThread::run()
         // VirtualStylus is Enabled when not in game
         isVirtualStylusEnabled = !isInGame;
 
-        // Read the player position
+
         uint8_t playerPosition;
 
         const int32_t playerAddressIncrement = 0xF30;
@@ -1076,6 +1076,8 @@ void EmuThread::run()
         if (calcAddr) {
             // Read the player position
             playerPosition = NDS->ARM9Read8(PlayerPosAddr);
+
+            // get addresses
             isAltFormAddr = calculatePlayerAddress(baseIsAltFormAddr, playerPosition, playerAddressIncrement);
             chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
             weaponChangeAddr = calculatePlayerAddress(baseWeaponChangeAddr, playerPosition, playerAddressIncrement);
