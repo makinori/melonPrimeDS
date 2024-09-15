@@ -468,8 +468,8 @@ void detectRomAndSetAddresses() {
         baseWeaponChangeAddr = 0x020DCA9B - 0x87F4; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x87F4; // 1p(host)
         baseJumpFlagAddr = baseWeaponAddr - 0xA;
-        baseAimXAddr = 0x020D7C0E;
-        baseAimYAddr = 0x020D7C16;
+        baseAimXAddr = 0x020D7C0E; // 20D7C36 for p2???
+        baseAimYAddr = 0x020D7C16; //020D7C3E for p2
         isMapOrUserActionPausedAddr = 0x020F4CF8; // 0x00000001: true, 0x00000000 false. Read8 is enough though.
         mainWindow->osdAddMessage(0, "Rom detected: KR1.0");
 
@@ -1070,6 +1070,8 @@ void EmuThread::run()
         uint32_t weaponAddr;
         uint32_t jumpFlagAddr;
 
+        int32_t aimAddrIncrement = 0x48;
+
         if (calcAddr) {
             // Read the player position
             playerPosition = NDS->ARM9Read8(PlayerPosAddr);
@@ -1080,8 +1082,13 @@ void EmuThread::run()
             jumpFlagAddr = calculatePlayerAddress(baseJumpFlagAddr, playerPosition, playerAddressIncrement);
 
             // aim addresses for version and player number
-            aimXAddr = calculatePlayerAddress(baseAimXAddr, playerPosition, 0x48);
-            aimYAddr = calculatePlayerAddress(baseAimYAddr, playerPosition, 0x48);
+
+            if (globalChecksum == RomVersions::KOREA1_0) {
+                aimAddrIncrement = 0x28;
+            }
+
+            aimXAddr = calculatePlayerAddress(baseAimXAddr, playerPosition, aimAddrIncrement);
+            aimYAddr = calculatePlayerAddress(baseAimYAddr, playerPosition, aimAddrIncrement);
 
             // mainWindow->osdAddMessage(0, "Completed address calculation.");
 
@@ -1182,43 +1189,35 @@ void EmuThread::run()
 					frameAdvance(2);
 				}
 
-				// ok (in scans and messages)
-				if (Input::HotkeyPressed(HK_MetroidUIOk)) {
-					NDS->ReleaseScreen();
-					frameAdvance(2);
-					NDS->TouchScreen(128, 142);
-					frameAdvance(2);
-				}
+                // Define the button actions using a lambda
+                auto executeButtonAction = [](int x, int y) {
+                    NDS->ReleaseScreen();
+                    frameAdvance(2);
+                    NDS->TouchScreen(x, y);
+                    frameAdvance(2);
+                    };
 
-				// left arrow (in scans and messages)
-				if (Input::HotkeyPressed(HK_MetroidUILeft)) {
-					NDS->ReleaseScreen();
-					frameAdvance(2);
-					NDS->TouchScreen(71, 141);
-					frameAdvance(2);
-				}
+                // Define the hotkey-action pairs
+                const std::pair<int, std::function<void()>> hotkeyActions[] = {
+                    // ok (in scans and messages)
+                    {HK_MetroidUIOk, [&]() { executeButtonAction(128, 142); }},
+                    // left arrow (in scans and messages)
+                    {HK_MetroidUILeft, [&]() { executeButtonAction(71, 141); }},
+                    // right arrow (in scans and messages)
+                    {HK_MetroidUIRight, [&]() { executeButtonAction(185, 141); }},
+                    {HK_MetroidUIYes, [&]() { executeButtonAction(96, 142); }},
+                    {HK_MetroidUINo, [&]() { executeButtonAction(160, 142); }},
+                    // Omega Canon or Last used weapon
+                    {HK_MetroidWeaponSpecial, [&]() { executeButtonAction(173, 32); }}
+                };
 
-				// right arrow (in scans and messages)
-				if (Input::HotkeyPressed(HK_MetroidUIRight)) {
-					NDS->ReleaseScreen();
-					frameAdvance(2);
-					NDS->TouchScreen(185, 141); // optimization ?
-					frameAdvance(2);
-				}
-
-				if (Input::HotkeyPressed(HK_MetroidUIYes)) {
-					NDS->ReleaseScreen();
-					frameAdvance(2);
-					NDS->TouchScreen(96, 142);
-					frameAdvance(2);
-				}
-
-				if (Input::HotkeyPressed(HK_MetroidUINo)) {
-					NDS->ReleaseScreen();
-					frameAdvance(2);
-					NDS->TouchScreen(160, 142);
-					frameAdvance(2);
-				}
+                // Check and execute hotkey actions
+                for (const auto& [hotkey, action] : hotkeyActions) {
+                    if (Input::HotkeyPressed(hotkey)) {
+                        action();
+                        break;  // Exit after executing one action
+                    }
+                }
 
 				// Define a lambda function to switch weapons
 				auto SwitchWeapon = [&](int weaponIndex) {
@@ -1328,13 +1327,6 @@ void EmuThread::run()
 					}
 				}
 
-				// Omega Canon or Last used weapon
-				if (Input::HotkeyPressed(HK_MetroidWeaponSpecial)) {
-					NDS->ReleaseScreen();
-					frameAdvance(2);
-					NDS->TouchScreen(173, 32);
-					frameAdvance(2);
-				}
 
 				// move
 
