@@ -1019,18 +1019,6 @@ void EmuThread::run()
             ingameSoVirtualStylusAutolyDisabled = false;
         }
 
-        bool calcAddr = false;
-
-        if(isInGame && isVirtualStylusEnabled && !ingameSoVirtualStylusAutolyDisabled) {
-            isVirtualStylusEnabled = false;
-            mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
-            ingameSoVirtualStylusAutolyDisabled = true;
-            calcAddr = true;
-        }
-
-        // VirtualStylus is Enabled when not in game
-        isVirtualStylusEnabled = !isInGame;
-
         // Read the player position
         uint8_t playerPosition;
 
@@ -1041,22 +1029,38 @@ void EmuThread::run()
         uint32_t weaponAddr;
         uint32_t jumpFlagAddr;
 
-        if (calcAddr) {
-            // Read the player position
-            playerPosition = NDS->ARM9Read8(PlayerPosAddr);
-            isAltFormAddr = calculatePlayerAddress(baseIsAltFormAddr, playerPosition, playerAddressIncrement);
-            chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
-            weaponChangeAddr = calculatePlayerAddress(baseWeaponChangeAddr, playerPosition, playerAddressIncrement);
-            weaponAddr = calculatePlayerAddress(baseWeaponAddr, playerPosition, playerAddressIncrement);
-            jumpFlagAddr = calculatePlayerAddress(baseJumpFlagAddr, playerPosition, playerAddressIncrement);
+		auto calculateAddresses = [&]() {
+			// Read the player position
+			playerPosition = NDS->ARM9Read8(PlayerPosAddr);
 
-            // aim addresses for version and player number
-            aimXAddr = calculatePlayerAddress(baseAimXAddr, playerPosition, 0x48);
-            aimYAddr = calculatePlayerAddress(baseAimYAddr, playerPosition, 0x48);
 
-            mainWindow->osdAddMessage(0, "Completed address calculation.");
+			// Calculate addresses
+			isAltFormAddr = calculatePlayerAddress(baseIsAltFormAddr, playerPosition, playerAddressIncrement);
+			chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
+			weaponChangeAddr = calculatePlayerAddress(baseWeaponChangeAddr, playerPosition, playerAddressIncrement);
+			weaponAddr = calculatePlayerAddress(baseWeaponAddr, playerPosition, playerAddressIncrement);
+			jumpFlagAddr = calculatePlayerAddress(baseJumpFlagAddr, playerPosition, playerAddressIncrement);
 
+			// aim addresses for version and player number
+			aimXAddr = calculatePlayerAddress(baseAimXAddr, playerPosition, 0x48);
+			aimYAddr = calculatePlayerAddress(baseAimYAddr, playerPosition, 0x48);
+
+			mainWindow->osdAddMessage(0, "Completed address calculation.");
+
+			};
+
+
+        if(isInGame && isVirtualStylusEnabled && !ingameSoVirtualStylusAutolyDisabled) {
+            isVirtualStylusEnabled = false;
+            mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
+            ingameSoVirtualStylusAutolyDisabled = true;
+
+            calculateAddresses();
         }
+
+        // VirtualStylus is Enabled when not in game
+        isVirtualStylusEnabled = !isInGame;
+
 
         if (isFocused && isVirtualStylusEnabled) {
 
