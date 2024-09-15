@@ -343,7 +343,6 @@ melonDS::u32 aimXAddr;
 melonDS::u32 aimYAddr;
 
 bool isAltForm;
-bool isRomDetected = false;
 
 
 void detectRomAndSetAddresses() {
