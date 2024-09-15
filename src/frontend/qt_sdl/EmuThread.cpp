@@ -1189,35 +1189,43 @@ void EmuThread::run()
 					frameAdvance(2);
 				}
 
-                // Define the button actions using a lambda
-                auto executeButtonAction = [this, frameAdvance](int x, int y) {
-                    NDS->ReleaseScreen();
-                    frameAdvance(2);
-                    NDS->TouchScreen(x, y);
-                    frameAdvance(2);
-                    };
+				// ok (in scans and messages)
+				if (Input::HotkeyPressed(HK_MetroidUIOk)) {
+					NDS->ReleaseScreen();
+					frameAdvance(2);
+					NDS->TouchScreen(128, 142);
+					frameAdvance(2);
+				}
 
-                // Define the hotkey-action pairs
-                const std::pair<int, std::function<void()>> hotkeyActions[] = {
-                    // Omega Canon or Last used weapon
-                    {HK_MetroidWeaponSpecial, [this, &executeButtonAction]() { executeButtonAction(173, 32); }},
-                    // ok (in scans and messages)
-                    {HK_MetroidUIOk, [this, &executeButtonAction]() { executeButtonAction(128, 142); }},
-                    // left arrow (in scans and messages)
-                    {HK_MetroidUILeft, [this, &executeButtonAction]() { executeButtonAction(71, 141); }},
-                    // right arrow (in scans and messages)
-                    {HK_MetroidUIRight, [this, &executeButtonAction]() { executeButtonAction(185, 141); }},
-                    {HK_MetroidUIYes, [this, &executeButtonAction]() { executeButtonAction(96, 142); }},
-                    {HK_MetroidUINo, [this, &executeButtonAction]() { executeButtonAction(160, 142); }}
-                };
+				// left arrow (in scans and messages)
+				if (Input::HotkeyPressed(HK_MetroidUILeft)) {
+					NDS->ReleaseScreen();
+					frameAdvance(2);
+					NDS->TouchScreen(71, 141);
+					frameAdvance(2);
+				}
 
-                // Check and execute hotkey actions
-                for (const auto& [hotkey, action] : hotkeyActions) {
-                    if (Input::HotkeyPressed(hotkey)) {
-                        action();
-                        break;  // Exit after executing one action
-                    }
-                }
+				// right arrow (in scans and messages)
+				if (Input::HotkeyPressed(HK_MetroidUIRight)) {
+					NDS->ReleaseScreen();
+					frameAdvance(2);
+					NDS->TouchScreen(185, 141); // optimization ?
+					frameAdvance(2);
+				}
+
+				if (Input::HotkeyPressed(HK_MetroidUIYes)) {
+					NDS->ReleaseScreen();
+					frameAdvance(2);
+					NDS->TouchScreen(96, 142);
+					frameAdvance(2);
+				}
+
+				if (Input::HotkeyPressed(HK_MetroidUINo)) {
+					NDS->ReleaseScreen();
+					frameAdvance(2);
+					NDS->TouchScreen(160, 142);
+					frameAdvance(2);
+				}
 
 				// Define a lambda function to switch weapons
 				auto SwitchWeapon = [&](int weaponIndex) {
@@ -1327,6 +1335,13 @@ void EmuThread::run()
 					}
 				}
 
+				// Omega Canon or Last used weapon
+				if (Input::HotkeyPressed(HK_MetroidWeaponSpecial)) {
+					NDS->ReleaseScreen();
+					frameAdvance(2);
+					NDS->TouchScreen(173, 32);
+					frameAdvance(2);
+				}
 
 				// move
 
