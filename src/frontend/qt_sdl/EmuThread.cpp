@@ -564,6 +564,32 @@ void EmuThread::run()
         if (Input::HotkeyPressed(HK_SwapScreens)) emit swapScreensToggle();
         if (Input::HotkeyPressed(HK_SwapScreenEmphasis)) emit screenEmphasisToggle();
 
+        // Lambda to update aim sensitivity and display a message
+        auto updateAimSensitivity = [](int change) {
+            // Check if the change would result in a value greater than or equal to 1
+            if (Config::MetroidAimSensitivity + change >= 1) {
+                Config::MetroidAimSensitivity += change;
+                // Save the changes to the configuration file (to persist settings for future sessions)
+                Config::Save();
+                // Create and display the OSD message
+                mainWindow->osdAddMessage(0, ("AimSensi Updated: " + std::to_string(Config::MetroidAimSensitivity)).c_str());
+            }
+            else {
+                // Display a message when trying to decrease below 1
+                mainWindow->osdAddMessage(0, "AimSensi cannot be decreased below 1");
+            }
+            };
+
+        // Sensitivity UP
+        if (Input::HotkeyPressed(HK_MetroidIngameSensiUp)) {
+            updateAimSensitivity(1);  // Increase sensitivity by 1
+        }
+
+        // Sensitivity DOWN
+        if (Input::HotkeyPressed(HK_MetroidIngameSensiDown)) {
+            updateAimSensitivity(-1);  // Decrease sensitivity by 1
+        }
+
         if (EmuRunning == emuStatus_Running || EmuRunning == emuStatus_FrameStep)
         {
             EmuStatus = emuStatus_Running;
@@ -1382,31 +1408,7 @@ void EmuThread::run()
 			}
 
 
-			// Lambda to update aim sensitivity and display a message
-			auto updateAimSensitivity = [](int change) {
-				// Check if the change would result in a value greater than or equal to 1
-				if (Config::MetroidAimSensitivity + change >= 1) {
-					Config::MetroidAimSensitivity += change;
-					// Save the changes to the configuration file (to persist settings for future sessions)
-					Config::Save();
-					// Create and display the OSD message
-					mainWindow->osdAddMessage(0, ("AimSensi Updated: " + std::to_string(Config::MetroidAimSensitivity)).c_str());
-				}
-				else {
-					// Display a message when trying to decrease below 1
-					mainWindow->osdAddMessage(0, "AimSensi cannot be decreased below 1");
-				}
-				};
 
-			// Sensitivity UP
-			if (Input::HotkeyReleased(HK_MetroidIngameSensiUp)) {
-				updateAimSensitivity(1);  // Increase sensitivity by 1
-			}
-
-			// Sensitivity DOWN
-			if (Input::HotkeyReleased(HK_MetroidIngameSensiDown)) {
-				updateAimSensitivity(-1);  // Decrease sensitivity by 1
-			}
 
 
 		}// END of if(isFocused)
