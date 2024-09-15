@@ -933,6 +933,7 @@ void EmuThread::run()
 
         // 感度係数を定数として定義
         const float SENSITIVITY_FACTOR = Config::MetroidAimSensitivity * 0.01f;
+        const float SENSITIVITY_FACTOR_VIRTUAL_STYLUS = Config::MetroidVirtualStylusSensitivity * 0.01f;
 
         auto isFocused = mainWindow->panel->getFocused();
 
@@ -1072,7 +1073,7 @@ void EmuThread::run()
 
             if (abs(mouseX) > 0) {
                 virtualStylusX += (
-                    mouseX * SENSITIVITY_FACTOR
+                    mouseX * SENSITIVITY_FACTOR_VIRTUAL_STYLUS
                 );
             }
 
@@ -1080,7 +1081,7 @@ void EmuThread::run()
 
             if (abs(mouseY) > 0) {
                 virtualStylusY += (
-                    mouseY * dsAspectRatio * SENSITIVITY_FACTOR
+                    mouseY * dsAspectRatio * SENSITIVITY_FACTOR_VIRTUAL_STYLUS
                 );
             }
 
