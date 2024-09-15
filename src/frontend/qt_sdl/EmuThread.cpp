@@ -1383,7 +1383,7 @@ void EmuThread::run()
 
             // Sensitivity UP
             if (Input::HotkeyReleased(HK_MetroidIngameSensiUp)) {
-                Config::MetroidAimSensitivity = MetroidAimSensitivity += 1;
+                Config::MetroidAimSensitivity = Config::MetroidAimSensitivity += 1;
 
                 // Save the changes to the configuration file (to persist settings for future sessions)
                 Config::Save();
@@ -1393,7 +1393,7 @@ void EmuThread::run()
 
             // Sensitivity Down
             if (Input::HotkeyReleased(HK_MetroidIngameSensiDown)) {
-                Config::MetroidAimSensitivity = MetroidAimSensitivity -= 1;
+                Config::MetroidAimSensitivity = Config::MetroidAimSensitivity -= 1;
 
                 // Save the changes to the configuration file (to persist settings for future sessions)
                 Config::Save();
