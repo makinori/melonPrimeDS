@@ -1190,7 +1190,7 @@ void EmuThread::run()
 				}
 
                 // Define the button actions using a lambda
-                auto executeButtonAction = [](int x, int y) {
+                auto executeButtonAction = [this](int x, int y) {
                     NDS->ReleaseScreen();
                     frameAdvance(2);
                     NDS->TouchScreen(x, y);
@@ -1200,15 +1200,15 @@ void EmuThread::run()
                 // Define the hotkey-action pairs
                 const std::pair<int, std::function<void()>> hotkeyActions[] = {
                     // Omega Canon or Last used weapon
-                    {HK_MetroidWeaponSpecial, [&]() { executeButtonAction(173, 32); }},
+                    {HK_MetroidWeaponSpecial, [this, &executeButtonAction]() { executeButtonAction(173, 32); }},
                     // ok (in scans and messages)
-                    {HK_MetroidUIOk, [&]() { executeButtonAction(128, 142); }},
+                    {HK_MetroidUIOk, [this, &executeButtonAction]() { executeButtonAction(128, 142); }},
                     // left arrow (in scans and messages)
-                    {HK_MetroidUILeft, [&]() { executeButtonAction(71, 141); }},
+                    {HK_MetroidUILeft, [this, &executeButtonAction]() { executeButtonAction(71, 141); }},
                     // right arrow (in scans and messages)
-                    {HK_MetroidUIRight, [&]() { executeButtonAction(185, 141); }},
-                    {HK_MetroidUIYes, [&]() { executeButtonAction(96, 142); }},
-                    {HK_MetroidUINo, [&]() { executeButtonAction(160, 142); }}
+                    {HK_MetroidUIRight, [this, &executeButtonAction]() { executeButtonAction(185, 141); }},
+                    {HK_MetroidUIYes, [this, &executeButtonAction]() { executeButtonAction(96, 142); }},
+                    {HK_MetroidUINo, [this, &executeButtonAction]() { executeButtonAction(160, 142); }}
                 };
 
                 // Check and execute hotkey actions
