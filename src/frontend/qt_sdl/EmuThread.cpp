@@ -1190,7 +1190,7 @@ void EmuThread::run()
 				}
 
                 // Define the button actions using a lambda
-                auto executeButtonAction = [this](int x, int y) {
+                auto executeButtonAction = [this, frameAdvance](int x, int y) {
                     NDS->ReleaseScreen();
                     frameAdvance(2);
                     NDS->TouchScreen(x, y);
