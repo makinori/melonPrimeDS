@@ -243,8 +243,8 @@ extern int MetroidAimSensitivity;
 extern int MetroidVirtualStylusSensitivity;
 //extern int MetroidVsPlayerInput;
 
-const int MetroidAimSensitivityDefault = 70;
-const int MetroidVirtualStylusSensitivityDefault = 70;
+const int MetroidAimSensitivityDefault = 30;
+const int MetroidVirtualStylusSensitivityDefault = 20;
 //const int MetroidVsPlayerInputDefault = 1;
 
 void Load();
