@@ -1086,10 +1086,11 @@ void EmuThread::run()
 
             // aim addresses for version and player number
 
-
+            /*
             if (globalChecksum == RomVersions::KOREA1_0) {
                 aimAddrIncrement = 0x46;
             }
+            */
 
             aimXAddr = calculatePlayerAddress(baseAimXAddr, playerPosition, aimAddrIncrement);
             aimYAddr = calculatePlayerAddress(baseAimYAddr, playerPosition, aimAddrIncrement);
