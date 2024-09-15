@@ -566,13 +566,22 @@ void EmuThread::run()
 
         // Lambda to update aim sensitivity and display a message
         auto updateAimSensitivity = [](int change) {
-            // Check if the change would result in a value greater than or equal to 1
-            if (Config::MetroidAimSensitivity + change >= 1) {
-                Config::MetroidAimSensitivity += change;
-                // Save the changes to the configuration file (to persist settings for future sessions)
-                Config::Save();
+            // Store the current sensitivity in a local variable
+            int currentSensitivity = Config::MetroidAimSensitivity;
+
+            // Calculate the new sensitivity
+            int newSensitivity = currentSensitivity + change;
+
+            // Check if the new sensitivity is at least 1
+            if (newSensitivity >= 1) {
+                // Update the config only if the value has changed
+                if (newSensitivity != currentSensitivity) {
+                    Config::MetroidAimSensitivity = newSensitivity;
+                    // Save the changes to the configuration file (to persist settings for future sessions)
+                    Config::Save();
+                }
                 // Create and display the OSD message
-                mainWindow->osdAddMessage(0, ("AimSensi Updated: " + std::to_string(Config::MetroidAimSensitivity)).c_str());
+                mainWindow->osdAddMessage(0, ("AimSensi Updated: " + std::to_string(newSensitivity)).c_str());
             }
             else {
                 // Display a message when trying to decrease below 1
@@ -581,14 +590,15 @@ void EmuThread::run()
             };
 
         // Sensitivity UP
-        if (Input::HotkeyPressed(HK_MetroidIngameSensiUp)) {
+        if (Input::HotkeyReleased(HK_MetroidIngameSensiUp)) {
             updateAimSensitivity(1);  // Increase sensitivity by 1
         }
 
         // Sensitivity DOWN
-        if (Input::HotkeyPressed(HK_MetroidIngameSensiDown)) {
+        if (Input::HotkeyReleased(HK_MetroidIngameSensiDown)) {
             updateAimSensitivity(-1);  // Decrease sensitivity by 1
         }
+
 
         if (EmuRunning == emuStatus_Running || EmuRunning == emuStatus_FrameStep)
         {
