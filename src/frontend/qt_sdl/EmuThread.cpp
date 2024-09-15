@@ -341,6 +341,7 @@ melonDS::u32 baseAimXAddr;
 melonDS::u32 baseAimYAddr;
 melonDS::u32 aimXAddr;
 melonDS::u32 aimYAddr;
+melonDS::u32 isMapOrUserActionPausedAddr; // for issue in AdventureMode, Aim Stopping when SwitchingWeapon. 
 
 bool isAltForm;
 
@@ -360,6 +361,7 @@ void detectRomAndSetAddresses() {
         baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020DEDA6;
         baseAimYAddr = 0x020DEDAE;
+        isMapOrUserActionPausedAddr = 0x020FBF18; // 0x00000001: true, 0x00000000 false. Read8 is enough though.
         isRomDetected = true;
         mainWindow->osdAddMessage(0, "Rom detected: US1.1");
 
@@ -377,6 +379,7 @@ void detectRomAndSetAddresses() {
         baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020de526;
         baseAimYAddr = 0x020de52E;
+        isMapOrUserActionPausedAddr = 0x020FB458; // 0x00000001: true, 0x00000000 false. Read8 is enough though.
         isRomDetected = true;
         mainWindow->osdAddMessage(0, "Rom detected: US1.0");
 
@@ -394,6 +397,7 @@ void detectRomAndSetAddresses() {
         baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020E03E6;
         baseAimYAddr = 0x020E03EE;
+        isMapOrUserActionPausedAddr = 0x020FD598; // 0x00000001: true, 0x00000000 false. Read8 is enough though.
         isRomDetected = true;
         mainWindow->osdAddMessage(0, "Rom detected: JP1.0");
 
@@ -411,6 +415,7 @@ void detectRomAndSetAddresses() {
         baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020e03a6;
         baseAimYAddr = 0x020e03ae;
+        isMapOrUserActionPausedAddr = 0x020FD558; // 0x00000001: true, 0x00000000 false. Read8 is enough though.
         isRomDetected = true;
         mainWindow->osdAddMessage(0, "Rom detected: JP1.1");
 
@@ -428,6 +433,7 @@ void detectRomAndSetAddresses() {
         baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020dedc6;
         baseAimYAddr = 0x020dedcE;
+        isMapOrUserActionPausedAddr = 0x020FBF38; // 0x00000001: true, 0x00000000 false. Read8 is enough though.
         isRomDetected = true;
         mainWindow->osdAddMessage(0, "Rom detected: EU1.0");
 
@@ -445,6 +451,7 @@ void detectRomAndSetAddresses() {
         baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020dee46;
         baseAimYAddr = 0x020dee4e;
+        isMapOrUserActionPausedAddr = 0x020FBFB8; // 0x00000001: true, 0x00000000 false. Read8 is enough though.
         mainWindow->osdAddMessage(0, "Rom detected: EU1.1");
 
         isRomDetected = true;
@@ -463,6 +470,7 @@ void detectRomAndSetAddresses() {
         baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020D7C0E;
         baseAimYAddr = 0x020D7C16;
+        isMapOrUserActionPausedAddr = 0x020F4CF8; // 0x00000001: true, 0x00000000 false. Read8 is enough though.
         mainWindow->osdAddMessage(0, "Rom detected: KR1.0");
 
         isRomDetected = true;
@@ -1043,6 +1051,7 @@ void EmuThread::run()
         }
 
         if (isFocused && isVirtualStylusEnabled) {
+            // VirtualStylus
 
 
             // this exists to just delay the pressing of the screen when you
@@ -1085,6 +1094,9 @@ void EmuThread::run()
 
 
             drawVCur = false;
+
+            
+                mainWindow->osdAddMessage(0, ("isMapOrUserActionPaused:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(isMapOrUserActionPausedAddr) & 0x0F])).c_str());
 
             // morph ball
             if (Input::HotkeyPressed(HK_MetroidMorphBall)) {
