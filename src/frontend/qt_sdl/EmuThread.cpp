@@ -468,10 +468,8 @@ void detectRomAndSetAddresses() {
         baseWeaponChangeAddr = 0x020DCA9B - 0x87F4; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x87F4; // 1p(host)
         baseJumpFlagAddr = baseWeaponAddr - 0xA;
-//        baseAimXAddr = 0x020D7C0E;
-//        baseAimYAddr = 0x020D7C16;
-        baseAimXAddr = 0x020D7C0C;
-        baseAimYAddr = 0x020D7C14;
+        baseAimXAddr = 0x020D7C0E;
+        baseAimYAddr = 0x020D7C16;
 
         isMapOrUserActionPausedAddr = 0x020F4CF8; // 0x00000001: true, 0x00000000 false. Read8 is enough though.
         mainWindow->osdAddMessage(0, "Rom detected: KR1.0");
@@ -1067,7 +1065,7 @@ void EmuThread::run()
         uint8_t playerPosition;
 
         const int32_t playerAddressIncrement = 0xF30;
-        const int32_t aimAddrIncrement = 0x48;
+        int32_t aimAddrIncrement = 0x48;
         uint32_t isAltFormAddr;
         uint32_t chosenHunterAddr;
         uint32_t weaponChangeAddr;
@@ -1086,11 +1084,10 @@ void EmuThread::run()
 
             // aim addresses for version and player number
 
-            /*
+
             if (globalChecksum == RomVersions::KOREA1_0) {
                 aimAddrIncrement = 0x46;
             }
-            */
 
             aimXAddr = calculatePlayerAddress(baseAimXAddr, playerPosition, aimAddrIncrement);
             aimYAddr = calculatePlayerAddress(baseAimYAddr, playerPosition, aimAddrIncrement);
