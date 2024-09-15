@@ -1174,6 +1174,12 @@ void EmuThread::run()
                     return; // Early return if the weapon is already equipped
                 }
 
+                // Check isMapOrUserActionPaused, for the issue "If you switch weapons while the map is open, the aiming mechanism may become stuck."
+                bool isMapOrUserActionPaused = NDS->ARM9Read8(isMapOrUserActionPausedAddr) == 0x1;
+                if (isMapOrUserActionPaused) {
+                    return;
+                }
+
                 // Read the current jump flag value
                 uint8_t currentFlags = NDS->ARM9Read8(jumpFlagAddr);
                 uint8_t jumpFlag = currentFlags & 0x0F;  // Get the lower 4 bits
