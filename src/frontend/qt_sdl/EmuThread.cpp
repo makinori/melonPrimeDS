@@ -539,13 +539,6 @@ void EmuThread::run()
     char melontitle[100];
 
 
-    if (isNewRom) {
-        isRomDetected = false;
-    }
-
-    if (!isRomDetected) {
-        detectRomAndSetAddresses();
-    }
 
 
     auto frameAdvanceOnce {
@@ -851,6 +844,15 @@ void EmuThread::run()
         }
     }
     };
+
+    if (isNewRom) {
+        isRomDetected = false;
+    }
+
+    if (!isRomDetected) {
+        detectRomAndSetAddresses();
+    }
+
 
     auto frameAdvance {
     [&](int n)
