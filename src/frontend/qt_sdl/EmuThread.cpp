@@ -1381,27 +1381,26 @@ void EmuThread::run()
 
 			}
 
-            // Sensitivity UP
-            if (Input::HotkeyReleased(HK_MetroidIngameSensiUp)) {
-                Config::MetroidAimSensitivity = Config::MetroidAimSensitivity += 1;
+		    // Lambda to update aim sensitivity and display a message
+		    auto updateAimSensitivity = [](int change) {
+		        Config::MetroidAimSensitivity += change;
 
-                // Save the changes to the configuration file (to persist settings for future sessions)
-                Config::Save();
+		        // Save the changes to the configuration file (to persist settings for future sessions)
+		        Config::Save();
 
-                mainWindow->osdAddMessage(0, ("AimSensi Updated:" + Config::MetroidAimSensitivity).c_str());
-            }
+		        // Create and display the OSD message
+		        mainWindow->osdAddMessage(0, ("AimSensi Updated: " + std::to_string(Config::MetroidAimSensitivity)).c_str());
+			};
 
-            // Sensitivity Down
-            if (Input::HotkeyReleased(HK_MetroidIngameSensiDown)) {
-                Config::MetroidAimSensitivity = Config::MetroidAimSensitivity -= 1;
+		    // Sensitivity UP
+		    if (Input::HotkeyReleased(HK_MetroidIngameSensiUp)) {
+		        updateAimSensitivity(1);  // Increase sensitivity by 1
+		    }
 
-                // Save the changes to the configuration file (to persist settings for future sessions)
-                Config::Save();
-
-                mainWindow->osdAddMessage(0, ("AimSensi Updated:" + Config::MetroidAimSensitivity).c_str());
-            }
-
-
+		    // Sensitivity DOWN
+		    if (Input::HotkeyReleased(HK_MetroidIngameSensiDown)) {
+		        updateAimSensitivity(-1);  // Decrease sensitivity by 1
+		    }
 
 		}// END of if(isFocused)
 
