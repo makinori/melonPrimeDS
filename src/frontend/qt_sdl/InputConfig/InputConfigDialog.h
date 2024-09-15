@@ -107,6 +107,8 @@ static constexpr std::initializer_list<const char*> hk_addons_labels =
 
     // "[Metroid] (Tab) Virtual Stylus [Toggle]",
     "[Metroid] (Tab) Menu/Map",
+    "[Metroid] (PgUp)   AimSensitivity Up",
+    "[Metroid] (PgDown) AimSensitivity Down",
 };
 
 static_assert(hk_addons.size() == hk_addons_labels.size());
