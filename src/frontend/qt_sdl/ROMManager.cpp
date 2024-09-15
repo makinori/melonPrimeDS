@@ -61,6 +61,7 @@ using namespace melonDS::Platform;
 // グローバル変数の定義（ここで初期化する）
 unsigned int globalChecksum = 0;
 bool isNewRom = false;
+bool isRomDetected = false;
 bool isVirtualStylusEnabled = true;
 bool ingameSoVirtualStylusAutolyDisabled = false;
 
@@ -1342,6 +1343,8 @@ bool LoadROM(EmuThread* emuthread, QStringList filepath, bool reset)
 
     // newRomFlag ON
     isNewRom = true;
+    isRomDetected = false;
+
     // virtualStylusFlag ON
     isVirtualStylusEnabled = true;
     ingameSoVirtualStylusAutolyDisabled = false;

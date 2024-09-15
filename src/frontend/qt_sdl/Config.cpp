@@ -237,16 +237,18 @@ ConfigEntry ConfigFile[] =
     {"HKKey_MetroidJump",              0, &HKKeyMapping[HK_MetroidJump],              Qt::Key_Space, true},
 
     {"HKKey_MetroidMorphBall",         0, &HKKeyMapping[HK_MetroidMorphBall],         Qt::Key_Control, true},
-    {"HKKey_MetroidMorphBallBoost",    0, &HKKeyMapping[HK_MetroidMorphBallBoost],    Qt::Key_Shift, true},
+    {"HKKey_MetroidMorphBallBoost",    0, &HKKeyMapping[HK_MetroidMorphBallBoost],    (int)Qt::RightButton | (int)0xF0000000, true},
 
     {"HKKey_MetroidScanVisor",         0, &HKKeyMapping[HK_MetroidScanVisor],         Qt::Key_C, true},
 
-    {"HKKey_MetroidUILeft",            0, &HKKeyMapping[HK_MetroidUILeft],            Qt::Key_Q, true},
-    {"HKKey_MetroidUIRight",           0, &HKKeyMapping[HK_MetroidUIRight],           Qt::Key_E, true},
+    {"HKKey_MetroidUILeft",            0, &HKKeyMapping[HK_MetroidUILeft],            Qt::Key_Z, true},
+    {"HKKey_MetroidUIRight",           0, &HKKeyMapping[HK_MetroidUIRight],           Qt::Key_X, true},
     {"HKKey_MetroidUIOk",              0, &HKKeyMapping[HK_MetroidUIOk],              Qt::Key_F, true},
-    
+    {"HKKey_MetroidUIYes",             0, &HKKeyMapping[HK_MetroidUIYes],             Qt::Key_G, true},
+    {"HKKey_MetroidUINo",              0, &HKKeyMapping[HK_MetroidUINo],              Qt::Key_H, true},
+
     {"HKKey_MetroidShootScan",         0, &HKKeyMapping[HK_MetroidShootScan],         (int)Qt::LeftButton | (int)0xF0000000, true},
-    {"HKKey_MetroidScanShoot",         0, &HKKeyMapping[HK_MetroidScanShoot],         (int)Qt::RightButton | (int)0xF0000000, true},
+    {"HKKey_MetroidScanShoot",         0, &HKKeyMapping[HK_MetroidScanShoot],         Qt::Key_V, true},
 
     {"HKKey_MetroidWeaponBeam",        0, &HKKeyMapping[HK_MetroidWeaponBeam],        (int)Qt::ExtraButton2 | (int)0xF0000000, true},
     {"HKKey_MetroidWeaponMissile",     0, &HKKeyMapping[HK_MetroidWeaponMissile],     (int)Qt::ExtraButton1 | (int)0xF0000000, true},
@@ -258,9 +260,14 @@ ConfigEntry ConfigFile[] =
     {"HKKey_MetroidWeapon5",           0, &HKKeyMapping[HK_MetroidWeapon5],           Qt::Key_5, true},
     {"HKKey_MetroidWeapon6",           0, &HKKeyMapping[HK_MetroidWeapon6],           Qt::Key_6, true},
     
-    {"HKKey_MetroidVirtualStylus",     0, &HKKeyMapping[HK_MetroidVirtualStylus],     Qt::Key_Tab, true},
-    {"HKKey_MetroidMenu",              0, &HKKeyMapping[HK_MetroidMenu],              Qt::Key_V, true},
-    
+    // {"HKKey_MetroidVirtualStylus",     0, &HKKeyMapping[HK_MetroidVirtualStylus],     Qt::Key_Tab, true},
+    {"HKKey_MetroidMenu",              0, &HKKeyMapping[HK_MetroidMenu],              Qt::Key_Tab, true},
+    {"HKKey_MetroidIngameSensiUp",     0, &HKKeyMapping[HK_MetroidIngameSensiUp],     Qt::Key_PageUp, true},
+    {"HKKey_MetroidIngameSensiDown",   0, &HKKeyMapping[HK_MetroidIngameSensiDown],   Qt::Key_PageDown, true},
+
+
+
+
     // not metroid
 
     {"HKJoy_FrameStep",           0, &HKJoyMapping[HK_FrameStep],           -1, true},

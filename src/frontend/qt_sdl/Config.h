@@ -56,6 +56,8 @@ Hotkey
     HK_MetroidUILeft,
     HK_MetroidUIRight,
     HK_MetroidUIOk,
+    HK_MetroidUIYes,
+    HK_MetroidUINo,
 
     HK_MetroidShootScan,
     HK_MetroidScanShoot,
@@ -70,8 +72,10 @@ Hotkey
     HK_MetroidWeapon5,
     HK_MetroidWeapon6,
 
-    HK_MetroidVirtualStylus,
+    //HK_MetroidVirtualStylus,
     HK_MetroidMenu,
+    HK_MetroidIngameSensiUp,
+    HK_MetroidIngameSensiDown,
     
     HK_MAX
 };
