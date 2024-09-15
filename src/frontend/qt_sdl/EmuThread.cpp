@@ -359,8 +359,8 @@ void detectRomAndSetAddresses() {
         baseWeaponChangeAddr = 0x020DB45B; // 1p(host)
         baseWeaponAddr = 0x020DB463; // 1p(host)
         baseJumpFlagAddr = baseWeaponAddr - 0xA;
-        baseAimXAddr = 0x020DEDA4;
-        baseAimYAddr = 0x020DEDAc;
+        baseAimXAddr = 0x020DEDA6;
+        baseAimYAddr = 0x020DEDAE;
         isMapOrUserActionPausedAddr = 0x020FBF18; // 0x00000001: true, 0x00000000 false. Read8 is enough though.
         isRomDetected = true;
         mainWindow->osdAddMessage(0, "Rom detected: US1.1");
@@ -377,8 +377,8 @@ void detectRomAndSetAddresses() {
         baseWeaponChangeAddr = 0x020DCA9B - 0x1EC0; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x1EC0; // 1p(host)
         baseJumpFlagAddr = baseWeaponAddr - 0xA;
-        baseAimXAddr = 0x020de524;
-        baseAimYAddr = 0x020de52C;
+        baseAimXAddr = 0x020de526;
+        baseAimYAddr = 0x020de52E;
         isMapOrUserActionPausedAddr = 0x020FB458; // 0x00000001: true, 0x00000000 false. Read8 is enough though.
         isRomDetected = true;
         mainWindow->osdAddMessage(0, "Rom detected: US1.0");
@@ -395,8 +395,8 @@ void detectRomAndSetAddresses() {
         baseWeaponChangeAddr = 0x020DCA9B; // 1p(host)
         baseWeaponAddr = 0x020DCAA3; // 1p(host)
         baseJumpFlagAddr = baseWeaponAddr - 0xA;
-        baseAimXAddr = 0x020E03E4;
-        baseAimYAddr = 0x020E03EC;
+        baseAimXAddr = 0x020E03E6;
+        baseAimYAddr = 0x020E03EE;
         isMapOrUserActionPausedAddr = 0x020FD598; // 0x00000001: true, 0x00000000 false. Read8 is enough though.
         isRomDetected = true;
         mainWindow->osdAddMessage(0, "Rom detected: JP1.0");
@@ -413,8 +413,8 @@ void detectRomAndSetAddresses() {
         baseWeaponChangeAddr = 0x020DCA9B - 0x40; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x40; // 1p(host)
         baseJumpFlagAddr = baseWeaponAddr - 0xA;
-        baseAimXAddr = 0x020e03a4;
-        baseAimYAddr = 0x020e03ac;
+        baseAimXAddr = 0x020e03a6;
+        baseAimYAddr = 0x020e03ae;
         isMapOrUserActionPausedAddr = 0x020FD558; // 0x00000001: true, 0x00000000 false. Read8 is enough though.
         isRomDetected = true;
         mainWindow->osdAddMessage(0, "Rom detected: JP1.1");
@@ -431,8 +431,8 @@ void detectRomAndSetAddresses() {
         baseWeaponChangeAddr = 0x020DCA9B - 0x1620; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x1620; // 1p(host)
         baseJumpFlagAddr = baseWeaponAddr - 0xA;
-        baseAimXAddr = 0x020dedc4;
-        baseAimYAddr = 0x020dedcC;
+        baseAimXAddr = 0x020dedc6;
+        baseAimYAddr = 0x020dedcE;
         isMapOrUserActionPausedAddr = 0x020FBF38; // 0x00000001: true, 0x00000000 false. Read8 is enough though.
         isRomDetected = true;
         mainWindow->osdAddMessage(0, "Rom detected: EU1.0");
@@ -449,8 +449,8 @@ void detectRomAndSetAddresses() {
         baseWeaponChangeAddr = 0x020DCA9B - 0x15A0; // 1p(host)
         baseWeaponAddr = 0x020DCAA3 - 0x15A0; // 1p(host)
         baseJumpFlagAddr = baseWeaponAddr - 0xA;
-        baseAimXAddr = 0x020dee44;
-        baseAimYAddr = 0x020dee4C;
+        baseAimXAddr = 0x020dee46;
+        baseAimYAddr = 0x020dee4e;
         isMapOrUserActionPausedAddr = 0x020FBFB8; // 0x00000001: true, 0x00000000 false. Read8 is enough though.
         mainWindow->osdAddMessage(0, "Rom detected: EU1.1");
 
