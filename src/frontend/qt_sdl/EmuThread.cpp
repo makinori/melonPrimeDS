@@ -509,11 +509,6 @@ void calculateAddresses(
     // Read the player position
     playerPosition = NDS->ARM9Read8(PlayerPosAddr);
 
-    // Lambda for calculating player-specific addresses
-    auto calculatePlayerAddress = [](uint32_t baseAddr, uint8_t playerPos, uint8_t increment) {
-        return baseAddr + (playerPos * increment);
-        };
-
     // Calculate addresses
     isAltFormAddr = calculatePlayerAddress(baseIsAltFormAddr, playerPosition, playerAddressIncrement);
     chosenHunterAddr = calculatePlayerAddress(baseChosenHunterAddr, playerPosition, 0x01);
