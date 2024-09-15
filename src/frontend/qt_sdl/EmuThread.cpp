@@ -1096,7 +1096,7 @@ void EmuThread::run()
             drawVCur = false;
 
             
-                mainWindow->osdAddMessage(0, ("isMapOrUserActionPaused:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(isMapOrUserActionPausedAddr) & 0x0F])).c_str());
+            // mainWindow->osdAddMessage(0, ("isMapOrUserActionPaused:" + std::string(1, "0123456789ABCDEF"[NDS->ARM9Read8(isMapOrUserActionPausedAddr) & 0x0F])).c_str());
 
             // morph ball
             if (Input::HotkeyPressed(HK_MetroidMorphBall)) {
