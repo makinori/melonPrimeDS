@@ -362,6 +362,7 @@ void detectRomAndSetAddresses() {
         baseAimXAddr = 0x020DEDA6;
         baseAimYAddr = 0x020DEDAE;
         isRomDetected = true;
+        mainWindow->osdAddMessage(0, "Rom detected: US1.1");
 
         break;
 
@@ -378,6 +379,7 @@ void detectRomAndSetAddresses() {
         baseAimXAddr = 0x020de526;
         baseAimYAddr = 0x020de52E;
         isRomDetected = true;
+        mainWindow->osdAddMessage(0, "Rom detected: US1.0");
 
         break;
 
@@ -394,6 +396,7 @@ void detectRomAndSetAddresses() {
         baseAimXAddr = 0x020E03E6;
         baseAimYAddr = 0x020E03EE;
         isRomDetected = true;
+        mainWindow->osdAddMessage(0, "Rom detected: JP1.0");
 
         break;
 
@@ -409,8 +412,8 @@ void detectRomAndSetAddresses() {
         baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020e03a6;
         baseAimYAddr = 0x020e03ae;
-
         isRomDetected = true;
+        mainWindow->osdAddMessage(0, "Rom detected: JP1.1");
 
         break;
 
@@ -427,6 +430,7 @@ void detectRomAndSetAddresses() {
         baseAimXAddr = 0x020dedc6;
         baseAimYAddr = 0x020dedcE;
         isRomDetected = true;
+        mainWindow->osdAddMessage(0, "Rom detected: EU1.0");
 
         break;
 
@@ -442,6 +446,7 @@ void detectRomAndSetAddresses() {
         baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020dee46;
         baseAimYAddr = 0x020dee4e;
+        mainWindow->osdAddMessage(0, "Rom detected: EU1.1");
 
         isRomDetected = true;
 
@@ -459,6 +464,7 @@ void detectRomAndSetAddresses() {
         baseJumpFlagAddr = baseWeaponAddr - 0xA;
         baseAimXAddr = 0x020D7C0E;
         baseAimYAddr = 0x020D7C16;
+        mainWindow->osdAddMessage(0, "Rom detected: KR1.0");
 
         isRomDetected = true;
 
@@ -531,6 +537,16 @@ void EmuThread::run()
     }
 
     char melontitle[100];
+
+
+    if (isNewRom) {
+        isRomDetected = false;
+    }
+
+    if (!isRomDetected) {
+        detectRomAndSetAddresses();
+    }
+
 
     auto frameAdvanceOnce {
     [&]()
@@ -965,16 +981,6 @@ void EmuThread::run()
             }
         #endif
 
-  
-        if (isNewRom) {
-            isRomDetected = false;
-        }
-
-        if (!isRomDetected) {
-            detectRomAndSetAddresses();
-        }
-
-
         bool isInGame = NDS->ARM9Read16(inGameAddr) == 0x0001;
 
         /*
@@ -985,23 +991,23 @@ void EmuThread::run()
             }else {
                 mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
 
-                // Créer une image vide de 200x100 pixels avec un fond transparent
+                // Create an empty image of 200x100 pixels with a transparent background
                 QImage image(200, 100, QImage::Format_ARGB32);
-                image.fill(Qt::transparent);  // Remplir avec de la transparence
+                image.fill(Qt::transparent);  // Fill with transparency
 
-                // Créer un QPainter pour dessiner sur l'image
+                // Create a QPainter to draw on the image
                 QPainter painter(&image);
                 painter.setRenderHint(QPainter::Antialiasing);
-                painter.setPen(QPen(Qt::black));  // Définir la couleur du texte
+                painter.setPen(QPen(Qt::black));  // Set the text color
 
-                // Définir la police et la taille du texte
+                // Set the font and text size
                 QFont font("Arial", 12);
                 painter.setFont(font);
 
-                // Dessiner le texte
+                // Draw the text
                 painter.drawText(image.rect(), Qt::AlignBottom | Qt::AlignRight, "first line\nsecond line");
 
-                // Terminer le dessin
+                // Finish drawing
                 painter.end();
 
             }
