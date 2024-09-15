@@ -974,10 +974,6 @@ void EmuThread::run()
             }
         #endif
 
-        if (isNewRom) {
-            isRomDetected = false;
-        }
-
         if (!isRomDetected) {
             detectRomAndSetAddresses();
             isNewRom = false;
