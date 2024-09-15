@@ -507,7 +507,7 @@ static void calculateAddresses(
     uint32_t& aimYAddr
 ) {
     // Read the player position
-    playerPosition = NDS->ARM9Read8(PlayerPosAddr);
+    playerPosition = NDS.ARM9Read8(PlayerPosAddr);
 
     // Calculate addresses
     isAltFormAddr = calculatePlayerAddress(baseIsAltFormAddr, playerPosition, playerAddressIncrement);
