@@ -485,8 +485,8 @@ uint32_t weaponChangeAddr;
 uint32_t weaponAddr;
 uint32_t jumpFlagAddr;
 
-void calculateAddresses(
-    NDSInterface* NDS,
+static void calculateAddresses(
+    NDS& NDS,
     uint32_t PlayerPosAddr,
     uint32_t baseIsAltFormAddr,
     uint32_t baseChosenHunterAddr,
@@ -1070,7 +1070,13 @@ void EmuThread::run()
             mainWindow->osdAddMessage(0, "Virtual Stylus disabled");
             ingameSoVirtualStylusAutolyDisabled = true;
 
-            calculateAddresses();
+            calculateAddresses(
+                NDS, PlayerPosAddr, baseIsAltFormAddr, baseChosenHunterAddr,
+                baseWeaponChangeAddr, baseWeaponAddr, baseJumpFlagAddr,
+                baseAimXAddr, baseAimYAddr, playerAddressIncrement, mainWindow,
+                playerPosition, isAltFormAddr, chosenHunterAddr, weaponChangeAddr,
+                weaponAddr, jumpFlagAddr, aimXAddr, aimYAddr
+            );
         }
 
         // VirtualStylus is Enabled when not in game
