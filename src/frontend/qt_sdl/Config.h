@@ -49,19 +49,23 @@ Hotkey
     HK_MetroidJump,
 
     HK_MetroidMorphBall,
-    HK_MetroidMorphBallBoost,
+    HK_MetroidZoom,
+    HK_MetroidHoldMorphBallBoost,
 
     HK_MetroidScanVisor,
 
     HK_MetroidUILeft,
     HK_MetroidUIRight,
     HK_MetroidUIOk,
+    HK_MetroidUIYes,
+    HK_MetroidUINo,
 
     HK_MetroidShootScan,
     HK_MetroidScanShoot,
     
     HK_MetroidWeaponBeam,
     HK_MetroidWeaponMissile,
+    HK_MetroidWeaponSpecial,
     HK_MetroidWeapon1,
     HK_MetroidWeapon2,
     HK_MetroidWeapon3,
@@ -69,8 +73,10 @@ Hotkey
     HK_MetroidWeapon5,
     HK_MetroidWeapon6,
 
-    HK_MetroidVirtualStylus,
+    //HK_MetroidVirtualStylus,
     HK_MetroidMenu,
+    HK_MetroidIngameSensiUp,
+    HK_MetroidIngameSensiDown,
     
     HK_MAX
 };
@@ -236,9 +242,11 @@ extern bool GdbARM9BreakOnStartup;
 
 extern int MetroidAimSensitivity;
 extern int MetroidVirtualStylusSensitivity;
+//extern int MetroidVsPlayerInput;
 
 const int MetroidAimSensitivityDefault = 30;
 const int MetroidVirtualStylusSensitivityDefault = 20;
+//const int MetroidVsPlayerInputDefault = 1;
 
 void Load();
 void Save();
