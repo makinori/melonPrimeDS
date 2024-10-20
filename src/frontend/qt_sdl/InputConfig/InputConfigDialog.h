@@ -40,28 +40,34 @@ static constexpr std::initializer_list<int> hk_addons =
     HK_MetroidJump,
 
     HK_MetroidMorphBall,
-    HK_MetroidMorphBallBoost,
+    HK_MetroidZoom,
+    HK_MetroidHoldMorphBallBoost,
 
     HK_MetroidScanVisor,
     
     HK_MetroidUILeft,
     HK_MetroidUIRight,
     HK_MetroidUIOk,
+    HK_MetroidUIYes,
+    HK_MetroidUINo,
 
     HK_MetroidShootScan,
     HK_MetroidScanShoot,
 
     HK_MetroidWeaponBeam,
     HK_MetroidWeaponMissile,
+    HK_MetroidWeaponSpecial,
     HK_MetroidWeapon1,
     HK_MetroidWeapon2,
     HK_MetroidWeapon3,
     HK_MetroidWeapon4,
     HK_MetroidWeapon5,
     HK_MetroidWeapon6,
-    
-    HK_MetroidVirtualStylus,
+
+    // HK_MetroidVirtualStylus,
     HK_MetroidMenu,
+    HK_MetroidIngameSensiUp,
+    HK_MetroidIngameSensiDown,
 };
 
 static constexpr std::initializer_list<const char*> hk_addons_labels =
@@ -76,20 +82,24 @@ static constexpr std::initializer_list<const char*> hk_addons_labels =
 
     "[Metroid] (Space) Jump",
 
-    "[Metroid] (L. Ctrl) Morph Ball",
-    "[Metroid] (L. Shift) Morph Ball Boost, Map Zoom Out, Imperialist Zoom",
+    "[Metroid] (L. Ctrl) Transform",
+    "[Metroid] (Mouse Right) Imperialist Zoom, Map Zoom Out, Morph Ball Boost",
+    "[Metroid] (Shift) Hold to Fast Morph Ball Boost (Hold to keep boosting)",
 
     "[Metroid] (C) Scan Visor",
 
-    "[Metroid] (Q) UI Left",
-    "[Metroid] (E) UI Right",
+    "[Metroid] (Z) UI Left",
+    "[Metroid] (X) UI Right",
     "[Metroid] (F) UI Ok",
+    "[Metroid] (G) UI Yes (Enter Starship)",
+    "[Metroid] (H) UI No  (Enter Starship)",
 
     "[Metroid] (Mouse Left) Shoot/Scan, Map Zoom In)",
-    "[Metroid] (Mouse Right) Scan/Shoot, Map Zoom In)",
+    "[Metroid] (V)          Scan/Shoot, Map Zoom In)",
 
-    "[Metroid] (Mouse 5, Side Top) Weapon Beam",
+    "[Metroid] (Mouse 5, Side Top)    Weapon Beam",
     "[Metroid] (Mouse 4, Side Bottom) Weapon Missile",
+    "[Metroid] (R) SpecialWeapon (Last used Weapon, Omega cannon)",
     "[Metroid] (1) Weapon 1",
     "[Metroid] (2) Weapon 2",
     "[Metroid] (3) Weapon 3",
@@ -97,8 +107,10 @@ static constexpr std::initializer_list<const char*> hk_addons_labels =
     "[Metroid] (5) Weapon 5",
     "[Metroid] (6) Weapon 6",
 
-    "[Metroid] (Tab) Virtual Stylus",
-    "[Metroid] (V) Menu/Map",
+    // "[Metroid] (Tab) Virtual Stylus [Toggle]",
+    "[Metroid] (Tab) Menu/Map",
+    "[Metroid] (PgUp)   AimSensitivity Up",
+    "[Metroid] (PgDown) AimSensitivity Down",
 };
 
 static_assert(hk_addons.size() == hk_addons_labels.size());

@@ -162,6 +162,7 @@ bool GdbARM9BreakOnStartup;
 
 int MetroidAimSensitivity;
 int MetroidVirtualStylusSensitivity;
+//int MetroidVsPlayerInput;
 
 CameraConfig Camera[2];
 
@@ -236,19 +237,23 @@ ConfigEntry ConfigFile[] =
     {"HKKey_MetroidJump",              0, &HKKeyMapping[HK_MetroidJump],              Qt::Key_Space, true},
 
     {"HKKey_MetroidMorphBall",         0, &HKKeyMapping[HK_MetroidMorphBall],         Qt::Key_Control, true},
-    {"HKKey_MetroidMorphBallBoost",    0, &HKKeyMapping[HK_MetroidMorphBallBoost],    Qt::Key_Shift, true},
+    {"HKKey_MetroidZoom",              0, &HKKeyMapping[HK_MetroidZoom],              (int)Qt::RightButton | (int)0xF0000000, true},
+    {"HKKey_MetroidHoldMorphBallBoost",0, &HKKeyMapping[HK_MetroidHoldMorphBallBoost],Qt::Key_Shift, true},
 
     {"HKKey_MetroidScanVisor",         0, &HKKeyMapping[HK_MetroidScanVisor],         Qt::Key_C, true},
 
-    {"HKKey_MetroidUILeft",            0, &HKKeyMapping[HK_MetroidUILeft],            Qt::Key_Q, true},
-    {"HKKey_MetroidUIRight",           0, &HKKeyMapping[HK_MetroidUIRight],           Qt::Key_E, true},
+    {"HKKey_MetroidUILeft",            0, &HKKeyMapping[HK_MetroidUILeft],            Qt::Key_Z, true},
+    {"HKKey_MetroidUIRight",           0, &HKKeyMapping[HK_MetroidUIRight],           Qt::Key_X, true},
     {"HKKey_MetroidUIOk",              0, &HKKeyMapping[HK_MetroidUIOk],              Qt::Key_F, true},
-    
+    {"HKKey_MetroidUIYes",             0, &HKKeyMapping[HK_MetroidUIYes],             Qt::Key_G, true},
+    {"HKKey_MetroidUINo",              0, &HKKeyMapping[HK_MetroidUINo],              Qt::Key_H, true},
+
     {"HKKey_MetroidShootScan",         0, &HKKeyMapping[HK_MetroidShootScan],         (int)Qt::LeftButton | (int)0xF0000000, true},
-    {"HKKey_MetroidScanShoot",         0, &HKKeyMapping[HK_MetroidScanShoot],         (int)Qt::RightButton | (int)0xF0000000, true},
+    {"HKKey_MetroidScanShoot",         0, &HKKeyMapping[HK_MetroidScanShoot],         Qt::Key_V, true},
 
     {"HKKey_MetroidWeaponBeam",        0, &HKKeyMapping[HK_MetroidWeaponBeam],        (int)Qt::ExtraButton2 | (int)0xF0000000, true},
     {"HKKey_MetroidWeaponMissile",     0, &HKKeyMapping[HK_MetroidWeaponMissile],     (int)Qt::ExtraButton1 | (int)0xF0000000, true},
+    {"HKKey_MetroidWeaponSpecial",     0, &HKKeyMapping[HK_MetroidWeaponSpecial],     Qt::Key_R, true},
     {"HKKey_MetroidWeapon1",           0, &HKKeyMapping[HK_MetroidWeapon1],           Qt::Key_1, true},
     {"HKKey_MetroidWeapon2",           0, &HKKeyMapping[HK_MetroidWeapon2],           Qt::Key_2, true},
     {"HKKey_MetroidWeapon3",           0, &HKKeyMapping[HK_MetroidWeapon3],           Qt::Key_3, true},
@@ -256,9 +261,14 @@ ConfigEntry ConfigFile[] =
     {"HKKey_MetroidWeapon5",           0, &HKKeyMapping[HK_MetroidWeapon5],           Qt::Key_5, true},
     {"HKKey_MetroidWeapon6",           0, &HKKeyMapping[HK_MetroidWeapon6],           Qt::Key_6, true},
     
-    {"HKKey_MetroidVirtualStylus",     0, &HKKeyMapping[HK_MetroidVirtualStylus],     Qt::Key_Tab, true},
-    {"HKKey_MetroidMenu",              0, &HKKeyMapping[HK_MetroidMenu],              Qt::Key_V, true},
-    
+    // {"HKKey_MetroidVirtualStylus",     0, &HKKeyMapping[HK_MetroidVirtualStylus],     Qt::Key_Tab, true},
+    {"HKKey_MetroidMenu",              0, &HKKeyMapping[HK_MetroidMenu],              Qt::Key_Tab, true},
+    {"HKKey_MetroidIngameSensiUp",     0, &HKKeyMapping[HK_MetroidIngameSensiUp],     Qt::Key_PageUp, true},
+    {"HKKey_MetroidIngameSensiDown",   0, &HKKeyMapping[HK_MetroidIngameSensiDown],   Qt::Key_PageDown, true},
+
+
+
+
     // not metroid
 
     {"HKJoy_FrameStep",           0, &HKJoyMapping[HK_FrameStep],           -1, true},
@@ -286,11 +296,11 @@ ConfigEntry ConfigFile[] =
     {"ScreenVSync",         1, &ScreenVSync,         false, false},
     {"ScreenVSyncInterval", 0, &ScreenVSyncInterval, 1, false},
 
-    {"3DRenderer", 0, &_3DRenderer, 1, false},
+    {"3DRenderer", 0, &_3DRenderer, 0, false}, //0: Software, 1:OpenGL
     {"Threaded3D", 1, &Threaded3D, true, false},
 
-    {"GL_ScaleFactor", 0, &GL_ScaleFactor, 8, false},
-    {"GL_BetterPolygons", 1, &GL_BetterPolygons, false, false},
+    {"GL_ScaleFactor", 0, &GL_ScaleFactor, 4, false}, // 8 is too much 4 is enough
+    {"GL_BetterPolygons", 1, &GL_BetterPolygons, true, false}, // If you don't check the box to improve Polygon division, part of the sky will blink in Alinos Perch.
 
     {"LimitFPS", 1, &LimitFPS, true, false},
     {"AudioSync", 1, &AudioSync, false},

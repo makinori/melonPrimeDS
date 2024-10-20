@@ -1005,7 +1005,7 @@ void ScreenPanelGL::drawScreenGL()
 
     screenSettingsLock.unlock();
 
-    // metroid related
+   // metroid related
 
     glUseProgram(overlayShader[2]);
 
@@ -1036,14 +1036,14 @@ void ScreenPanelGL::drawScreenGL()
                 numScreens == 1 ? screenMatrix[0] : screenMatrix[screenType]
             );
             glDrawArrays(GL_TRIANGLES, screenKind[screenType] == 0 ? 0 : 2*3, 2*3);
-        } 
+        }
     }
 
     screenSettingsLock.unlock();
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
-
+    
     osdUpdate();
     if (osdEnabled)
     {
