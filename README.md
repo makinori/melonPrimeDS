@@ -92,10 +92,10 @@ Downloadable builds were made using GitHub actions
 -   Update to latest melonDS
 -   Would be really nice if weapon switching was done through the memory
 
-## Livetek 2.0
+## Livetek Release
 
-There was an update for improving multiplayer but it's very messy and breaks a lot of other parts.
+There was an update trying to improve multiplayer, but it broke lots of other things.
 
-Find code here: https://github.com/makinori/melonPrimeDS/tree/livetek-2.0
+Find code here: https://github.com/makinori/melonPrimeDS/tree/livetek
 
-Download here: https://github.com/makinori/melonPrimeDS/releases/tag/livetek-2.0-draft
+Download here: https://github.com/makinori/melonPrimeDS/releases/tag/livetek-release
