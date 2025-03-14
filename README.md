@@ -18,15 +18,13 @@ Releases for [Windows, Linux and macOS here!](https://github.com/makidoll/melonP
 
 [![aur](https://img.shields.io/aur/version/melonprimeds-bin?style=flat&logo=archlinux)](https://aur.archlinux.org/packages/melonprimeds-bin)
 
-
 > **⚠️🖱️ Warning if using mouse acceleration!**<br>
 > Please disable mouse acceleration or it will feel strange.<br>
 > Find a [guide for Windows here](https://www.lifewire.com/turn-off-mouse-acceleration-in-windows-11-5193828) and use [SteerMouse if on macOS](https://plentycom.jp/en/steermouse/index.html)<br>
 > Wasn't able to get raw mouse input unfortunately.
 
 > **⚠️ Warning for macOS users!**<br>
-> Once you start the program, you're going to have to go into macOS settings:<br>
-> **Privacy & Security > Accessibility**, and ensure melonPrimeDS is enabled.
+> Once you start the program, you're going to have to go into macOS settings:<br> > **Privacy & Security > Accessibility**, and ensure melonPrimeDS is enabled.
 
 ### Instructions
 
@@ -92,4 +90,12 @@ Downloadable builds were made using GitHub actions
 
 -   Change controls when map is open. Need to find memory location
 -   Update to latest melonDS
--   Would be really nice if weapon switching was done through the memory 
+-   Would be really nice if weapon switching was done through the memory
+
+### Livetek 2.0
+
+There was an update for improving multiplayer but it's very messy and breaks a lot of other parts.
+
+Find code here: https://github.com/makinori/melonPrimeDS/tree/livetek-2.0
+
+Download here: https://github.com/makinori/melonPrimeDS/releases/tag/livetek-2.0
