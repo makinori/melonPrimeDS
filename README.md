@@ -12,7 +12,7 @@ I originally made this for controller but because there's no lock-on, it wasn't 
 
 [melonPrimeDS.webm](https://github.com/makidoll/melonPrimeDS/assets/8362329/69ab26bb-7205-451a-a11c-70a2ca0b549d)
 
-### Download
+## Download
 
 Releases for [Windows, Linux and macOS here!](https://github.com/makidoll/melonPrimeDS/releases)
 
@@ -26,7 +26,7 @@ Releases for [Windows, Linux and macOS here!](https://github.com/makidoll/melonP
 > **⚠️ Warning for macOS users!**<br>
 > Once you start the program, you're going to have to go into macOS settings:<br> > **Privacy & Security > Accessibility**, and ensure melonPrimeDS is enabled.
 
-### Instructions
+## Instructions
 
 -   Fyi. the emulator hack uses a different config path than melonDS, so this won't conflict
 
@@ -61,7 +61,7 @@ Releases for [Windows, Linux and macOS here!](https://github.com/makidoll/melonP
 <br>
 <img src="./metroid/keyboard.png"/>
 
-### Default settings changed from melonDS
+## Default settings changed from melonDS
 
 -   Fullscreen toggle set to `F11`
 -   Screen layout set to **horizontal**
@@ -73,7 +73,7 @@ Releases for [Windows, Linux and macOS here!](https://github.com/makidoll/melonP
 
 VSync was already disabled but keeping it off also helps with performance
 
-### Build
+## Build
 
 I modified melonDS and played Hunters on Linux. Building is straightforward
 
@@ -86,13 +86,13 @@ ninja
 
 Downloadable builds were made using GitHub actions
 
-### Todo
+## Todo
 
 -   Change controls when map is open. Need to find memory location
 -   Update to latest melonDS
 -   Would be really nice if weapon switching was done through the memory
 
-### Livetek 2.0
+## Livetek 2.0
 
 There was an update for improving multiplayer but it's very messy and breaks a lot of other parts.
 
