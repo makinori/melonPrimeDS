@@ -98,4 +98,4 @@ There was an update for improving multiplayer but it's very messy and breaks a l
 
 Find code here: https://github.com/makinori/melonPrimeDS/tree/livetek-2.0
 
-Download here: https://github.com/makinori/melonPrimeDS/releases/tag/livetek-2.0
+Download here: https://github.com/makinori/melonPrimeDS/releases/tag/livetek-2.0-draft
