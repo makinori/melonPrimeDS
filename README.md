@@ -10,11 +10,11 @@ I originally made this for controller but because there's no lock-on, it wasn't 
 
 **Please read the instructions carefully.**
 
-[melonPrimeDS.webm](https://github.com/makidoll/melonPrimeDS/assets/8362329/69ab26bb-7205-451a-a11c-70a2ca0b549d)
+[melonPrimeDS.webm](https://github.com/makinori/melonPrimeDS/assets/8362329/69ab26bb-7205-451a-a11c-70a2ca0b549d)
 
 ## Download
 
-Releases for [Windows, Linux and macOS here!](https://github.com/makidoll/melonPrimeDS/releases)
+Releases for [Windows, Linux and macOS here!](https://github.com/makinori/melonPrimeDS/releases/tag/mph-1.2)
 
 [![aur](https://img.shields.io/aur/version/melonprimeds-bin?style=flat&logo=archlinux)](https://aur.archlinux.org/packages/melonprimeds-bin)
 
